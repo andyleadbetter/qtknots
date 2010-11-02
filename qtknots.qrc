@@ -1,0 +1,28 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/QKnots.qml</file>
+        <file>qml/images/gloss.png</file>
+        <file>qml/images/lineedit.png</file>
+        <file>qml/images/lineedit.sci</file>
+        <file>qml/images/quit.png</file>
+        <file>qml/images/stripes.png</file>
+        <file>qml/images/titlebar.png</file>
+        <file>qml/images/titlebar.sci</file>
+        <file>qml/images/toolbutton.png</file>
+        <file>qml/images/toolbutton.sci</file>
+        <file>qml/common/Directory.qml</file>
+        <file>qml/common/DirectoryDelegate.qml</file>
+        <file>qml/common/DirectoryView.qml</file>
+        <file>qml/common/PlayingView.qml</file>
+        <file>qml/common/ProfilesDelegate.qml</file>
+        <file>qml/common/ProfilesView.qml</file>
+        <file>qml/common/Progress.qml</file>
+        <file>qml/common/scrollbar.qml</file>
+        <file>qml/common/Slider.qml</file>
+        <file>qml/mobile/Button.qml</file>
+        <file>qml/mobile/GridDelegate.qml</file>
+        <file>qml/mobile/ImageDetails.qml</file>
+        <file>qml/mobile/TitleBar.qml</file>
+        <file>qml/mobile/ToolBar.qml</file>
+    </qresource>
+</RCC>
