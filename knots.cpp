@@ -47,6 +47,8 @@ void Knots::loadSettings()
     _serverAddress.setHost("192.168.0.28");
     _serverAddress.setScheme("http");
     _serverAddress.setPort(1978);
+    //_serverAddress.setUserName("andy");
+    //_serverAddress.setPassword("andy");
 
     _profile = _settings.value( "DefaultProfileId", QString( "6") ).toString();
 

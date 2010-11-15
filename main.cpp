@@ -12,7 +12,12 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     Knots& knots = Knots::instance();
 
-    QmlApplicationViewer viewer;    
+    app.addLibraryPath("/usr/lib/qt4/imports");
+
+
+
+
+    QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::Auto);
 
     qmlRegisterType<KnotsDeclarative>("Knots", 1, 0, "Knots");

@@ -24,5 +24,35 @@
         <file>qml/mobile/ImageDetails.qml</file>
         <file>qml/mobile/TitleBar.qml</file>
         <file>qml/mobile/ToolBar.qml</file>
+        <file>qml/images/knots2.png</file>
+        <file>qml/images/knots_button_add_to_playlist.png</file>
+        <file>qml/images/knots_button_back.png</file>
+        <file>qml/images/knots_button_clear_position.png</file>
+        <file>qml/images/knots_button_delete.png</file>
+        <file>qml/images/knots_button_info.png</file>
+        <file>qml/images/knots_button_lyrics.png</file>
+        <file>qml/images/knots_button_new.png</file>
+        <file>qml/images/knots_button_next_item.png</file>
+        <file>qml/images/knots_button_next.png</file>
+        <file>qml/images/knots_button_no_repeat.png</file>
+        <file>qml/images/knots_button_play_album.png</file>
+        <file>qml/images/knots_button_play_artist.png</file>
+        <file>qml/images/knots_button_play.png</file>
+        <file>qml/images/knots_button_player.png</file>
+        <file>qml/images/knots_button_playlist.png</file>
+        <file>qml/images/knots_button_prev.png</file>
+        <file>qml/images/knots_button_rate.png</file>
+        <file>qml/images/knots_button_remove_from_playlist.png</file>
+        <file>qml/images/knots_button_reorder.png</file>
+        <file>qml/images/knots_button_repeat.png</file>
+        <file>qml/images/knots_button_save_as.png</file>
+        <file>qml/images/knots_button_search.png</file>
+        <file>qml/images/knots_button_stop.png</file>
+        <file>qml/images/knots_dir.png</file>
+        <file>qml/images/knots_item_connect.png</file>
+        <file>qml/images/knots_item_music.png</file>
+        <file>qml/images/knots_item_server.png</file>
+        <file>qml/images/knots_item_video.png</file>
+        <file>qml/mobile/VideoControls.qml</file>
     </qresource>
 </RCC>

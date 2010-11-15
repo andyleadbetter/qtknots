@@ -8,6 +8,7 @@ Item {
     id: screen; width: 800; height: 480
     state: "Browsing"
 
+
     Knots {
         id: knots     
     }
@@ -19,8 +20,7 @@ Item {
         width: parent.width;
         height: parent.height;
         x: -parent.width;
-        opacity:  1.0;
-        z: 5
+        opacity:  1.0;        
         }
 
     Rectangle {
@@ -30,13 +30,14 @@ Item {
 
         Image { source: "images/stripes.png"; fillMode: Image.Tile; anchors.fill: parent; opacity: 0.3 }
 
-        Mobile.TitleBar { id: titleBar; width: parent.width; height: 40; opacity: 0.9 }
+        Mobile.TitleBar { id: titleBar; width: parent.width; height: 40; opacity: 0.9; z: 5 }
 
         Common.DirectoryView {
             id: mainView;
             width: parent.width;
             anchors.top: titleBar.bottom;
-            anchors.bottom: toolBar.top }
+            anchors.bottom: toolBar.top;
+        }
 
         Common.ProfilesView {
             id: profilesView;
@@ -66,6 +67,9 @@ Item {
             PropertyChanges { target: toolBar; visible: true}
             PropertyChanges { target: toolBar; visible: true }
             PropertyChanges { target: titleBar; visible: true }
+            PropertyChanges { target: page; z: 1}
+
+            PropertyChanges { target: playingView; z:0 }
 
         },
         State {
@@ -80,6 +84,8 @@ Item {
             PropertyChanges { target: toolBar; onButton2Clicked: screen.state = "Profile" }
             PropertyChanges { target: toolBar; visible: true }
             PropertyChanges { target: titleBar; visible: true }
+            PropertyChanges { target: page; z: 1}
+            PropertyChanges { target: playingView; z:0 }
 
         },
         State {
@@ -87,9 +93,12 @@ Item {
             PropertyChanges { target: page; x: parent.width }
             PropertyChanges { target: mainView; x: parent.width }
             PropertyChanges { target: profilesView; x: -parent.width }
+            PropertyChanges { target: page; z: 0}
             PropertyChanges { target: playingView; x:0 }
             PropertyChanges { target: toolBar; visible: false }
             PropertyChanges { target: titleBar; visible: false }
+
+            PropertyChanges { target: playingView; z:1 }
         }
 
     ]
