@@ -8,12 +8,12 @@
 #include <QNetworkReply>
 #include <QSettings>
 
-
+#include "qmlapplicationviewer.h"
+#include "knotsplayer.h"
 #include "profile.h"
 
 class SaxProfileHandler;
 class KnotsDirectoryImpl;
-class KnotsPlayer;
 
 
 
@@ -33,6 +33,8 @@ public slots:
     void onProfilesFetched( QNetworkReply* reply );
 
     void onDirectoryReady();
+
+    void onPlayerStateChange( KnotsPlayer::PlayingState newState );
 
 public:
 
@@ -87,6 +89,9 @@ private:
     KnotsDirectoryImpl* _currentDirectory;
     KnotsPlayer* _player;
     QSettings _settings;
+
+    QmlApplicationViewer _navigator;
+    QmlApplicationViewer _videoPlayer;
 
 
 };

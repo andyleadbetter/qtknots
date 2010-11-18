@@ -52,26 +52,32 @@ public:
     explicit KnotsDeclarative(QObject *parent = 0);
 
     Q_PROPERTY( QString currentSource READ getCurrentSource WRITE setCurrentSource NOTIFY sourceChanged )
+    Q_PROPERTY( float duration READ getDuration NOTIFY durationChanged )
+    Q_PROPERTY( QString serverName READ getServerName WRITE setServerName )
 
  public slots:
 
     void onSourceChanged( QString &source );
     void backSelected();
-    void toggleFullscreen();
     void stop( );
-    void setVideoRect(int x, int y, int width, int height );
-
+    void seek( float position );
 
 signals:
     void currentPathChanged();
     void sourceChanged(QString &newSource );
+    void durationChanged( float newDuration );
 
 private:
     QString getCurrentSource();
     void setCurrentSource( QString &newSource );
+    float getDuration();
+    QString getServerName();
+    void setServerName( QString &newServer );
 
     Knots& _instance;
     QString _source;
+    QString _serverName;
+    float _duration;
 
 };
 

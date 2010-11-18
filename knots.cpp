@@ -1,13 +1,17 @@
+#include <QtDebug>
+#include <QtOpenGL/QGLWidget>
+#include <qdeclarative.h>
+
+
 
 #include "knots.h"
-
-#include <QtDebug>
-
 #include "profile.h"
 #include "saxprofilehandler.h"
 #include "knotsdirectory.h"
 #include "knotsitem.h"
 #include "knotsplayer.h"
+#include "knotsdeclarative.h"
+
 
 Knots* Knots::_instance;
 
@@ -25,8 +29,24 @@ Knots::Knots(QObject *parent)
     , _currentPath("")
     , _currentDirectory(0)
     , _settings("AndyLeadbetter", "QtKnots")
-
+    , _navigator( 0, true )
+    , _videoPlayer( 0, false)
 {  
+    qmlRegisterType<KnotsDeclarative>("Knots", 1, 0, "Knots");
+
+    qmlRegisterType<ProfileList>("ProfilesList", 1, 0,"ProfilesList");
+
+    qmlRegisterType<KnotsDirectory>("KnotsDirectory", 1, 0,"KnotsDirectory");
+
+    _navigator.setOrientation(QmlApplicationViewer::Auto);
+    _videoPlayer.setOrientation(QmlApplicationViewer::Auto);
+
+    _navigator.setMainQmlFile("qrc:///qml/QKnots.qml");
+
+    _videoPlayer.setMainQmlFile("qrc://qml/common/PlayingView.qml");
+
+    _navigator.show();
+
     loadSettings();
 
     loadProfiles();
@@ -34,6 +54,9 @@ Knots::Knots(QObject *parent)
     browseRoot();
 
     _player = new KnotsPlayer( this );
+
+    connect( _player, SIGNAL(stateChanged(PlayingState)), this, SLOT(onPlayerStateChange(KnotsPlayer::PlayingState)));
+
 }
 
 KnotsPlayer& Knots::player()
@@ -43,16 +66,8 @@ KnotsPlayer& Knots::player()
 
 void Knots::loadSettings()
 {
-    //_serverAddress = _settings.value( "ServerAddress", QString("Http://192.168.0.28:1979")).toString();
-    _serverAddress.setHost("192.168.0.28");
-    _serverAddress.setScheme("http");
-    _serverAddress.setPort(1978);
-    //_serverAddress.setUserName("andy");
-    //_serverAddress.setPassword("andy");
-
+    _serverAddress = _settings.value( "ServerAddress", QString("Http://192.168.0.28:1978")).toString();
     _profile = _settings.value( "DefaultProfileId", QString( "6") ).toString();
-
-
 }
 
 QString Knots::profile() const
@@ -80,6 +95,7 @@ QUrl Knots::serverAddress() const
 void Knots::setServerAddress( QUrl &newServerAddress )
 {
     _serverAddress = newServerAddress;
+    browseRoot();
 }
 
 
@@ -142,7 +158,7 @@ void Knots::browseByPath( QString &pathToBrowse )
 {
     QString qualifiedDir;
 
-    qualifiedDir = "/external/browse?path=" + pathToBrowse;
+    qualifiedDir = "/external/browse?limit=10000&path=" + pathToBrowse;
     _pathHistory.push(_currentPath);
     _currentPath = qualifiedDir ;
     loadDirectory(qualifiedDir);
@@ -151,7 +167,7 @@ void Knots::browseByPath( QString &pathToBrowse )
 
 void Knots::browseVirtual( QString &virtualPath )
 {
-    QString qualifiedDir("/external/browse?virtual=");
+    QString qualifiedDir("/external/browse?limit=10000&virtual=");
     qualifiedDir += virtualPath ;
 
     _pathHistory.push(_currentPath);
@@ -202,3 +218,16 @@ void Knots::onDirectoryReady()
 }
 
 
+void Knots::onPlayerStateChange( KnotsPlayer::PlayingState newState )
+{
+    if( KnotsPlayer::Playing == newState )
+    {
+        _videoPlayer.show();
+        _navigator.hide();
+    } else {
+        _videoPlayer.show();
+        _navigator.hide();
+    }
+
+
+}

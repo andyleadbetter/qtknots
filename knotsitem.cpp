@@ -3,8 +3,11 @@
 #include "knotsitem.h"
 #include <QDebug>
 
-KnotsItem::KnotsItem(QObject *parent) :
-    QObject(parent)
+KnotsItem::KnotsItem(QObject *parent)
+    : QObject(parent)
+    , _id("")
+    , _mid("")
+
 {
 }
 
@@ -24,10 +27,6 @@ KnotsItem::KnotsItem(QObject *parent) :
 KnotsItem::~KnotsItem(){
 }
 
-int KnotsItem::getIntId() {
-    return _intId;
-}
-
 QString KnotsItem::getMediaType() {
     return _mediaType;
 }
@@ -44,8 +43,7 @@ QString KnotsItem::getId() {
     return _id;
 }
 void KnotsItem::setId(QString & id) {
-    _id = id;
-    _intId = id.toInt();
+    _id = id;    
 }
 QString KnotsItem::getDirectoryId() {
     return _directoryId;
@@ -93,14 +91,14 @@ void KnotsItem::setItemImage() {
             qDebug() << _itemImage.toString();
         } else {
             if( _type == DIR ) {
-                // itemImage = Knots.getContext().getResources().getDrawable(R.drawable.knots_dir);
+                _itemImage = "/qml/images/knots_dir.png";
             } else if ( _type == SERVER ) {
-                // itemImage = Knots.getContext().getResources().getDrawable(R.drawable.knots_item_server);
+                _itemImage = "/qml/images/knots_item_server.png";
             } else if (_type == ITEM) {
                 if( _mediaType == "" || _mediaType == "1" ) {
-                    //  itemImage =  Knots.getContext().getResources().getDrawable(R.drawable.knots_item_video);
+                    _itemImage = "/qml/images/knots_item_video.png";
                 } else {
-                    //  itemImage =  Knots.getContext().getResources().getDrawable(R.drawable.knots_item_music);
+                    _itemImage = "/qml/images/knots_item_music.png";
                 }
             }
         }
@@ -143,4 +141,10 @@ QString KnotsItem::itemSelected()
         break;
     }
     return newState;
+}
+
+
+bool KnotsItem::operator ==(const KnotsItem& rhs )
+{
+    return _id==rhs._id;
 }

@@ -44,12 +44,13 @@ import Qt 4.7
 Item {
     id: slider; width: 400; height: 16
 
+    signal dragged
+
     // value is read/write.
-    property real value
-    onValueChanged: { handle.x = 2 + (value - minimum) * slider.xMax / (maximum - minimum); }
+    property real value    
     property real maximum: 1
-    property real minimum: 1
-    property int xMax: slider.width - handle.width - 4
+    property real minimum: 0
+    property int xMax: slider.width - handle.width - 4;
 
     Rectangle {
         anchors.fill: parent
@@ -69,9 +70,11 @@ Item {
         }
 
         MouseArea {
+            signal seek;
             anchors.fill: parent; drag.target: parent
             drag.axis: Drag.XAxis; drag.minimumX: 2; drag.maximumX: slider.xMax+2
             onPositionChanged: { value = (maximum - minimum) * (handle.x-2) / slider.xMax + minimum; }
+            onReleased: {console.log( "slider - Released" + value); slider.dragged(); }
         }
     }
 }

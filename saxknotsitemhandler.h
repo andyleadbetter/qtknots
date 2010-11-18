@@ -38,8 +38,9 @@ public:
 
 
 private:
-    int currentPage;
-    int totalPages;
+    int _currentPage;
+    int _totalPages;
+    int _numberItems;
 
     KnotsItem* _currentItem;
 

@@ -11,7 +11,7 @@ KnotsDeclarative::KnotsDeclarative(QObject *parent)
     : QObject(parent)
     , _instance( Knots::instance())
 {
-    connect( &_instance.player(), SIGNAL(sourceChanged(QString&)), this, SLOT(onSourceChanged(QString&)));
+    connect( &_instance.player(), SIGNAL(sourceChanged(QString&)), this, SLOT(onSourceChanged(QString&)));    
 }
 
 void KnotsDeclarative::backSelected()
@@ -24,20 +24,37 @@ void KnotsDeclarative::stop()
     _instance.player().stop();
 }
 
-void KnotsDeclarative::toggleFullscreen()
+void KnotsDeclarative::seek(float position)
 {
-    //_instance.player().fullScreen();
+    _instance.player().seek(position);
 }
 
-void KnotsDeclarative::setVideoRect(int x, int y, int width, int height )
-{
-    _instance.player().setVideoRect( x,y,width,height);
-}
 
 QString KnotsDeclarative::getCurrentSource()
 {
     return _source;
 }
+
+float KnotsDeclarative::getDuration()
+{
+    return _duration;
+}
+
+
+
+QString KnotsDeclarative::getServerName()
+{
+    return _instance.serverAddress().toString();
+}
+
+void KnotsDeclarative::setServerName( QString &newServer )
+{
+    QUrl url(newServer);
+
+    _instance.setServerAddress(url);
+}
+
+
 
 void KnotsDeclarative::setCurrentSource( QString &newSource )
 {
@@ -47,11 +64,10 @@ void KnotsDeclarative::setCurrentSource( QString &newSource )
 void KnotsDeclarative::onSourceChanged(QString &source)
 {
     _source = source;
+    _duration = _instance.player().duration();
     emit sourceChanged(_source);
+    emit durationChanged(_duration);
 }
-
-
-
 
 ProfileList::ProfileList( QObject *parent )
     : QAbstractListModel( parent )
@@ -81,7 +97,7 @@ int ProfileList::rowCount ( const QModelIndex & /*parent*/) const
     if( _profiles == 0 )
         return 0;
 
-    qDebug() << "Profiles Model has " << _profiles->count() << " entries";
+    //qDebug() << "Profiles Model has " << _profiles->count() << " entries";
     return _profiles->count();
 }
 
@@ -93,7 +109,7 @@ void ProfileList::onProfilesChanged( ProfileListImpl* newProfiles )
 
 QVariant ProfileList::data ( const QModelIndex & index, int role ) const
 {
-    qDebug() << "Qml asking for entry " << index.row();
+    //qDebug() << "Qml asking for entry " << index.row();
 
     if( _profiles == 0 )
         return QVariant();
@@ -106,9 +122,9 @@ QVariant ProfileList::data ( const QModelIndex & index, int role ) const
 
     if( dobj )
     {
-        qDebug() << "Bitrate: " << dobj->getBitrate()
-                 << "Name: " << dobj->getName()
-                 << "Id: " << dobj->getId();
+        //qDebug() << "Bitrate: " << dobj->getBitrate()
+                // << "Name: " << dobj->getName()
+                // << "Id: " << dobj->getId();
 
         switch (role) {
         case Qt::DisplayRole: // The default display role now displays the first name as well
@@ -154,14 +170,14 @@ int KnotsDirectory::rowCount ( const QModelIndex & /*parent*/) const
     {
         count = _items->items().count();
     }
-    qDebug() << "Directory has " << count << " entries";
+    //qDebug() << "Directory has " << count << " entries";
     return count;
 }
 
 
 QVariant KnotsDirectory::data ( const QModelIndex & index, int role ) const
 {
-    qDebug() << "Qml asking item " << index.row();
+
 
     if( _items == 0 )
         return QVariant();
@@ -172,18 +188,20 @@ QVariant KnotsDirectory::data ( const QModelIndex & index, int role ) const
     if (index.row() > (_items->items().count()) )
         return QVariant();
 
-    KnotsItem *dobj = _items->items().values().at(index.row());
+    KnotsItem *dobj = _items->items().at(index.row());
 
     if( dobj )
     {
-        qDebug() << "Name: " << dobj->getText()
-                 << "Id: " << dobj->getId()
-                 << "thumbnail" << dobj->getItemImage();
-
+#ifdef _DEBUG
+    qDebug() << "Qml asking item " << index.row()
+             << "Name: " << dobj->getText()
+             << "Id: " << dobj->getId()
+             << "thumbnail" << dobj->getItemImage();
+#endif
         switch (role) {
         case Qt::DisplayRole: // The default display role now displays the first name as well
         case IdRole:
-            return QVariant::fromValue(dobj->getId());
+            return QVariant::fromValue(dobj->_modelIndex);
         case NameRole:
             return QVariant::fromValue(dobj->getText());
         case ItemImageRole:
@@ -202,11 +220,11 @@ QVariant KnotsDirectory::data ( const QModelIndex & index, int role ) const
 QString KnotsDirectory::itemSelected( QString itemId )
 {
     QString newState = "Browsing";
+    KnotsItem* item = 0;
 
-    KnotsItem* item = _items->items()[itemId];
-    if( item )
-        newState = item->itemSelected();
+    item = _items->items().at(itemId.toInt());
+
+    newState = item->itemSelected();
 
     return newState;
-
 }

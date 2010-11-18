@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 import Qt 4.7
+import Knots 1.0
 
 Item {
     id: titleBar
@@ -48,14 +49,17 @@ Item {
 
     BorderImage { source: "../images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
 
+    Knots {
+        id: knots
+    }
+
     Item {
         id: container
         width: (parent.width * 2) - 55 ; height: parent.height
 
-        function accept() {
-            imageDetails.closed()
+        function accept() {            
             titleBar.state = ""
-            background.state = ""
+            knots.serverName =  editor.text;
         }
 
         Image {
@@ -81,7 +85,7 @@ Item {
 
         Button {
             id: tagButton; x: titleBar.width - 50; width: 45; height: 32; text: "..."
-            onClicked: if (titleBar.state == "Tags") container.accept(); else titleBar.state = "Tags"
+            onClicked: if (titleBar.state == "ServerChange") container.accept(); else titleBar.state = "ServerChange"
             anchors.verticalCenter: parent.verticalCenter
         }
 
@@ -113,7 +117,7 @@ Item {
     }
 
     states: State {
-        name: "Tags"
+        name: "ServerChange"
         PropertyChanges { target: container; x: -tagButton.x + 5 }
         PropertyChanges { target: tagButton; text: "OK" }
         PropertyChanges { target: editor; focus: true }

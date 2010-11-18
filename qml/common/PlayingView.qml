@@ -3,8 +3,10 @@ import "../common" as Common
 import "../mobile" as Mobile
 import Knots 1.0
 
-//import QtMultimediaKit 1.1
-import  Qt.multimedia 1.0
+import QtMultimediaKit 1.1
+import QtMobility.systeminfo 1.1
+
+//import  Qt.multimedia 1.0
 
 
 
@@ -13,7 +15,7 @@ Rectangle {
     id: playingPage;
     Knots {  id: knots }
     state:  "Default"
-    color: "black"
+    color: "Black"
 
     Video {
         id: videoPlayer
@@ -21,49 +23,83 @@ Rectangle {
         anchors.top: parent.top;
         anchors.left: parent.left;
         anchors.right: parent.right;
-        autoLoad: true
-        playing: false
-        fillMode: PreserveAspectFit;
+        autoLoad: false
+        playing: false        
         source: knots.currentSource
-        focus: true
-        Keys.onSpacePressed: video_control.paused = !video_control.paused
-        Keys.onLeftPressed: video_control.position -= 5000
-        Keys.onRightPressed: video_control.position += 5000
+        fillMode: Video.PreserveAspectFit;
+        z: 5
+        opacity: 1.0
+
+        Keys.onSpacePressed: videoPlayer.paused = !videoPlayer.paused
 
         onErrorChanged: {
-            console.log( "Video Error:" + errorString)
+            //console.log( "Video Error:" + errorString)
         }
+
         onStatusChanged: {
-            console.log( "Video status:" + status )
-            if( status < 6 ){
-                playing = true;
-            }
+
         }
+
         onBufferProgressChanged: {
-            console.log( "Buffering : " + bufferProgress )
+            //console.log( "Buffering : " + bufferProgress )
         }
         onSourceChanged: {
-            console.log( "Starting Stream @ " + source)
+            //console.log( "Starting Stream @ " + source)
             playing = true;
+            backlightControllerTimer.start()
+        }
+
+        onPositionChanged: {
+            //console.log( "Position :" + position  + "Duration: " + duration)
         }
 
         MouseArea {
             id: videoArea
             anchors.fill: parent
-
         }
     }
 
     Mobile.VideoControls {
         id: videoControls; z: 5
-        height: 40; width: parent.width; opacity: 0.9
-        length: videoPlayer.duration
+
+        height: 40; width: parent.width; opacity: 0.9        
         position: videoPlayer.position
-        onPlayClicked: {
+        duration: knots.duration;
+        onStopClicked: {
             knots.stop();
-            parent.state = "Browsing";
+            backlightControllerTimer.stop()
+            videoPlayer.playing=false;
+            screen.state = "Browsing";
+        }
+        onPlayClicked: {
+            if( videoPlayer.playing ) {
+                videoPlayer.playing = false;
+                playLabel = "Play";
+            } else {
+                videoPlayer.playing = true;                
+                playLabel = "Pause"
+            }
+        }
+        onSeek: {
+            console.log( "PlayingView - Seeking" + position)
+            knots.seek( position );
         }
 
+    }
+
+    ScreenSaver {
+        id: backlightControl
+        screenSaverDelayed: true
+    }
+
+    Timer {
+        id: backlightControllerTimer
+        interval: 20000 // 20 seconds
+        repeat:  true
+        onTriggered: {
+            backlightControl.screenSaverDelayed = true;
+            console.log( "Delayed Screensaver")
+        }
     }
 
     states: [

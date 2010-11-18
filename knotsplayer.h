@@ -17,6 +17,7 @@ class KnotsPlayer : public QObject
 {
     Q_OBJECT
 
+public:
     enum PlayingState
     {
         WaitingForPortInfo,
@@ -28,6 +29,7 @@ class KnotsPlayer : public QObject
 
 signals:
     void sourceChanged(QString &newSource);
+    void stateChanged( PlayingState newState );
 
 public:
     explicit KnotsPlayer( QObject *parent = 0);
@@ -36,17 +38,15 @@ public:
 
     void stop();
 
-    void seek();
+    void seek(float newPosition );
 
-    void setVideoRect(int x, int y, int width, int height );
+    float duration();
 
 public slots:
 
     void requestFinished( QNetworkReply* reply);
 
-    void onPropertiesUpdated();
-
-    void positionChanged(qint64);
+    void onPropertiesUpdated();    
 
 private:
 
@@ -60,6 +60,7 @@ private:
     QNetworkAccessManager _serverConnection;
     QNetworkReply* _stopRequest;
     QNetworkReply* _playRequest;
+    QNetworkReply* _seekRequest;
 
     QString _playerId;
     QString _password;

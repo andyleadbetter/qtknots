@@ -109,7 +109,10 @@ bool KnotsPlayerProperties::endElement(const QString & /* namespaceURI */,
         _address = _currentText;
     } else if ( localName == "looped" ) {
         _looped = _currentText;
+    } else if ( localName == "duration") {
+        _duration = _currentText;
     }
+
 
 return true;
 }

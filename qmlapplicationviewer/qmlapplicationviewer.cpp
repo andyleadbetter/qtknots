@@ -7,6 +7,7 @@
 #include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
+#include <QtOpenGL/QGLWidget>
 
 #if defined(QMLJSDEBUGGER) && !defined(NO_JSDEBUGGER)
 #include <jsdebuggeragent.h>
@@ -48,10 +49,24 @@ QString QmlApplicationViewerPrivate::adjustPath(const QString &path)
     return path;
 }
 
-QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
+QmlApplicationViewer::QmlApplicationViewer(QWidget *parent, bool useOpenGL ) :
     QDeclarativeView(parent),
     m_d(new QmlApplicationViewerPrivate)
 {
+    // Set optimizations not already done in QDeclarativeView
+    setAttribute(Qt::WA_OpaquePaintEvent);
+    setAttribute(Qt::WA_NoSystemBackground); // Make QDeclarativeView use OpenGL backend
+
+    if( useOpenGL )
+    {
+        QGLWidget *glWidget = new QGLWidget(this);
+        glWidget->setAutoFillBackground(false);
+        setViewport(glWidget);
+        setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+        QGLFormat format = QGLFormat::defaultFormat();
+        format.setSampleBuffers(false);
+    }
+
     connect(engine(), SIGNAL(quit()), SLOT(close()));
     setResizeMode(QDeclarativeView::SizeRootObjectToView);
 #if defined(QMLJSDEBUGGER) && !defined(NO_JSDEBUGGER)

@@ -34,6 +34,8 @@ public slots:
 
 public:
 
+    bool operator== (const KnotsItem& rhs );
+
     enum Types {
         CATEGORY = 0,
         TAG = 1,
@@ -83,18 +85,18 @@ public:
     /**
       *
       */
-    QString _mid;
     QString _id;
+    QString _mid;
     QString _directoryId;
     QString _text;
-    int _type;
+    int _modelIndex;
     QUrl _itemImage;
     QHash<QString,QString> _fields;
     QString _mediaType;
-    int _intId;
+    int _type;
 
 };
 
-typedef QMap<QString, KnotsItem*> KnotsItemListImpl;
+typedef QList<KnotsItem*> KnotsItemListImpl;
 
 #endif // KNOTSITEM_H

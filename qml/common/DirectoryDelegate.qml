@@ -9,7 +9,7 @@ Component {
             Rectangle { color: "black"; opacity: index % 2 ? 0.6 : 0.8; height: 84; width: wrapper.width; y: 1 }
             Rectangle {
                 x: 6; y: 4; width: 77; height: 77; color: "white"; smooth: true
-                Image { id: thumb; source: thumbnail ; x: 1; y: 1;fillMode: Image.PreserveAspectFit; smooth: true; width: 75; height: 75 }
+                Image { id: thumb; source: thumbnail ; x: 1; y: 1;fillMode: Image.PreserveAspectFit; smooth: true; width: 75; height: 75 ; onStatusChanged:  { console.log("Image Status " + Image.status) } }
                 Image { source: "../images/gloss.png" }
             }
             Column {

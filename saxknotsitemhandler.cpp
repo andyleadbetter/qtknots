@@ -8,10 +8,8 @@ SaxKnotsItemHandler::SaxKnotsItemHandler(KnotsItemListImpl& items )
 
 bool SaxKnotsItemHandler::startDocument()
 {
-    QList<KnotsItem*> values = _items.values();
-    qDeleteAll( values.begin(), values.end());
-    _items.clear();
-
+    _numberItems = 0;
+    qDeleteAll( _items.begin(), _items.end());
     return true;
 }
 
@@ -73,7 +71,8 @@ bool SaxKnotsItemHandler::endElement(const QString & /* namespaceURI */,
         //if this is the end of the item element, then call retrieveData to pull info about this item
         if( localName == "item" ) {
             _currentItem->retrieveData();
-            _items.insert(_currentItem->getId(), _currentItem);
+            _currentItem->_modelIndex = _numberItems++;
+            _items.append(_currentItem);
         }
 
 

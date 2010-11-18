@@ -13,7 +13,7 @@ public:
         Auto
     };
 
-    QmlApplicationViewer(QWidget *parent = 0);
+    QmlApplicationViewer(QWidget *parent = 0, bool useOpenGL = false);
     virtual ~QmlApplicationViewer();
 
     void setMainQmlFile(const QString &file);

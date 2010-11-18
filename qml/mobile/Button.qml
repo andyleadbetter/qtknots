@@ -42,38 +42,108 @@
 import Qt 4.7
 
 Item {
-    id: container
+    id: pushbutton
 
+    property string text: "Text"
+    property bool checkable: false
+    property bool checked: false
+    property url backgroundImage: "";
+    property alias backgroundImageBorder: buttonImage.border;
+    property url activeImage: "";
+    property alias activeImageBorder: buttonActiveImage.border;
+    property url hoverImage: "";
+    property alias hoverImageBorder: buttonHoverImage.border;
     signal clicked
 
-    property string text
+    width: Math.max(text.width + 20, 110)
+    height: Math.max(text.height + 12, 23)
 
     BorderImage {
         id: buttonImage
-        source: "images/toolbutton.sci"
-        width: container.width; height: container.height
+        anchors.fill:parent
+        source: Qt.resolvedUrl(backgroundImage == "" ? "../images/button.png" : backgroundImage);
+        border.left:10;
+        border.top:10;
+        border.right:10;
+        border.bottom:10;
     }
+
     BorderImage {
-        id: pressed
+        id: buttonActiveImage
+        source: Qt.resolvedUrl(activeImage == "" ? "../images/button-active.png" : activeImage);
         opacity: 0
-        source: "images/toolbutton.sci"
-        width: container.width; height: container.height
+
+        anchors.fill: parent
+        border.left: 10
+        border.top: 10
+        border.right: 10
+        border.bottom: 10
     }
+
+    BorderImage {
+        id: buttonHoverImage
+        source: Qt.resolvedUrl(hoverImage == "" ? "../images/button-hover.png" : hoverImage);
+        opacity: 0
+
+        anchors.fill: parent
+        border.left: 10
+        border.top: 10
+        border.right: 10
+        border.bottom: 10
+    }
+
+    Text {
+        id: text
+        font.pixelSize: 12
+        anchors.verticalCenter:parent.verticalCenter
+        anchors.horizontalCenter:parent.horizontalCenter
+        anchors.verticalCenterOffset: pushbutton.state === "pressed" ? 1 : 0
+        anchors.horizontalCenterOffset: pushbutton.state === "pressed" ? 1 : 0
+        text: pushbutton.text
+        color: "#616261";
+    }
+
     MouseArea {
         id: mouseRegion
-        anchors.fill: buttonImage
-        onClicked: { container.clicked(); }
+        hoverEnabled: true
+        anchors.fill: parent
+        onClicked: {
+            if (pushbutton.checkable) {
+                pushbutton.checked = !pushbutton.checked;
+            }
+            pushbutton.clicked();
+        }
     }
-    Text {
-        color: "white"
-        anchors.centerIn: buttonImage; font.bold: true
-        text: container.text; style: Text.Raised; styleColor: "black"
-    }
+
     states: [
         State {
-            name: "Pressed"
-            when: mouseRegion.pressed == true
-            PropertyChanges { target: pressed; opacity: 1 }
+            name: "pressed"
+            when: mouseRegion.pressed || pushbutton.checked
+            PropertyChanges { target: buttonImage; opacity: 0 }
+            PropertyChanges { target: buttonActiveImage; opacity: 1 }
+            PropertyChanges { target: buttonHoverImage; opacity: 0 }
+        },
+        State {
+            name: "highlighted"
+            when: mouseRegion.containsMouse && !pushbutton.checked
+            PropertyChanges { target: buttonImage; opacity: 0 }
+            PropertyChanges { target: buttonActiveImage; opacity: 0 }
+            PropertyChanges { target: buttonHoverImage; opacity: 1 }
         }
     ]
+
+    transitions: [
+        /*Transition {
+            from: "";
+            to: "Pressed"
+            NumberAnimation { properties: "opacity"; duration: 30 }
+            ColorAnimation { properties: "color"; duration: 30 }
+        },*/
+        Transition {
+            from: "highlighted";
+            to: ""
+            NumberAnimation { properties: "opacity"; duration: 130 }
+        }
+    ]
+
 }

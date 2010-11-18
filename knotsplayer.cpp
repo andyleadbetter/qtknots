@@ -17,16 +17,6 @@ KnotsPlayer::KnotsPlayer( QObject *parent )
     , _status( Stopped )
 {
     _properties = new KnotsPlayerProperties;
-//    _playerBackend = new QMediaPlayer;
-//    connect(_playerBackend, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
-
-//    _playerBackend->setVolume(50);
-
-//    _videoWidget = new QVideoWidget(parent);
-//    _playerBackend->setVideoOutput(_videoWidget);
-
-
-
 
     connect( _properties, SIGNAL(propertiesUpdated()), this, SLOT(onPropertiesUpdated()));
     connect( &_serverConnection, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestFinished(QNetworkReply*)));
@@ -57,9 +47,24 @@ void KnotsPlayer::stop()
 }
 
 
-void KnotsPlayer::seek()
+void KnotsPlayer::seek( float newPosition )
 {
+    double percentage = ( duration() - newPosition ) / duration();
 
+    QUrl url = Knots::instance().serverAddress();
+    url.setPath( "/external/seek");
+    url.addQueryItem("player_id", _playerId );
+    url.addQueryItem("position", QString::number( percentage )  );
+
+
+    _seekRequest = _serverConnection.get(QNetworkRequest(url));
+    _status = Seeking;
+}
+
+
+float KnotsPlayer::duration()
+{
+    return _properties->_duration.toFloat()*1000;
 }
 
 void KnotsPlayer::requestFinished( QNetworkReply* reply)
@@ -131,25 +136,10 @@ void KnotsPlayer::onPropertiesUpdated()
     switch( _status )
     {
     case WaitingForPortInfo:        
-//        _playerBackend->setMedia(_properties->_streamUrl);
-//        _playerBackend->play();
         QString source(  _properties->_streamUrl.toString() );
         emit sourceChanged(source);
-
-         _status = Playing;
+        _status = Playing;
         break;
 
     };
 }
-
-void KnotsPlayer::positionChanged( qint64 newPosition)
-{
-}
-
-void  KnotsPlayer::setVideoRect(int x, int y, int width, int height )
-{
-    QRect geometry(x,y,width, height);
-    _videoWidget->setGeometry(geometry);
-    _videoWidget->show();
-}
-
