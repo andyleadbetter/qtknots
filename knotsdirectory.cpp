@@ -30,7 +30,7 @@ KnotsItemListImpl& KnotsDirectoryImpl::items()
     return *_items;
 }
 
-void KnotsDirectoryImpl::directoryFetchFinished( QNetworkReply* reply )
+void KnotsDirectoryImpl::onDirectoryFetchFinished( QNetworkReply* reply )
 {
     qWarning() << "Fetched from " << reply->url() ;
     qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
@@ -64,7 +64,9 @@ void KnotsDirectoryImpl::loadPath(QString &pathToLoad)
 {
     try {
 
-        _parser = new SaxKnotsItemHandler(*_items);
+        _parser = new SaxKnotsItemHandler(0);
+        _parser->setItems(_items);
+
 
         QNetworkRequest request( pathToLoad );
 
@@ -75,8 +77,11 @@ void KnotsDirectoryImpl::loadPath(QString &pathToLoad)
 
         _xmlReader->setContentHandler(_parser);
 
+        connect(_parser, SIGNAL(directoryPagesChanged(int,int)),SLOT(onDirectoryPagesChanged(int,int)));
         connect(&_serverConnection, SIGNAL(finished(QNetworkReply*)),
-                this, SLOT(directoryFetchFinished(QNetworkReply*)));
+                this, SLOT(onDirectoryFetchFinished(QNetworkReply*)));
+        connect( _parser, SIGNAL(itemsAdded()), SLOT(itemsAdded()));
+
     }
 
     catch(...)
@@ -85,3 +90,28 @@ void KnotsDirectoryImpl::loadPath(QString &pathToLoad)
     }
 }
 
+int KnotsDirectoryImpl::getCurrentPage() const
+{
+    return _currentPage;
+}
+
+int KnotsDirectoryImpl::getTotalPages() const
+{
+    return _totalPages;
+}
+
+void KnotsDirectoryImpl::onDirectoryPagesChanged( int currentPage, int totalPages )
+{
+    _currentPage = currentPage;
+    _totalPages = totalPages;
+
+    if( currentPage < totalPages )
+    {
+        qDebug() << "Got " << totalPages << "pages to retrieve";
+    }
+}
+
+void KnotsDirectoryImpl::itemsAdded()
+{
+    emit directoryChanged();
+}

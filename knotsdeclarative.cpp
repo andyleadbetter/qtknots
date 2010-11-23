@@ -10,8 +10,8 @@
 KnotsDeclarative::KnotsDeclarative(QObject *parent)
     : QObject(parent)
     , _instance( Knots::instance())
-{
-    connect( &_instance.player(), SIGNAL(sourceChanged(QString&)), this, SLOT(onSourceChanged(QString&)));    
+{    
+    connect( &_instance.player(), SIGNAL(propertiesChanged(KnotsPlayerProperties)), this, SLOT(onPropertiesUpdated(const KnotsPlayerProperties&)));
 }
 
 void KnotsDeclarative::backSelected()
@@ -41,6 +41,10 @@ float KnotsDeclarative::getDuration()
 }
 
 
+float KnotsDeclarative::getPosition()
+{
+    return _position;
+}
 
 QString KnotsDeclarative::getServerName()
 {
@@ -56,18 +60,41 @@ void KnotsDeclarative::setServerName( QString &newServer )
 
 
 
-void KnotsDeclarative::setCurrentSource( QString &newSource )
+void KnotsDeclarative::setCurrentSource( QString &/*newSource */)
 {
     _source = "";
 }
 
-void KnotsDeclarative::onSourceChanged(QString &source)
-{
-    _source = source;
-    _duration = _instance.player().duration();
+void KnotsDeclarative::onSourceChanged(QString &/*source*/)
+{    
     emit sourceChanged(_source);
-    emit durationChanged(_duration);
 }
+
+void KnotsDeclarative::onPropertiesUpdated(const KnotsPlayerProperties& newProperties )
+{
+
+    _duration = newProperties._duration.toFloat() * 1000;
+    _position = _duration * newProperties._position.toFloat() ;
+
+    QString tmpSource = newProperties._streamUrl.toString();
+    if( _source != tmpSource )
+    {
+        _source = tmpSource;
+        emit sourceChanged(_source);
+    }
+
+    emit durationChanged(_duration);
+    emit positionChanged(_position);
+
+}
+
+
+
+
+
+
+
+
 
 ProfileList::ProfileList( QObject *parent )
     : QAbstractListModel( parent )

@@ -137,7 +137,6 @@ QString KnotsItem::itemSelected()
 
     case ITEM:
         Knots::instance().player().play(_id);
-        newState = "Playing";
         break;
     }
     return newState;

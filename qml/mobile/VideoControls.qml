@@ -57,6 +57,7 @@ Item {
         anchors.right: parent.right
         anchors.verticalCenter: toolbar.verticalCenter
         anchors.margins: 5
+        height: 32;
         onDragged: {
             toolbar.seek();
             console.log( "VideoControls - Dragged" + value)

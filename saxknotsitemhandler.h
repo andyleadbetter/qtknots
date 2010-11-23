@@ -6,9 +6,12 @@
 #include <QXmlDefaultHandler>
 #include "knotsitem.h"
 
-class SaxKnotsItemHandler : public QXmlDefaultHandler
+class SaxKnotsItemHandler
+        : public QObject
+        , public QXmlDefaultHandler
 {
-private:
+    Q_OBJECT
+
     enum CurrentState    {
         Idle,
         ParsingRoot,
@@ -19,10 +22,16 @@ private:
     } _currentState;
 
 
-
+signals:
+    void directoryPagesChanged( int currentPage, int totalPages );
+    void itemsAdded();
 
 public:
-    SaxKnotsItemHandler(KnotsItemListImpl& profiles);
+
+
+    explicit SaxKnotsItemHandler( QObject* parent = 0);
+
+    void setItems( KnotsItemListImpl* items );
 
     bool startDocument();
 
@@ -36,7 +45,6 @@ public:
 
     bool fatalError(const QXmlParseException &exception);
 
-
 private:
     int _currentPage;
     int _totalPages;
@@ -44,7 +52,7 @@ private:
 
     KnotsItem* _currentItem;
 
-    KnotsItemListImpl& _items;
+    KnotsItemListImpl* _items;
 
     QString _currentText;
 

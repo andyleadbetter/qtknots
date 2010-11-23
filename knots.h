@@ -8,13 +8,11 @@
 #include <QNetworkReply>
 #include <QSettings>
 
-#include "qmlapplicationviewer.h"
-#include "knotsplayer.h"
 #include "profile.h"
+#include "mainwindow.h"
 
 class SaxProfileHandler;
 class KnotsDirectoryImpl;
-
 
 
 class Knots : public QObject
@@ -22,6 +20,7 @@ class Knots : public QObject
     Q_OBJECT
 public:
     explicit Knots(QObject *parent = 0);
+    ~Knots();
 
 signals:
     void directoryChanged(KnotsDirectoryImpl* newItems);
@@ -66,6 +65,8 @@ public:
 
     void loadSettings();
 
+    void launch();
+
 private:
     QString _profile;
     QUrl _serverAddress;
@@ -90,8 +91,7 @@ private:
     KnotsPlayer* _player;
     QSettings _settings;
 
-    QmlApplicationViewer _navigator;
-    QmlApplicationViewer _videoPlayer;
+    MainWindow* _mainWindow;
 
 
 };

@@ -51,24 +51,26 @@ QString QmlApplicationViewerPrivate::adjustPath(const QString &path)
 
 QmlApplicationViewer::QmlApplicationViewer(QWidget *parent, bool useOpenGL ) :
     QDeclarativeView(parent),
-    m_d(new QmlApplicationViewerPrivate)
+    m_d(new QmlApplicationViewerPrivate),
+    m_glWidget(0)
 {
     // Set optimizations not already done in QDeclarativeView
     setAttribute(Qt::WA_OpaquePaintEvent);
     setAttribute(Qt::WA_NoSystemBackground); // Make QDeclarativeView use OpenGL backend
+    setAttribute(Qt::WA_DeleteOnClose);
 
     if( useOpenGL )
     {
-        QGLWidget *glWidget = new QGLWidget(this);
-        glWidget->setAutoFillBackground(false);
-        setViewport(glWidget);
+        m_glWidget = new QGLWidget(this);
+        m_glWidget->setAutoFillBackground(false);
+        setViewport(m_glWidget);
         setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
         QGLFormat format = QGLFormat::defaultFormat();
         format.setSampleBuffers(false);
     }
 
     connect(engine(), SIGNAL(quit()), SLOT(close()));
-    setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    setResizeMode(QDeclarativeView::SizeViewToRootObject);
 #if defined(QMLJSDEBUGGER) && !defined(NO_JSDEBUGGER)
     new QmlJSDebugger::JSDebuggerAgent(engine());
 #endif
@@ -80,6 +82,8 @@ QmlApplicationViewer::QmlApplicationViewer(QWidget *parent, bool useOpenGL ) :
 QmlApplicationViewer::~QmlApplicationViewer()
 {
     delete m_d;
+    delete m_glWidget;
+    m_glWidget = 0;
 }
 
 void QmlApplicationViewer::setMainQmlFile(const QString &file)

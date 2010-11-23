@@ -5,6 +5,7 @@
 #include <QAbstractItemModel>
 #include "profile.h"
 #include "knotsdirectory.h"
+#include "knotsplayerproperties.h"
 
 class Knots;
 
@@ -53,24 +54,29 @@ public:
 
     Q_PROPERTY( QString currentSource READ getCurrentSource WRITE setCurrentSource NOTIFY sourceChanged )
     Q_PROPERTY( float duration READ getDuration NOTIFY durationChanged )
+    Q_PROPERTY( float position READ getPosition NOTIFY positionChanged )
     Q_PROPERTY( QString serverName READ getServerName WRITE setServerName )
 
  public slots:
-
     void onSourceChanged( QString &source );
     void backSelected();
     void stop( );
     void seek( float position );
+    void onPropertiesUpdated(const KnotsPlayerProperties& newProperties );
 
 signals:
     void currentPathChanged();
     void sourceChanged(QString &newSource );
     void durationChanged( float newDuration );
+    void positionChanged( float newPosition );
 
 private:
     QString getCurrentSource();
     void setCurrentSource( QString &newSource );
+
     float getDuration();
+    float getPosition();
+
     QString getServerName();
     void setServerName( QString &newServer );
 
@@ -78,6 +84,7 @@ private:
     QString _source;
     QString _serverName;
     float _duration;
+    float _position;
 
 };
 

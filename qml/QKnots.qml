@@ -13,16 +13,6 @@ Item {
         id: knots     
     }
 
-    Common.PlayingView {
-        id: playingView;
-        anchors.top: parent.top;
-        anchors.bottom: parent.bottom;
-        width: parent.width;
-        height: parent.height;
-        x: -parent.width;
-        opacity:  1.0;        
-        }
-
     Rectangle {
         id: page
         anchors.fill: parent; color: "#343434";
@@ -57,8 +47,7 @@ Item {
         State {
             name: "Profile"
             PropertyChanges { target: mainView; x: parent.width }
-            PropertyChanges { target: profilesView; x: 0 }
-            PropertyChanges { target: playingView; x: -parent.width }
+            PropertyChanges { target: profilesView; x: 0 }            
             PropertyChanges { target: page; x: 0 }
             PropertyChanges { target: toolBar; }
             PropertyChanges { target: toolBar; button1Label: "Back"; }
@@ -69,7 +58,7 @@ Item {
             PropertyChanges { target: titleBar; visible: true }
             PropertyChanges { target: page; z: 1}
 
-            PropertyChanges { target: playingView; z:0 }
+
 
         },
         State {
@@ -77,7 +66,6 @@ Item {
             PropertyChanges { target: page; x: 0 }
             PropertyChanges { target: mainView; x: 0 }
             PropertyChanges { target: profilesView; x: -parent.width  }
-            PropertyChanges { target: playingView; x: -parent.width }
             PropertyChanges { target: toolBar; button1Label: "Back"; }
             PropertyChanges { target: toolBar; button2Label: "Profile" }
             PropertyChanges { target: toolBar; onButton1Clicked: knots.backSelected(); }
@@ -85,23 +73,9 @@ Item {
             PropertyChanges { target: toolBar; visible: true }
             PropertyChanges { target: titleBar; visible: true }
             PropertyChanges { target: page; z: 1}
-            PropertyChanges { target: playingView; z:0 }
-
-        },
-        State {
-            name: "Playing"
-            PropertyChanges { target: page; x: parent.width }
-            PropertyChanges { target: mainView; x: parent.width }
-            PropertyChanges { target: profilesView; x: -parent.width }
-            PropertyChanges { target: page; z: 0}
-            PropertyChanges { target: playingView; x:0 }
-            PropertyChanges { target: toolBar; visible: false }
-            PropertyChanges { target: titleBar; visible: false }
-
-            PropertyChanges { target: playingView; z:1 }
         }
-
     ]
+
     transitions: Transition {
         PropertyAnimation { properties: "x"; duration: 200 }
     }

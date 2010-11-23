@@ -46,11 +46,20 @@ Item {
 
     signal dragged
 
+    property bool dragging: false
+
+
     // value is read/write.
     property real value    
     property real maximum: 1
     property real minimum: 0
     property int xMax: slider.width - handle.width - 4;
+
+    onValueChanged: {
+        if( !dragging ) {
+            handle.x = 2 + (value - minimum) * slider.xMax / (maximum - minimum);
+        }
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -73,8 +82,9 @@ Item {
             signal seek;
             anchors.fill: parent; drag.target: parent
             drag.axis: Drag.XAxis; drag.minimumX: 2; drag.maximumX: slider.xMax+2
+            onPressed: { slider.dragging = true }
             onPositionChanged: { value = (maximum - minimum) * (handle.x-2) / slider.xMax + minimum; }
-            onReleased: {console.log( "slider - Released" + value); slider.dragged(); }
-        }
+            onReleased: {console.log( "slider - Released" + value); slider.dragging = false; slider.dragged(); }
+        }       
     }
 }

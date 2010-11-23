@@ -16,11 +16,13 @@ class KnotsDirectoryImpl : public QObject
 
 signals:
 
-    void directoryChanged();
+    void directoryChanged( );
 
 public slots:
 
-    void directoryFetchFinished( QNetworkReply* reply );
+    void onDirectoryFetchFinished( QNetworkReply* reply );
+    void onDirectoryPagesChanged( int currentPage, int totalPages );
+    void itemsAdded();
 
 public:
     virtual ~KnotsDirectoryImpl();
@@ -29,20 +31,31 @@ public:
 
     KnotsItemListImpl& items();
 
+    int getCurrentPage() const;
+    int getTotalPages() const;
+
 private:
 
     void loadPath( QString &pathToLoad  );
 
     explicit KnotsDirectoryImpl(QObject *parent = 0);
 
-    SaxKnotsItemHandler* _parser;
+
+
     QXmlSimpleReader*    _xmlReader;
     QXmlInputSource*     _xmlSource;
+    QNetworkReply* _currentDownload;
+    KnotsItemListImpl* _items;
+    SaxKnotsItemHandler* _parser;
+
+
 
     QNetworkAccessManager _serverConnection;
-    QNetworkReply* _currentDownload;
 
-    KnotsItemListImpl* _items;
+
+
+    int _totalPages;
+    int _currentPage;
 
 
 };

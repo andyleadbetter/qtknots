@@ -1,15 +1,20 @@
 #include "saxknotsitemhandler.h"
 #include "knotsitem.h"
 
-SaxKnotsItemHandler::SaxKnotsItemHandler(KnotsItemListImpl& items )
-    : _items( items )
+SaxKnotsItemHandler::SaxKnotsItemHandler( QObject *parent )
+    : QObject( parent )
 {
+}
+
+void SaxKnotsItemHandler::setItems(KnotsItemListImpl *items)
+{
+    _items = items;
 }
 
 bool SaxKnotsItemHandler::startDocument()
 {
     _numberItems = 0;
-    qDeleteAll( _items.begin(), _items.end());
+    qDeleteAll( _items->begin(), _items->end());
     return true;
 }
 
@@ -22,9 +27,8 @@ bool SaxKnotsItemHandler::startElement(const QString & /* namespaceURI */,
     if( localName == "item") {
         _currentItem = new KnotsItem();
         _currentState = ParsingItem;
-        /*  } else if( localName == "pages" ) {
-            currentPage = new KnotsPage();
-            _currentState = ParsingPage;*/
+    } else if( localName == "pages" ) {
+            _currentState = ParsingPage;
     } else if( localName == "items" ) {
         _currentState = ParsingItems;
     }
@@ -72,11 +76,22 @@ bool SaxKnotsItemHandler::endElement(const QString & /* namespaceURI */,
         if( localName == "item" ) {
             _currentItem->retrieveData();
             _currentItem->_modelIndex = _numberItems++;
-            _items.append(_currentItem);
+            _items->append(_currentItem);
+            emit itemsAdded();
         }
 
 
+    } else if( _currentState == ParsingPage ) {
+        if(localName == "current"){
+            _currentPage = _currentText.toInt();
+        } else if( localName == "total") {
+            _totalPages = _currentText.toInt();
+        } else if( localName == "pages" )
+        {
+            emit directoryPagesChanged( _currentPage, _totalPages );
+        }
     }
+
     return true;
 }
 

@@ -5,11 +5,10 @@
 #include <QObject>
 #include <QString>
 #include <QNetworkAccessManager>
-#include <QMediaPlayer>
-#include <QVideoWidget>
+
 #include <QtDBus/QtDBus>
 
-
+const int KOneSecond = 1000;
 
 class KnotsPlayerProperties;
 
@@ -27,9 +26,10 @@ public:
         Stopped
     } _status;
 
+
 signals:
-    void sourceChanged(QString &newSource);
-    void stateChanged( PlayingState newState );
+    void propertiesChanged(const KnotsPlayerProperties &newProperties );
+    void stateChanged( KnotsPlayer::PlayingState newState );
 
 public:
     explicit KnotsPlayer( QObject *parent = 0);
@@ -42,11 +42,18 @@ public:
 
     float duration();
 
+    ~KnotsPlayer();
+
+    KnotsPlayerProperties& properties();
+
+
 public slots:
 
     void requestFinished( QNetworkReply* reply);
 
     void onPropertiesUpdated();    
+
+    void updateTimeout();
 
 private:
 
@@ -54,6 +61,7 @@ private:
     void stopRequestFinished(QNetworkReply* reply);
     void seekRequestFinished(QNetworkReply* reply);
     void startObservingProperties();
+    void stopObservingProperties();
 
 
 
@@ -64,8 +72,9 @@ private:
 
     QString _playerId;
     QString _password;
-    QMediaPlayer* _playerBackend;
-    QVideoWidget* _videoWidget;
+
+    QTimer* _propertiesUpdateTimer;
+
     KnotsPlayerProperties* _properties;
 
 };

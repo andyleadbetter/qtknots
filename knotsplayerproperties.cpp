@@ -5,6 +5,21 @@
 KnotsPlayerProperties::KnotsPlayerProperties(QObject *parent )
     : QObject( parent )
 {
+
+
+    _xmlReader = new QXmlSimpleReader();
+    _xmlReader->setContentHandler(this);
+
+    connect(&_serverConnection, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(fetchFinished(QNetworkReply*)));
+}
+
+KnotsPlayerProperties::~KnotsPlayerProperties()
+{
+
+    delete _xmlSource; _xmlSource = 0;
+    delete _xmlReader; _xmlReader = 0;
+    disconnect(this);
 }
 
 void KnotsPlayerProperties::updateStatus(QString &playerId, QString &password)
@@ -20,14 +35,7 @@ void KnotsPlayerProperties::updateStatus(QString &playerId, QString &password)
     QNetworkRequest request( statusUrl );
 
     _currentDownload = _serverConnection.get(request);
-
     _xmlSource = new QXmlInputSource( _currentDownload );
-    _xmlReader = new QXmlSimpleReader();
-
-    _xmlReader->setContentHandler(this);
-
-    connect(&_serverConnection, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(fetchFinished(QNetworkReply*)));
 
 }
 
@@ -48,8 +56,9 @@ void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
     _streamUrl.setPort(_port.toInt());
     _streamUrl.setHost( Knots::instance().serverAddress().host());
     _streamUrl.setPath("/" + _stream);
+    delete _xmlSource;
+    _xmlSource=0;
 
-    disconnect(this);
     emit propertiesUpdated();
 }
 
@@ -57,7 +66,6 @@ void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
 
 bool KnotsPlayerProperties::startDocument()
 {
-
     return true;
 }
 

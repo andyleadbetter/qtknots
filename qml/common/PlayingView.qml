@@ -11,7 +11,8 @@ import QtMobility.systeminfo 1.1
 
 
 Rectangle {
-    anchors.fill:  parent
+    width:  800;
+    height: 480;
     id: playingPage;
     Knots {  id: knots }
     state:  "Default"
@@ -33,11 +34,10 @@ Rectangle {
         Keys.onSpacePressed: videoPlayer.paused = !videoPlayer.paused
 
         onErrorChanged: {
-            //console.log( "Video Error:" + errorString)
+            console.log( "Video Error:" + errorString)
         }
 
         onStatusChanged: {
-
         }
 
         onBufferProgressChanged: {
@@ -46,11 +46,13 @@ Rectangle {
         onSourceChanged: {
             //console.log( "Starting Stream @ " + source)
             playing = true;
-            backlightControllerTimer.start()
+            videoControls.position = 0;
+            backlightControllerTimer.start();
+            sliderUpdater.start();
         }
 
         onPositionChanged: {
-            //console.log( "Position :" + position  + "Duration: " + duration)
+//            console.log( "Position :" + position  + "Duration: " + duration)
         }
 
         MouseArea {
@@ -62,14 +64,14 @@ Rectangle {
     Mobile.VideoControls {
         id: videoControls; z: 5
 
-        height: 40; width: parent.width; opacity: 0.9        
-        position: videoPlayer.position
-        duration: knots.duration;
+        height: 40; width: parent.width; opacity: 1.0
+        position: knots.position
+        duration: knots.duration
         onStopClicked: {
             knots.stop();
             backlightControllerTimer.stop()
+            sliderUpdater.stop()
             videoPlayer.playing=false;
-            screen.state = "Browsing";
         }
         onPlayClicked: {
             if( videoPlayer.playing ) {
@@ -102,16 +104,27 @@ Rectangle {
         }
     }
 
+    Timer {
+        id: sliderUpdater
+        interval: 1000 // 1 seconds
+        repeat:  true
+        onTriggered: {
+            videoControls.position = videoControls.position + 1000 ;
+            console.log( "update position slider")
+        }
+    }
+
+
     states: [
         State {
             name: "Fullscreen"
             PropertyChanges { target: videoArea; onClicked: { playingPage.state = "Default" } }
-            PropertyChanges { target: videoControls; y: screen.height; }
+            PropertyChanges { target: videoControls; y: playingPage.height; }
         },
         State {
             name: "Default"
             PropertyChanges { target: videoArea; onClicked: { playingPage.state = "Fullscreen" } }
-            PropertyChanges { target: videoControls; y: screen.height - videoControls.height; }
+            PropertyChanges { target: videoControls; y: playingPage.height - videoControls.height; }
         }
 
     ]

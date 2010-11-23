@@ -49,6 +49,8 @@ public:
 
     bool fatalError(const QXmlParseException &exception);
 
+    ~KnotsPlayerProperties();
+
 public:
 
     QString _seekable;
