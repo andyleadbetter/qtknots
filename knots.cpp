@@ -35,19 +35,25 @@ Knots::Knots(QObject *parent)
 
     loadProfiles();
 
-    browseRoot();
 
     _player = new KnotsPlayer( this );
+    _currentDirectory = new KnotsDirectory(this);
+
+    connect( _currentDirectory , SIGNAL(directoryChanged()), this, SLOT(onDirectoryReady()));
+
 }
 
 void Knots::launch()
 {
+    browseRoot();
+
     _mainWindow = new MainWindow;
 
     _mainWindow->launch();
 
     connect( _player, SIGNAL(stateChanged(KnotsPlayer::PlayingState)), this, SLOT(onPlayerStateChange(KnotsPlayer::PlayingState)));
     connect( _player, SIGNAL(stateChanged(KnotsPlayer::PlayingState)), _mainWindow, SLOT(onPlayerStateChange(KnotsPlayer::PlayingState)));
+    connect(&serverConnection, SIGNAL(finished(QNetworkReply*)), this, SLOT(onProfilesFetched(QNetworkReply*)));
 }
 
 KnotsPlayer& Knots::player()
@@ -86,6 +92,10 @@ QUrl Knots::serverAddress() const
 void Knots::setServerAddress( QUrl &newServerAddress )
 {
     _serverAddress = newServerAddress;
+    _settings.setValue( "ServerAddress", _serverAddress);
+    delete _profiles;
+    delete handler;
+    loadProfiles();
     browseRoot();
 }
 
@@ -105,14 +115,8 @@ void Knots::loadProfiles() {
 
         QNetworkRequest request( requestAddress );
 
-        currentDownload = serverConnection.get(request);
+        _profileFetch = serverConnection.get(request);
 
-        _xmlSource = new QXmlInputSource( currentDownload );
-
-        _xmlReader.setContentHandler(handler);
-
-        connect(&serverConnection, SIGNAL(finished(QNetworkReply*)),
-                 this, SLOT(onProfilesFetched(QNetworkReply*)));
     }
 
     catch(...)
@@ -123,19 +127,28 @@ void Knots::loadProfiles() {
 
 void Knots::onProfilesFetched( QNetworkReply* reply )
 {
-    qWarning() << "Fetched from " << reply->url() ;
-    qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-    qWarning() << reply->peek( 256 );
+    if( reply == _profileFetch )
+    {
+        _xmlSource = new QXmlInputSource( _profileFetch );
+        _xmlReader = new QXmlSimpleReader;
+        _xmlReader->setContentHandler(handler);
+
+        qWarning() << "Fetched from " << reply->url() ;
+        qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
+        qWarning() << reply->peek( 256 );
 
 
-    _xmlReader.parse(_xmlSource );
+        _xmlReader->parse(_xmlSource );
 
-    delete _xmlSource;
+        delete _xmlSource;
+        delete _xmlReader;
+        _xmlReader = 0;
 
 
-    currentDownload->deleteLater();
+        _profileFetch->deleteLater();
 
-    emit profilesChanged(_profiles);
+        emit profilesChanged(_profiles);
+    }
 }
 
 void Knots::browseRoot()
@@ -148,7 +161,7 @@ void Knots::browseByPath( QString &pathToBrowse )
 {
     QString qualifiedDir;
 
-    qualifiedDir = "/external/browse?limit=10000&path=" + pathToBrowse;
+    qualifiedDir = "/external/browse?path=" + pathToBrowse;
     _pathHistory.push(_currentPath);
     _currentPath = qualifiedDir ;
     loadDirectory(qualifiedDir);
@@ -156,7 +169,7 @@ void Knots::browseByPath( QString &pathToBrowse )
 
 void Knots::browseVirtual( QString &virtualPath )
 {
-    QString qualifiedDir("/external/browse?limit=10000&virtual=");
+    QString qualifiedDir("/external/browse?virtual=");
     qualifiedDir += virtualPath ;
 
     _pathHistory.push(_currentPath);
@@ -188,15 +201,8 @@ void Knots::loadDirectory(QString &newPath)
 
     request=_serverAddress.toString();
     request += newPath;
-    KnotsDirectoryImpl* newDir = KnotsDirectoryImpl::browseByPath(request);
+    _currentDirectory->browseByPath(request);
 
-    if( newDir )
-    {
-        connect( newDir, SIGNAL(directoryChanged()), this, SLOT(onDirectoryReady()));
-
-        delete _currentDirectory;
-        _currentDirectory = newDir;
-    }
 }
 
 
@@ -206,7 +212,7 @@ void Knots::onDirectoryReady()
 }
 
 
-void Knots::onPlayerStateChange( KnotsPlayer::PlayingState newState )
+void Knots::onPlayerStateChange( KnotsPlayer::PlayingState /*newState */)
 {
 }
 
@@ -214,4 +220,15 @@ Knots::~Knots()
 {
     delete _mainWindow;
     delete _player;
+}
+
+KnotsDirectory* Knots::currentDirectory() {
+    return _currentDirectory;
+}
+
+void Knots::search( QString &searchTag )
+{
+    QString qualifiedDir = "/external/browse?search=" + searchTag + " &order=added DESC&limit=10000";
+    _currentPath = qualifiedDir ;
+    loadDirectory(qualifiedDir);
 }

@@ -1,7 +1,11 @@
-#include <QtGui/QApplication>
-#include "knots.h"
-#include "knotsdeclarative.h"
 #include <qdeclarative.h>
+#include <QtGui/QApplication>
+
+#include "knots.h"
+#include "knotsdirectory.h"
+#include "knotsdeclarative.h"
+
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

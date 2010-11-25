@@ -55,26 +55,35 @@ Item {
 
     Item {
         id: container
-        width: (parent.width * 2) - 55 ; height: parent.height
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: parent.height
 
-        function accept() {            
-            titleBar.state = ""
+        function changeServer() {
+            titleBar.state = ""            
             knots.serverName =  editor.text;
         }
 
-        Image {
-            id: quitButton
-            anchors.left: parent.left//; anchors.leftMargin: 0
-            anchors.verticalCenter: parent.verticalCenter
-            source: "../images/quit.png"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: Qt.quit()
+        function search() {
+            titleBar.state = ""
+            knots.search(editor.text);
+        }
+
+
+        Button {
+            id: quitButton;
+            text:  ""
+            anchors {
+                left: parent.left
+                verticalCenter: parent.verticalCenter
             }
+            width: 45; height: 32; backgroundImage: "../images/quit.png"; activeImage: "../images/quit.png"; hoverImage: "../images/quit.png"
+            onClicked: Qt.quit()
         }
 
         Text {
             id: categoryText
+            text:  ""
             anchors {
                 left: quitButton.right; right: tagButton.left; leftMargin: 10; rightMargin: 10
                 verticalCenter: parent.verticalCenter
@@ -84,16 +93,34 @@ Item {
         }
 
         Button {
-            id: tagButton; x: titleBar.width - 50; width: 45; height: 32; text: "..."
-            onClicked: if (titleBar.state == "ServerChange") container.accept(); else titleBar.state = "ServerChange"
-            anchors.verticalCenter: parent.verticalCenter
+            id: tagButton;
+            text:  "Search"
+            anchors {
+                right: serverButton.left
+                verticalCenter: parent.verticalCenter
+            }
+            width: 45; height: 32;
+            onClicked: container.search();
+        }
+
+        Button {
+            id: serverButton;
+            text:  "Server"
+            anchors {
+                right: container.right;
+                verticalCenter: parent.verticalCenter
+            }
+            width: 45; height: 32;
+            onClicked: container.changeServer();
         }
 
         Item {
             id: lineEdit
             y: 4; height: parent.height - 9
-            anchors { left: tagButton.right; leftMargin: 5; right: parent.right; rightMargin: 5 }
-
+            anchors {
+                left: quitButton.right; right: tagButton.left; leftMargin: 10; rightMargin: 10
+                verticalCenter: parent.verticalCenter
+            }
             BorderImage { source: "../images/lineedit.sci"; anchors.fill: parent }
 
             TextInput {
@@ -116,12 +143,20 @@ Item {
         }
     }
 
-    states: State {
-        name: "ServerChange"
-        PropertyChanges { target: container; x: -tagButton.x + 5 }
-        PropertyChanges { target: tagButton; text: "OK" }
-        PropertyChanges { target: editor; focus: true }
-    }
+    states: [
+        State {
+            name: "ServerChange"
+            PropertyChanges { target: container; x: -tagButton.x + 5 }
+            PropertyChanges { target: tagButton; text: "OK";  }
+            PropertyChanges { target: editor; text: knots.serverName; focus: true }
+        },
+        State {
+            name: "Search"
+            PropertyChanges { target: container; x: -tagButton.x + 5 }
+            PropertyChanges { target: tagButton; text: "OK"; }
+            PropertyChanges { target: editor; focus: true }
+        }
+    ]
 
     transitions: Transition {
         NumberAnimation { properties: "x"; easing.type: Easing.InOutQuad }

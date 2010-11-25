@@ -60,7 +60,7 @@ Item {
 
     BorderImage {
         id: buttonImage
-        anchors.fill:parent
+        anchors.fill:parent        
         source: Qt.resolvedUrl(backgroundImage == "" ? "../images/button.png" : backgroundImage);
         border.left:10;
         border.top:10;

@@ -24,8 +24,8 @@ Rectangle {
         anchors.top: parent.top;
         anchors.left: parent.left;
         anchors.right: parent.right;
-        autoLoad: false
-        playing: false        
+        autoLoad: true
+        playing: true
         source: knots.currentSource
         fillMode: Video.PreserveAspectFit;
         z: 5
@@ -45,8 +45,9 @@ Rectangle {
         }
         onSourceChanged: {
             //console.log( "Starting Stream @ " + source)
-            playing = true;
-            videoControls.position = 0;
+            playing = source=="" ? false : true;
+            position: knots.position
+            duration: knots.duration
             backlightControllerTimer.start();
             sliderUpdater.start();
         }
@@ -100,7 +101,7 @@ Rectangle {
         repeat:  true
         onTriggered: {
             backlightControl.screenSaverDelayed = true;
-            console.log( "Delayed Screensaver")
+            //console.log( "Delayed Screensaver")
         }
     }
 
@@ -110,7 +111,7 @@ Rectangle {
         repeat:  true
         onTriggered: {
             videoControls.position = videoControls.position + 1000 ;
-            console.log( "update position slider")
+            //console.log( "update position slider")
         }
     }
 

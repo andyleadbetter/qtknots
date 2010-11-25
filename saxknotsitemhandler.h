@@ -6,11 +6,17 @@
 #include <QXmlDefaultHandler>
 #include "knotsitem.h"
 
-class SaxKnotsItemHandler
-        : public QObject
-        , public QXmlDefaultHandler
+class SaxKnotsItemHandlerParserObserver
 {
-    Q_OBJECT
+public:
+    virtual void handleNewItem(KnotsItem* item ) = 0;
+    virtual void handlePages( int totalPages, int currentPage ) = 0;
+};
+
+
+class SaxKnotsItemHandler :
+        public QXmlDefaultHandler
+{
 
     enum CurrentState    {
         Idle,
@@ -22,16 +28,13 @@ class SaxKnotsItemHandler
     } _currentState;
 
 
-signals:
-    void directoryPagesChanged( int currentPage, int totalPages );
-    void itemsAdded();
 
 public:
 
 
-    explicit SaxKnotsItemHandler( QObject* parent = 0);
+    SaxKnotsItemHandler();
 
-    void setItems( KnotsItemListImpl* items );
+    void setItemHandler( SaxKnotsItemHandlerParserObserver* observer );
 
     bool startDocument();
 
@@ -50,9 +53,8 @@ private:
     int _totalPages;
     int _numberItems;
 
+    SaxKnotsItemHandlerParserObserver* _observer;
     KnotsItem* _currentItem;
-
-    KnotsItemListImpl* _items;
 
     QString _currentText;
 

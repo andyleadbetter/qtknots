@@ -3,6 +3,7 @@ import Qt 4.7
 import "common" as Common
 import "mobile" as Mobile
 import Knots 1.0
+import KnotsDirectory 1.0
 
 Item {
     id: screen; width: 800; height: 480
@@ -47,32 +48,31 @@ Item {
         State {
             name: "Profile"
             PropertyChanges { target: mainView; x: parent.width }
-            PropertyChanges { target: profilesView; x: 0 }            
-            PropertyChanges { target: page; x: 0 }
-            PropertyChanges { target: toolBar; }
-            PropertyChanges { target: toolBar; button1Label: "Back"; }
-            PropertyChanges { target: toolBar; button2Label: ""; }
-            PropertyChanges { target: toolBar; onButton1Clicked: screen.state = "Browsing"; }
-            PropertyChanges { target: toolBar; visible: true}
-            PropertyChanges { target: toolBar; visible: true }
+            PropertyChanges { target: profilesView; x: 0 }                        
+            PropertyChanges { target: toolBar;
+                button1Label: "Back";
+                button2Label: "";
+                onButton1Clicked: screen.state = "Browsing";
+                button2Visible: false;
+                button4Visible: false;
+                button3Visible: false;
+            }
             PropertyChanges { target: titleBar; visible: true }
-            PropertyChanges { target: page; z: 1}
-
-
 
         },
         State {
             name: "Browsing"
-            PropertyChanges { target: page; x: 0 }
             PropertyChanges { target: mainView; x: 0 }
             PropertyChanges { target: profilesView; x: -parent.width  }
-            PropertyChanges { target: toolBar; button1Label: "Back"; }
-            PropertyChanges { target: toolBar; button2Label: "Profile" }
-            PropertyChanges { target: toolBar; onButton1Clicked: knots.backSelected(); }
-            PropertyChanges { target: toolBar; onButton2Clicked: screen.state = "Profile" }
-            PropertyChanges { target: toolBar; visible: true }
+            PropertyChanges { target: toolBar;
+                button1Label: "Back";
+                button2Label: "Profile";
+                onButton1Clicked: knots.backSelected();
+                onButton2Clicked: screen.state = "Profile"                
+                button4Visible: false;
+                button3Visible: false;
+            }
             PropertyChanges { target: titleBar; visible: true }
-            PropertyChanges { target: page; z: 1}
         }
     ]
 

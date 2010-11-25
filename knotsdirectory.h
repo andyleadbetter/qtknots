@@ -10,9 +10,15 @@
 class Knots;
 
 
-class KnotsDirectoryImpl : public QObject
+class KnotsDirectory : public QAbstractListModel, public SaxKnotsItemHandlerParserObserver
 {
     Q_OBJECT
+
+    enum ProfileRoles {
+        IdRole = Qt::UserRole + 1,
+        NameRole,
+        ItemImageRole
+    };
 
 signals:
 
@@ -20,42 +26,48 @@ signals:
 
 public slots:
 
+    QString itemSelected( QString itemId );
     void onDirectoryFetchFinished( QNetworkReply* reply );
-    void onDirectoryPagesChanged( int currentPage, int totalPages );
-    void itemsAdded();
+
 
 public:
-    virtual ~KnotsDirectoryImpl();
+    virtual ~KnotsDirectory();
 
-    static KnotsDirectoryImpl* browseByPath( QString &pathToLoad );
+    explicit KnotsDirectory(QObject *parent = 0);
 
-    KnotsItemListImpl& items();
+    void browseByPath( QString &pathToLoad );
 
     int getCurrentPage() const;
+
     int getTotalPages() const;
+
+    int rowCount ( const QModelIndex & /*parent*/) const;
+
+    QVariant data ( const QModelIndex & index, int role ) const;
+
+
+protected:
+
+    void handleNewItem(KnotsItem *item );
+
+    void handlePages(int totalPages, int currentPage);
+
+    void loadPath( QUrl &pathToLoad  );
+
 
 private:
 
-    void loadPath( QString &pathToLoad  );
 
-    explicit KnotsDirectoryImpl(QObject *parent = 0);
-
-
-
+    QUrl _basePath;
     QXmlSimpleReader*    _xmlReader;
     QXmlInputSource*     _xmlSource;
     QNetworkReply* _currentDownload;
-    KnotsItemListImpl* _items;
     SaxKnotsItemHandler* _parser;
-
-
-
     QNetworkAccessManager _serverConnection;
-
-
-
+    QHash<int, QByteArray> _roles;
     int _totalPages;
     int _currentPage;
+    KnotsItemListImpl _items;
 
 
 };

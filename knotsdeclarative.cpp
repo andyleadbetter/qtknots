@@ -12,6 +12,12 @@ KnotsDeclarative::KnotsDeclarative(QObject *parent)
     , _instance( Knots::instance())
 {    
     connect( &_instance.player(), SIGNAL(propertiesChanged(KnotsPlayerProperties)), this, SLOT(onPropertiesUpdated(const KnotsPlayerProperties&)));
+    connect( &_instance, SIGNAL(directoryChanged(KnotsDirectory*)), SIGNAL(directoryChanged(KnotsDirectory*)));
+}
+
+KnotsDirectory* KnotsDeclarative::getDirectory()
+{
+    return _instance.currentDirectory();
 }
 
 void KnotsDeclarative::backSelected()
@@ -58,6 +64,10 @@ void KnotsDeclarative::setServerName( QString &newServer )
     _instance.setServerAddress(url);
 }
 
+void KnotsDeclarative::search( QString searchTag )
+{
+    _instance.search(searchTag);
+}
 
 
 void KnotsDeclarative::setCurrentSource( QString &/*newSource */)
@@ -87,13 +97,6 @@ void KnotsDeclarative::onPropertiesUpdated(const KnotsPlayerProperties& newPrope
     emit positionChanged(_position);
 
 }
-
-
-
-
-
-
-
 
 
 ProfileList::ProfileList( QObject *parent )
@@ -168,90 +171,3 @@ QVariant ProfileList::data ( const QModelIndex & index, int role ) const
 
 }
 
-
-
-KnotsDirectory::KnotsDirectory( QObject *parent )
-    : QAbstractListModel( parent )
-    , _instance( Knots::instance() )
-    , _items(0)
-{
-    _roles[IdRole] = "id";
-    _roles[NameRole] = "name";
-    _roles[ItemImageRole] = "thumbnail";
-    setRoleNames(_roles);
-
-    connect( &_instance, SIGNAL(directoryChanged(KnotsDirectoryImpl*)), SLOT(onDirectoryChanged(KnotsDirectoryImpl*)));
-}
-
-void KnotsDirectory::onDirectoryChanged( KnotsDirectoryImpl* newDirectory )
-{
-    _items = newDirectory;
-    reset();
-}
-
-int KnotsDirectory::rowCount ( const QModelIndex & /*parent*/) const
-{
-    int count = 0;
-
-    if( _items )
-    {
-        count = _items->items().count();
-    }
-    //qDebug() << "Directory has " << count << " entries";
-    return count;
-}
-
-
-QVariant KnotsDirectory::data ( const QModelIndex & index, int role ) const
-{
-
-
-    if( _items == 0 )
-        return QVariant();
-
-    if (!index.isValid())
-        return QVariant(); // Return Null variant if index is invalid
-
-    if (index.row() > (_items->items().count()) )
-        return QVariant();
-
-    KnotsItem *dobj = _items->items().at(index.row());
-
-    if( dobj )
-    {
-#ifdef _DEBUG
-    qDebug() << "Qml asking item " << index.row()
-             << "Name: " << dobj->getText()
-             << "Id: " << dobj->getId()
-             << "thumbnail" << dobj->getItemImage();
-#endif
-        switch (role) {
-        case Qt::DisplayRole: // The default display role now displays the first name as well
-        case IdRole:
-            return QVariant::fromValue(dobj->_modelIndex);
-        case NameRole:
-            return QVariant::fromValue(dobj->getText());
-        case ItemImageRole:
-            return QVariant::fromValue(dobj->getItemImage());
-
-        default:
-            return QVariant();
-        }
-    } else {
-        return QVariant();
-    }
-
-}
-
-
-QString KnotsDirectory::itemSelected( QString itemId )
-{
-    QString newState = "Browsing";
-    KnotsItem* item = 0;
-
-    item = _items->items().at(itemId.toInt());
-
-    newState = item->itemSelected();
-
-    return newState;
-}

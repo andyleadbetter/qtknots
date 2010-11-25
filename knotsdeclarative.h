@@ -56,6 +56,7 @@ public:
     Q_PROPERTY( float duration READ getDuration NOTIFY durationChanged )
     Q_PROPERTY( float position READ getPosition NOTIFY positionChanged )
     Q_PROPERTY( QString serverName READ getServerName WRITE setServerName )
+    Q_PROPERTY( KnotsDirectory *currentDirectory READ getDirectory NOTIFY directoryChanged )
 
  public slots:
     void onSourceChanged( QString &source );
@@ -63,12 +64,15 @@ public:
     void stop( );
     void seek( float position );
     void onPropertiesUpdated(const KnotsPlayerProperties& newProperties );
+    void search( QString searchTag );
 
 signals:
     void currentPathChanged();
     void sourceChanged(QString &newSource );
     void durationChanged( float newDuration );
     void positionChanged( float newPosition );
+    void directoryChanged( KnotsDirectory *newDirectory );
+
 
 private:
     QString getCurrentSource();
@@ -76,6 +80,8 @@ private:
 
     float getDuration();
     float getPosition();
+
+    KnotsDirectory* getDirectory();
 
     QString getServerName();
     void setServerName( QString &newServer );
@@ -86,38 +92,6 @@ private:
     float _duration;
     float _position;
 
-};
-
-
-class KnotsDirectory : public QAbstractListModel
-{
-    Q_OBJECT
-public:
-
-    enum ProfileRoles {
-        IdRole = Qt::UserRole + 1,
-        NameRole,
-        ItemImageRole
-    };
-
-
-
-
-    explicit KnotsDirectory(QObject *parent = 0);
-
-public slots:
-    void onDirectoryChanged(KnotsDirectoryImpl* newDirectory);
-    QString itemSelected( QString itemId );
-public:
-
-    int rowCount ( const QModelIndex & /*parent*/) const;
-
-    QVariant data ( const QModelIndex & index, int role ) const;
-
-private:
-    Knots& _instance;
-    KnotsDirectoryImpl* _items;
-    QHash<int, QByteArray> _roles;
 };
 
 #endif // KNOTSDECLARATIVE_H

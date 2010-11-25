@@ -16,7 +16,7 @@ KnotsPlayer::KnotsPlayer( QObject *parent )
     : QObject( parent )
     , _status( Stopped )
 {
-    _properties = new KnotsPlayerProperties;    
+    _properties = new KnotsPlayerProperties;
     _propertiesUpdateTimer = new QTimer();
 
     connect(_propertiesUpdateTimer, SIGNAL(timeout()), this, SLOT( updateTimeout()));
@@ -39,6 +39,7 @@ void KnotsPlayer::play( QString& id )
 
     _playRequest = _serverConnection.get(QNetworkRequest(url));
     _status = WaitingForPortInfo;
+
 
 }
 
@@ -82,7 +83,7 @@ void KnotsPlayer::requestFinished( QNetworkReply* reply)
         stopRequestFinished(reply);
 
 
-
+    updateTimeout();
 
 }
 
@@ -103,10 +104,8 @@ void KnotsPlayer::startRequestFinished(QNetworkReply* reply)
     _password = tokens[1];
 
     reply->deleteLater();
-    _playRequest = 0;
+    _playRequest = 0;    
 
-
-    startObservingProperties();
 
 }
 
@@ -131,11 +130,13 @@ void KnotsPlayer::stopRequestFinished(QNetworkReply* reply)
 void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)
 {
 
-    qWarning() << "Fetched from " << reply->url() ;
-    qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-    qWarning() << reply->peek( reply->bytesAvailable());
+    //qWarning() << "Fetched from " << reply->url() ;
+    //qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
+    //qWarning() << reply->peek( reply->bytesAvailable());
 
     reply->deleteLater();
+
+    _properties->updateStatus(_playerId,_password);
 }
 
 
@@ -163,7 +164,8 @@ void KnotsPlayer::onPropertiesUpdated()
         break;
        }
     default:
-        qWarning() << "Default State in properties update";
+       // qWarning() << "Default State in properties update";
+        break;
     };
 
     emit propertiesChanged(*_properties);

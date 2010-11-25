@@ -1,20 +1,19 @@
 #include "saxknotsitemhandler.h"
 #include "knotsitem.h"
 
-SaxKnotsItemHandler::SaxKnotsItemHandler( QObject *parent )
-    : QObject( parent )
+SaxKnotsItemHandler::SaxKnotsItemHandler(  )
 {
 }
 
-void SaxKnotsItemHandler::setItems(KnotsItemListImpl *items)
+void SaxKnotsItemHandler::setItemHandler( SaxKnotsItemHandlerParserObserver* observer )
 {
-    _items = items;
+    _observer = observer;
 }
 
 bool SaxKnotsItemHandler::startDocument()
 {
     _numberItems = 0;
-    qDeleteAll( _items->begin(), _items->end());
+
     return true;
 }
 
@@ -34,18 +33,6 @@ bool SaxKnotsItemHandler::startElement(const QString & /* namespaceURI */,
     }
 
     _currentText.clear();
-
-#if 0
-    if( localName.equals("item")) {
-        currentItem = new KnotsItem();
-        status = CurrentState.ParsingItem;
-    } else if( localName.equals("pages")) {
-        currentPage = new KnotsPage();
-        status = CurrentState.ParsingPage;
-    } else if( localName.equals("items")) {
-        status = CurrentState.ParsingItems;
-    }
-#endif
 
     return true;
 }
@@ -74,10 +61,8 @@ bool SaxKnotsItemHandler::endElement(const QString & /* namespaceURI */,
 
         //if this is the end of the item element, then call retrieveData to pull info about this item
         if( localName == "item" ) {
-            _currentItem->retrieveData();
-            _currentItem->_modelIndex = _numberItems++;
-            _items->append(_currentItem);
-            emit itemsAdded();
+            _currentItem->retrieveData();            
+            _observer->handleNewItem(_currentItem);
         }
 
 
@@ -88,7 +73,7 @@ bool SaxKnotsItemHandler::endElement(const QString & /* namespaceURI */,
             _totalPages = _currentText.toInt();
         } else if( localName == "pages" )
         {
-            emit directoryPagesChanged( _currentPage, _totalPages );
+            _observer->handlePages(_totalPages, _currentPage );
         }
     }
 

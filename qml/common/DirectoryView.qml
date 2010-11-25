@@ -1,11 +1,12 @@
 import Qt 4.7
 import "../common" as Common
 import "../mobile" as Mobile
+import Knots 1.0
 import KnotsDirectory 1.0
 
 Rectangle {
 
-    KnotsDirectory { id: knotsData }
+    Knots { id: knotsData }
 
     Item {
         x: 2;
@@ -15,9 +16,8 @@ Rectangle {
 
         DirectoryDelegate { id: listDelegate }
         ListView {
-            id: videoListView; model: knotsData; delegate: listDelegate; z: 6
+            id: videoListView; model: knotsData.currentDirectory; delegate: listDelegate;
             width: parent.width; height: parent.height;
-        }
-
+        }        
     }
 }

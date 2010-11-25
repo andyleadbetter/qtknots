@@ -12,7 +12,7 @@
 #include "mainwindow.h"
 
 class SaxProfileHandler;
-class KnotsDirectoryImpl;
+class KnotsDirectory;
 
 
 class Knots : public QObject
@@ -23,7 +23,7 @@ public:
     ~Knots();
 
 signals:
-    void directoryChanged(KnotsDirectoryImpl* newItems);
+    void directoryChanged(KnotsDirectory* newItems);
 
     void profilesChanged(ProfileListImpl* profiles );
 
@@ -47,6 +47,8 @@ public:
 
     QUrl  serverAddress() const;
 
+    KnotsDirectory* currentDirectory();
+
     void setServerAddress( QUrl &newServerAddress );
 
     void browseByPath( QString &pathToBrowse );
@@ -67,18 +69,21 @@ public:
 
     void launch();
 
+    void search( QString &searchTag );
+
 private:
     QString _profile;
     QUrl _serverAddress;
     QString _currentPath;
     QString _playerId;
 
-    QXmlSimpleReader _xmlReader;
+    QXmlSimpleReader* _xmlReader;
     QXmlInputSource  *_xmlSource;
 
 
     QNetworkAccessManager serverConnection;
     QNetworkReply* currentDownload;
+    QNetworkReply* _profileFetch;
 
     QStack<QString> _pathHistory;
 
@@ -87,7 +92,7 @@ private:
     static Knots* _instance;
 
     ProfileListImpl* _profiles;
-    KnotsDirectoryImpl* _currentDirectory;
+    KnotsDirectory* _currentDirectory;
     KnotsPlayer* _player;
     QSettings _settings;
 

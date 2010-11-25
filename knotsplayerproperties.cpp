@@ -41,9 +41,9 @@ void KnotsPlayerProperties::updateStatus(QString &playerId, QString &password)
 
 void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
 {
-    qWarning() << "Fetched from " << reply->url() ;
-    qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-    qWarning() << reply->peek( 256 );
+   // qWarning() << "Fetched from " << reply->url() ;
+   // qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
+   // qWarning() << reply->peek( 256 );
 
 
     _xmlReader->parse(_xmlSource );

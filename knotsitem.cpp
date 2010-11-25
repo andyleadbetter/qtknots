@@ -88,7 +88,6 @@ void KnotsItem::setItemImage() {
             _itemImage.addQueryItem("mid",_mid);
             _itemImage.addQueryItem("mediatype","0");
             _itemImage.setPath("/root/resource_file");
-            qDebug() << _itemImage.toString();
         } else {
             if( _type == DIR ) {
                 _itemImage = "/qml/images/knots_dir.png";
@@ -111,7 +110,7 @@ QHash<QString, QString>& KnotsItem::getFields() {
 
 
 void KnotsItem::retrieveData() {
-    int local_type = getType();
+    (void)getType();
     setItemImage();
 }
 

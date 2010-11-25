@@ -46,9 +46,21 @@ Item {
 
 
     property alias button1Label: button1.text
-    property alias button2Label: button2.text
+    property alias button2Label: button2.text    
+    property alias button3Label: button3.text
+    property alias button4Label: button4.text
+
+    property alias button1Visible: button1.visible
+    property alias button2Visible: button2.visible
+    property alias button3Visible: button3.visible
+    property alias button4Visible: button4.visible
+
+
     signal button1Clicked
     signal button2Clicked
+    signal button3Clicked
+    signal button4Clicked
+
 
     BorderImage { source: "../images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
 
@@ -60,7 +72,19 @@ Item {
 
     Button {
         id: button2
-        anchors.right: parent.right; anchors.rightMargin: 5; y: 3; width: 140; height: 32
+        anchors.left: button1.right; anchors.rightMargin: 5; y: 3; width: 140; height: 32
         onClicked: toolbar.button2Clicked()
+    }
+
+    Button {
+        id: button3
+        anchors.left: button2.right; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+        onClicked: toolbar.button3Clicked()
+    }
+
+    Button {
+        id: button4
+        anchors.left: button3.right; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+        onClicked: toolbar.button4Clicked()
     }
 }
