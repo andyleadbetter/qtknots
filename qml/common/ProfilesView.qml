@@ -1,5 +1,5 @@
 import Qt 4.7
-import "../mobile" as Mobile
+
 import "../common" as Common
 import ProfilesList 1.0
 

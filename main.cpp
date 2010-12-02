@@ -10,6 +10,8 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+    app.setGraphicsSystem("raster");
+
     Knots::instance();
 
     qmlRegisterType<KnotsDeclarative>("Knots", 1, 0, "Knots");

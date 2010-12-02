@@ -1,7 +1,6 @@
 
 import Qt 4.7
 import "common" as Common
-import "mobile" as Mobile
 import Knots 1.0
 import KnotsDirectory 1.0
 
@@ -9,6 +8,7 @@ Item {
     id: screen; width: 800; height: 480
     state: "Browsing"
 
+    property string defaultView: "List"
 
     Knots {
         id: knots     
@@ -16,66 +16,134 @@ Item {
 
     Rectangle {
         id: page
-        anchors.fill: parent; color: "#343434";
+        anchors.fill: parent;
+        color: "#343434";
 
 
-        Image { source: "images/stripes.png"; fillMode: Image.Tile; anchors.fill: parent; opacity: 0.3 }
+        Common.TitleBar { id: titleBar; anchors.top:  page.top; opacity: 0.9; z: 5 }
 
-        Mobile.TitleBar { id: titleBar; width: parent.width; height: 40; opacity: 0.9; z: 5 }
-
-        Common.DirectoryView {
-            id: mainView;
+        Loader {
+            id: directoryView
+            sourceComponent: defaultView=="List" ? directory : grid ;
             width: parent.width;
             anchors.top: titleBar.bottom;
+            //anchors.topMargin: defaultView=="Grid" ? 20 : 0;
             anchors.bottom: toolBar.top;
+        }
+
+        Common.ToolBar {
+            id: toolBar; z: 5; anchors.bottom: parent.bottom;
+            opacity: 0.9
+            button1Label: "Profile"; button2Label: "Back"
+        }
+
+
+        Component {
+            id: grid
+            GridView {
+                anchors.fill: parent
+                id: videoGridView;
+                delegate: Common.GridDelegate {}
+                model: knots.currentDirectory
+            }
+        }
+
+        Component {
+            id: directory
+            ListView {
+                anchors.fill: parent
+                id: videoListView; delegate: Common.DirectoryDelegate {}
+                model: knots.currentDirectory
+            }
         }
 
         Common.ProfilesView {
             id: profilesView;
-            x: -parent.width;
+            x: 2*parent.width;
             width: parent.width;
             anchors.top: titleBar.bottom;
             anchors.bottom: toolBar.top;
         }
 
-        Mobile.ToolBar {
-            id: toolBar; z: 5
-            height: 40; anchors.bottom: parent.bottom; width: parent.width; opacity: 0.9
-            button1Label: "Profile"; button2Label: "Back"        
+
+        Common.OptionsView {
+            id: optionsView;
+            x: parent.width;
+            width: parent.width;
+            anchors.top: titleBar.bottom;
+            anchors.bottom: toolBar.top;
+        }
+
+
+        Common.SearchView {
+            id: searchView;
+            x: parent.width;
+            width: parent.width;
+            anchors.top: titleBar.bottom;
+            anchors.bottom: toolBar.top;
         }
     }
+
     states: [
+
         State {
-            name: "Profile"
-            PropertyChanges { target: mainView; x: parent.width }
-            PropertyChanges { target: profilesView; x: 0 }                        
+            name: "Browsing"
+            PropertyChanges { target: directoryView; x: 0 }
+            PropertyChanges { target: optionsView; x: parent.width  }
+            PropertyChanges { target: profilesView; x: 2*parent.width  }
+            PropertyChanges { target: searchView; x:   2*parent.width  }
             PropertyChanges { target: toolBar;
                 button1Label: "Back";
-                button2Label: "";
-                onButton1Clicked: screen.state = "Browsing";
+                button2Label: "Options";
+                onButton1Clicked: knots.backSelected();
+                onButton2Clicked: screen.state = "Options"
+                button4Visible: false;
+                button3Visible: false;
+            }
+        },
+        State {
+            name: "Options"
+            PropertyChanges { target: directoryView; x: -parent.width }
+            PropertyChanges { target: profilesView;  x: parent.width  }
+            PropertyChanges { target: searchView;    x: parent.width  }
+            PropertyChanges { target: optionsView;   x: 0}
+            PropertyChanges { target: toolBar;
+                button1Label: "Back";
+                onButton1Clicked: screen.state = "Browsing"
+                button2Visible: false
+                button4Visible: false;
+                button3Visible: false;
+            }
+        },
+        State {
+            name: "Profile"
+            PropertyChanges { target: profilesView; x: 0}
+            PropertyChanges { target: directoryView; x: -2*parent.width  }
+            PropertyChanges { target: searchView; x:  parent.width  }
+            PropertyChanges { target: optionsView; x: -parent.width  }
+            PropertyChanges { target: toolBar;
+                button1Label: "Back";
+                onButton1Clicked: screen.state = "Options";
                 button2Visible: false;
                 button4Visible: false;
                 button3Visible: false;
             }
-            PropertyChanges { target: titleBar; visible: true }
-
         },
         State {
-            name: "Browsing"
-            PropertyChanges { target: mainView; x: 0 }
-            PropertyChanges { target: profilesView; x: -parent.width  }
+            name: "Searching"
+            PropertyChanges { target: searchView; x: 0}
+            PropertyChanges { target: directoryView; x: parent.width  }
+            PropertyChanges { target: optionsView; x: -parent.width  }
+            PropertyChanges { target: profilesView; x: -2*parent.width  }
             PropertyChanges { target: toolBar;
                 button1Label: "Back";
-                button2Label: "Profile";
-                onButton1Clicked: knots.backSelected();
-                onButton2Clicked: screen.state = "Profile"                
+                onButton1Clicked: screen.state = "Options";
+                button2Visible: false;
                 button4Visible: false;
                 button3Visible: false;
             }
-            PropertyChanges { target: titleBar; visible: true }
         }
     ]
-
     transitions: Transition {
         PropertyAnimation { properties: "x"; duration: 200 }
     }

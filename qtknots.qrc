@@ -10,20 +10,6 @@
         <file>qml/images/titlebar.sci</file>
         <file>qml/images/toolbutton.png</file>
         <file>qml/images/toolbutton.sci</file>
-        <file>qml/common/Directory.qml</file>
-        <file>qml/common/DirectoryDelegate.qml</file>
-        <file>qml/common/DirectoryView.qml</file>
-        <file>qml/common/PlayingView.qml</file>
-        <file>qml/common/ProfilesDelegate.qml</file>
-        <file>qml/common/ProfilesView.qml</file>
-        <file>qml/common/Progress.qml</file>
-        <file>qml/common/scrollbar.qml</file>
-        <file>qml/common/Slider.qml</file>
-        <file>qml/mobile/Button.qml</file>
-        <file>qml/mobile/GridDelegate.qml</file>
-        <file>qml/mobile/ImageDetails.qml</file>
-        <file>qml/mobile/TitleBar.qml</file>
-        <file>qml/mobile/ToolBar.qml</file>
         <file>qml/images/knots2.png</file>
         <file>qml/images/knots_button_add_to_playlist.png</file>
         <file>qml/images/knots_button_back.png</file>
@@ -53,7 +39,6 @@
         <file>qml/images/knots_item_music.png</file>
         <file>qml/images/knots_item_server.png</file>
         <file>qml/images/knots_item_video.png</file>
-        <file>qml/mobile/VideoControls.qml</file>
         <file>qml/images/button-active.png</file>
         <file>qml/images/button-hover.png</file>
         <file>qml/images/button.png</file>
@@ -129,5 +114,24 @@
         <file>qml/images/toggle-handle.png</file>
         <file>qml/images/toolbar-button-hover.png</file>
         <file>qml/images/tooltip-background.png</file>
+        <file>qml/common/OptionsView.qml</file>
+        <file>qml/common/OptionsModel.qml</file>
+        <file>qml/common/Button.qml</file>
+        <file>qml/common/OptionsPage.qml</file>
+        <file>qml/common/SearchView.qml</file>
+        <file>qml/common/TitleBar.qml</file>
+        <file>qml/common/ToolBar.qml</file>
+        <file>qml/common/VideoControls.qml</file>
+        <file>qml/common/Directory.qml</file>
+        <file>qml/common/DirectoryDelegate.qml</file>
+        <file>qml/common/DirectoryView.qml</file>
+        <file>qml/common/PlayingView.qml</file>
+        <file>qml/common/ProfilesDelegate.qml</file>
+        <file>qml/common/ProfilesView.qml</file>
+        <file>qml/common/Progress.qml</file>
+        <file>qml/common/scrollbar.qml</file>
+        <file>qml/common/Slider.qml</file>
+        <file>qml/common/GridDelegate.qml</file>
+        <file>qml/common/GridView.qml</file>
     </qresource>
 </RCC>

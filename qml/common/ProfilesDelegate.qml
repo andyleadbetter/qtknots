@@ -18,7 +18,7 @@ Component {
             anchors.fill: wrapper
             onClicked: {
                 console.log( "Clicked " + index )
-                screen.state = "Browsing"
+                screen.state = "Options"
                 profilesModel.currentProfile = index;
             }
 

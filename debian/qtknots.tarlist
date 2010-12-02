@@ -1,0 +1,4 @@
+755 root root . usr /
+755 root root . usr/local /
+755 root root . usr/local/bin /
+755 root root . usr/local/bin/qtknots debian/qtknots/usr/local/bin/qtknots

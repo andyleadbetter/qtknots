@@ -1,6 +1,6 @@
 import Qt 4.7
 import "../common" as Common
-import "../mobile" as Mobile
+
 import Knots 1.0
 
 import QtMultimediaKit 1.1
@@ -46,8 +46,6 @@ Rectangle {
         onSourceChanged: {
             //console.log( "Starting Stream @ " + source)
             playing = source=="" ? false : true;
-            position: knots.position
-            duration: knots.duration
             backlightControllerTimer.start();
             sliderUpdater.start();
         }
@@ -62,7 +60,7 @@ Rectangle {
         }
     }
 
-    Mobile.VideoControls {
+    Common.VideoControls {
         id: videoControls; z: 5
 
         height: 40; width: parent.width; opacity: 1.0

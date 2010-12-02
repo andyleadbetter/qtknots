@@ -152,11 +152,8 @@ QVariant KnotsDirectory::data ( const QModelIndex & index, int role ) const
     if( dobj )
     {
 
-/*        qDebug() << "Qml asking item " << index.row()
-                 << "Name: " << dobj->getText()
-                 << "Id: " << dobj->getId()
-                 << "thumbnail" << dobj->getItemImage();
-*/
+        //qDebug() << "Qml asking item " << index.row() << "Name: " << dobj->getText() << "Id: " << dobj->getId() << "thumbnail" << dobj->getItemImage();
+
         switch (role) {
         case Qt::DisplayRole: // The default display role now displays the first name as well
         case IdRole:

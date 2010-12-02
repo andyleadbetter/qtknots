@@ -1,0 +1,22 @@
+Format: 1.8
+Date: Sat, 23 Oct 2010 15:36:57 +0100
+Source: qtknots
+Binary: qtknots
+Architecture: armel
+Version: 0.0.1
+Distribution: unstable
+Urgency: low
+Maintainer: unknown <>
+Changed-By: unknown <>
+Description: 
+ qtknots    - <insert up to 60 chars description>
+Changes: 
+ qtknots (0.0.1) unstable; urgency=low
+ .
+   * Initial Release.
+Checksums-Sha1: 
+ 688aa7b2ee96bb2da87686c02a5b7c64fc5b4269 1058998 qtknots_0.0.1_armel.deb
+Checksums-Sha256: 
+ 361a421f2a20668aceed692d314392cc96cf5e716fd989ad390eeca29802d5d1 1058998 qtknots_0.0.1_armel.deb
+Files: 
+ af62e2d283d99a71154a6e76f1cd3458 1058998 user/hidden optional qtknots_0.0.1_armel.deb
