@@ -14,6 +14,7 @@ public:
     void launch();
     ~MainWindow();
 
+    void switchViews(bool showPlayer);
 signals:
 
 public slots:

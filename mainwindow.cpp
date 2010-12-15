@@ -1,4 +1,5 @@
 #include <qdeclarative.h>
+#include <qdeclarativeengine.h>
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include "mainwindow.h"
@@ -12,20 +13,24 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::launch()
 {
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6) || defined( Q_OS_SYMBIAN )
-    _navigator = new QmlApplicationViewer( this, true );
+    _navigator = new QmlApplicationViewer( this );
 #else
-    _navigator = new QmlApplicationViewer( this, false );
+    _navigator = new QmlApplicationViewer( this );
 #endif
-    _navigator->setOrientation(QmlApplicationViewer::Auto);
-    _navigator->setMainQmlFile("qrc:///qml/QKnots.qml");
-    _navigator->show();
+    _navigator->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
+    _navigator->setResizeMode(QDeclarativeView::SizeViewToRootObject);
+    _navigator->setSource(QUrl("qrc:///qml/QKnots.qml"));
 
-    _videoPlayer = new QmlApplicationViewer( this, false);
-    _videoPlayer->setOrientation(QmlApplicationViewer::Auto);
-    _videoPlayer->setMainQmlFile("qrc:///qml/common/PlayingView.qml");
-    _videoPlayer->hide();
 
-    connect( _navigator, SIGNAL(destroyed()), this, SLOT(onQmlFinished()));
+    _videoPlayer = new QmlApplicationViewer( this );
+    _videoPlayer->setOrientation(QmlApplicationViewer::ScreenOrientationLockLandscape);
+    _videoPlayer->setResizeMode(QDeclarativeView::SizeViewToRootObject);
+    _videoPlayer->setSource(QUrl("qrc:///qml/common/PlayingView.qml"));
+
+     QObject::connect(_navigator->engine(), SIGNAL(quit()), QCoreApplication::instance(),SLOT(quit()));
+
+
+    switchViews(false);
 
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6) || defined( Q_OS_SYMBIAN )
     showFullScreen();
@@ -34,16 +39,24 @@ void MainWindow::launch()
 #endif
 }
 
+void MainWindow::switchViews( bool showPlayer )
+{
+    if( showPlayer )
+    {
+        _navigator->hide();
+        _videoPlayer->showExpanded();
+    }
+    else
+    {
+        _navigator->showExpanded();
+        _videoPlayer->hide();
+    }
+
+}
+
 void MainWindow::onPlayerStateChange( KnotsPlayer::PlayingState newState )
 {
-    if( KnotsPlayer::Playing == newState )
-    {
-        _videoPlayer->show();
-        _navigator->hide();
-    } else {
-        _videoPlayer->hide();
-        _navigator->show();
-    }
+    switchViews(KnotsPlayer::Playing == newState );
 }
 
 MainWindow::~MainWindow()
@@ -55,4 +68,6 @@ MainWindow::~MainWindow()
 void MainWindow::onQmlFinished()
 {
     close();
+    _navigator->close();
+    _videoPlayer->close();
 }

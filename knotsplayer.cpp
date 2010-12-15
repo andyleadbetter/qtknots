@@ -18,14 +18,26 @@ KnotsPlayer::KnotsPlayer( QObject *parent )
 {
     _properties = new KnotsPlayerProperties;
     _propertiesUpdateTimer = new QTimer();
+    _backlightTimer = new QTimer();
 
     connect(_propertiesUpdateTimer, SIGNAL(timeout()), this, SLOT( updateTimeout()));
+
+    connect(_backlightTimer, SIGNAL(timeout()), this, SLOT(onBacklightTimer()));
+
     connect( _properties, SIGNAL(propertiesUpdated()), this, SLOT(onPropertiesUpdated()));
     connect( &_serverConnection, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestFinished(QNetworkReply*)));
+
+#if defined(Q_WS_MAEMO_5)
+    _ossoContext = osso_initialize("QtKnots","1.0",true, 0);
+#endif
+
 }
 
 KnotsPlayer::~KnotsPlayer()
 {
+#if defined(Q_WS_MAEMO_5)
+    osso_deinitialize( _ossoContext );
+#endif
     delete _properties;
 }
 
@@ -106,6 +118,8 @@ void KnotsPlayer::startRequestFinished(QNetworkReply* reply)
     reply->deleteLater();
     _playRequest = 0;    
 
+    startBacklightKeepAlive();
+
 
 }
 
@@ -125,6 +139,31 @@ void KnotsPlayer::stopRequestFinished(QNetworkReply* reply)
     _status = Stopped;
     emit stateChanged(_status);
 
+
+    stopBacklightKeepAlive();
+
+}
+
+
+void KnotsPlayer::startBacklightKeepAlive()
+{
+    _backlightTimer->start(5000);
+}
+
+void KnotsPlayer::stopBacklightKeepAlive()
+{
+    _backlightTimer->stop();
+}
+
+void KnotsPlayer::onBacklightTimer()
+{
+#if defined(Q_WS_MAEMO_5)
+    osso_return_t err = osso_display_state_on(_ossoContext);
+    qWarning() << "Turned on display for playback with result " << err;
+
+    err = osso_display_blanking_pause( _ossoContext );
+    qWarning() << "Request backlight result " << err ;
+#endif
 }
 
 void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)

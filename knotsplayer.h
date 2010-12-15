@@ -6,6 +6,10 @@
 #include <QString>
 #include <QNetworkAccessManager>
 
+#if defined(Q_WS_MAEMO_5)
+#include <libosso.h>
+#endif
+
 #include <QtDBus/QtDBus>
 
 const int KOneSecond = 1000;
@@ -47,6 +51,9 @@ public:
     KnotsPlayerProperties& properties();
 
 
+    void startBacklightKeepAlive();
+    void stopBacklightKeepAlive();
+    void onBacklightTimer();
 public slots:
 
     void requestFinished( QNetworkReply* reply);
@@ -74,8 +81,14 @@ private:
     QString _password;
 
     QTimer* _propertiesUpdateTimer;
-
+    QTimer* _backlightTimer;
     KnotsPlayerProperties* _properties;
+
+
+#if defined(Q_WS_MAEMO_5)
+    osso_context_t* _ossoContext;
+#endif
+
 
 };
 

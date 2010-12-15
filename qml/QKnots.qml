@@ -8,7 +8,7 @@ Item {
     id: screen; width: 800; height: 480
     state: "Browsing"
 
-    property string defaultView: "List"
+    property string defaultView: "Grid"
 
     Knots {
         id: knots     
@@ -20,20 +20,18 @@ Item {
         color: "#343434";
 
 
-        Common.TitleBar { id: titleBar; anchors.top:  page.top; opacity: 0.9; z: 5 }
+        Common.TitleBar { id: titleBar; anchors.top:  page.top; z: 5 }
 
         Loader {
             id: directoryView
             sourceComponent: defaultView=="List" ? directory : grid ;
             width: parent.width;
             anchors.top: titleBar.bottom;
-            //anchors.topMargin: defaultView=="Grid" ? 20 : 0;
             anchors.bottom: toolBar.top;
         }
 
         Common.ToolBar {
-            id: toolBar; z: 5; anchors.bottom: parent.bottom;
-            opacity: 0.9
+            id: toolBar; z: 5; anchors.bottom: parent.bottom;            
             button1Label: "Profile"; button2Label: "Back"
         }
 
@@ -43,6 +41,8 @@ Item {
             GridView {
                 anchors.fill: parent
                 id: videoGridView;
+                cellHeight:  200
+                cellWidth: 200
                 delegate: Common.GridDelegate {}
                 model: knots.currentDirectory
             }
