@@ -42,7 +42,7 @@
 import Qt 4.7
 
 Item {
-    id: slider; width: 400; height: 16
+    id: slider; height: 16
 
     signal dragged
 
@@ -53,7 +53,8 @@ Item {
     property real value    
     property real maximum: 1
     property real minimum: 0
-    property int xMax: slider.width - handle.width - 4;
+    property int xMax: slider.width - handle.width - 4
+    property real stepPerPixel: ( maximum - minimum ) / width
 
     onValueChanged: {
         if( !dragging ) {
@@ -70,6 +71,34 @@ Item {
         }
     }
 
+    MouseArea {
+        id: grooveMouseAreaLessThanHandle
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: handle.left
+        anchors.left: parent.left
+        height: slider.height
+        onPressed: {
+            value =  Math.min( value, value - ( 5 * stepPerPixel ) )
+
+            console.log( "Position after press " + value );
+        }
+    }
+
+    MouseArea {
+        id: grooveMouseAreaPastThanHandle
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: handle.right
+        anchors.right: parent.right
+
+        onPressed: {
+            value =  Math.max( value, value + ( 5 * stepPerPixel ) )
+            console.log( "Position after press " + value );
+        }
+    }
+
+
     Rectangle {
         id: handle; smooth: true
         x: slider.width / 2 - handle.width / 2; y: 2; width: 30; height: slider.height-4; radius: 6
@@ -85,6 +114,7 @@ Item {
             onPressed: { slider.dragging = true }
             onPositionChanged: { value = (maximum - minimum) * (handle.x-2) / slider.xMax + minimum; }
             onReleased: {console.log( "slider - Released" + value); slider.dragging = false; slider.dragged(); }
-        }       
+        }
     }
+
 }

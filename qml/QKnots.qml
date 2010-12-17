@@ -17,7 +17,7 @@ Item {
     Rectangle {
         id: page
         anchors.fill: parent;
-        color: "#343434";
+        color: defaultView == "List" ? "#343434" : "white";
 
 
         Common.TitleBar { id: titleBar; anchors.top:  page.top; z: 5;  onTaskSwitch: knots.taskSwitch() }
@@ -41,11 +41,13 @@ Item {
             GridView {
                 anchors.fill: parent
                 id: videoGridView;
-                cellHeight:  200
-                cellWidth: 200
+                cellHeight:  cellWidth
+                cellWidth: parent.width / 4
                 delegate: Common.GridDelegate {}
                 model: knots.currentDirectory
+
             }
+
         }
 
         Component {

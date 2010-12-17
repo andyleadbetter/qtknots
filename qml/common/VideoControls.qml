@@ -17,37 +17,50 @@ Item {
     signal stopClicked
     signal seek
 
+    height:  64
+
+
     BorderImage { source: "../images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
 
     Button {
+        id: prev
+        activeImage: "../images/knots_button_prev.png"
+        hoverImage: activeImage
+        backgroundImage: activeImage
+        anchors.left: parent.left ; anchors.rightMargin: 5; y: 3;
+        width: 64; height: 64
+        onClicked: toolbar.prevClicked()
+    }
+
+    Button {
         id: stop
-        text: "Stop"
-        anchors.left: parent.left; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+        activeImage: "../images/knots_button_stop.png"
+        hoverImage: activeImage
+        backgroundImage:  activeImage
+        anchors.left: prev.right; anchors.leftMargin: 5; y: 3;
+        width: 64; height: 64
         onClicked: toolbar.stopClicked()
     }
 
     Button {
         id: play
-        text: "Play"
-        anchors.left: stop.right; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+        activeImage: "../images/knots_button_play.png"
+        hoverImage: activeImage
+        backgroundImage: activeImage
+        anchors.left: stop.right; anchors.leftMargin: 5; y: 3;
+        width: 64; height: 64
         onClicked: toolbar.playClicked()
-    }
-
-
-    Button {
-        id: prev
-        text: "Prev"
-        anchors.left: play.right; anchors.rightMargin: 5; y: 3; width: 140; height: 32
-        onClicked: toolbar.prevClicked()
     }
 
     Button {
         id: next
-        text: "Next"
-        anchors.left: prev.right; anchors.rightMargin: 5; y: 3; width: 140; height: 32
+        activeImage:"../images/knots_button_next.png"
+        hoverImage: activeImage
+        backgroundImage: activeImage
+        anchors.left: play.right; anchors.rightMargin: 5; y: 3;
+        width: 64; height: 64
         onClicked: toolbar.nextClicked()
     }
-
 
 
     Common.Slider {
@@ -56,11 +69,13 @@ Item {
         anchors.left: next.right
         anchors.right: parent.right
         anchors.verticalCenter: toolbar.verticalCenter
-        anchors.margins: 5
+        anchors.margins: 10
         height: 32;
         onDragged: {
             toolbar.seek();
             console.log( "VideoControls - Dragged" + value)
-        }
+        }        
+
     }
+
 }

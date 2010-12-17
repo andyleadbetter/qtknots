@@ -8,7 +8,7 @@
 #include "knotsplayer.h"
 
 #if defined(Q_WS_MAEMO_5)
-    #include <QtDBus/QtDbus>
+    #include <QtDBus>
 #endif
 
 KnotsDeclarative::KnotsDeclarative(QObject *parent)

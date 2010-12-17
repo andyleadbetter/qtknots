@@ -44,7 +44,7 @@ import Qt 4.7
 Item {
     id: pushbutton
 
-    property string text: "Text"
+    property string text: ""
     property bool checkable: false
     property bool checked: false
     property url backgroundImage: "";
@@ -100,6 +100,7 @@ Item {
         anchors.verticalCenterOffset: pushbutton.state === "pressed" ? 1 : 0
         anchors.horizontalCenterOffset: pushbutton.state === "pressed" ? 1 : 0
         text: pushbutton.text
+        visible:  text != ""
         color: "#616261";
     }
 

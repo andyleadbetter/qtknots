@@ -63,24 +63,26 @@ Rectangle {
     Common.VideoControls {
         id: videoControls; z: 5
 
-        height: 40; width: parent.width; opacity: 1.0
+        width: parent.width; opacity: 1.0
+
         position: knots.position
         duration: knots.duration
+
         onStopClicked: {
             knots.stop();
             backlightControllerTimer.stop()
             sliderUpdater.stop()
             videoPlayer.playing=false;
         }
+
         onPlayClicked: {
             if( videoPlayer.playing ) {
-                videoPlayer.playing = false;
-                playLabel = "Play";
+                videoPlayer.playing = false;       
             } else {
-                videoPlayer.playing = true;                
-                playLabel = "Pause"
+                videoPlayer.playing = true;                                
             }
         }
+
         onSeek: {
             console.log( "PlayingView - Seeking" + position)
             knots.seek( position );

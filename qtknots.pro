@@ -53,6 +53,10 @@ HEADERS += \
 
 QT           += xml network opengl
 
+maemo5 {
+    QT += dbus
+}
+
 RESOURCES += \
     qtknots.qrc
 
@@ -312,4 +316,27 @@ OTHER_FILES += \
     qml/images/button-hover.png \
     qml/images/button-active.png \
     qml/images/button.png \
-    qml/images/.directory
+    qml/images/.directory \
+    qml/images/mediaplayer/VideoOverlayButtonPressed.png \
+    qml/images/mediaplayer/VideoOverlayButton.png \
+    qml/images/mediaplayer/StopPressed.png \
+    qml/images/mediaplayer/Stop.png \
+    qml/images/mediaplayer/ShufflePressed.png \
+    qml/images/mediaplayer/Shuffle.png \
+    qml/images/mediaplayer/RepeatPressed.png \
+    qml/images/mediaplayer/Repeat.png \
+    qml/images/mediaplayer/Play.png \
+    qml/images/mediaplayer/Pause.png \
+    qml/images/mediaplayer/ForwardPressed.png \
+    qml/images/mediaplayer/Forward.png \
+    qml/images/mediaplayer/CrossfadePressed.png \
+    qml/images/mediaplayer/Crossfade.png \
+    qml/images/mediaplayer/Button.png \
+    qml/images/mediaplayer/BackPressed.png \
+    qml/images/mediaplayer/background.png \
+    qml/images/mediaplayer/Back.png \
+    qml/images/mediaplayer/AppletStop.png \
+    qml/images/mediaplayer/AppletPlay.png \
+    qml/images/mediaplayer/AppletPause.png \
+    qml/images/mediaplayer/AppletForward.png \
+    qml/images/mediaplayer/AppletBack.png
