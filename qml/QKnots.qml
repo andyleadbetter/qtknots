@@ -20,7 +20,7 @@ Item {
         color: "#343434";
 
 
-        Common.TitleBar { id: titleBar; anchors.top:  page.top; z: 5 }
+        Common.TitleBar { id: titleBar; anchors.top:  page.top; z: 5;  onTaskSwitch: knots.taskSwitch() }
 
         Loader {
             id: directoryView

@@ -44,12 +44,10 @@ import Knots 1.0
 
 Item {
     id: titleBar
-    property string untaggedString: "Uploads from everyone"
-    property string taggedString: "Recent uploads tagged "
-
     BorderImage { source: "../images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
     width: parent.width;
     height: 40;
+    signal taskSwitch;
 
     Item {
         id: container
@@ -59,14 +57,27 @@ Item {
 
 
 
+
         Button {
-            id: quitButton;
+            id: switchButton;
             text:  ""
             anchors {
                 left: parent.left
                 verticalCenter: parent.verticalCenter
             }
-            width: 45; height: 32; backgroundImage: "../images/quit.png"; activeImage: "../images/quit.png"; hoverImage: "../images/quit.png"
+            width: 112; height: 56; backgroundImage: "../images/wmTaskSwitcherIcon.png";hoverImage: backgroundImage;  activeImage: "../images/wmTaskSwitcherIconPressed.png";
+            onClicked: titleBar.taskSwitch();
+        }
+
+        Button {
+            id: quitButton;
+            text:  ""
+            anchors {
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+            }
+            backgroundImage: "../images/wmCloseIcon.png"; hoverImage: backgroundImage; activeImage: "../images/wmCloseIconPressed.png";
+            width: 112; height: 56;
             onClicked: Qt.quit()
         }
 

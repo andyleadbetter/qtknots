@@ -133,5 +133,9 @@
         <file>qml/common/Slider.qml</file>
         <file>qml/common/GridDelegate.qml</file>
         <file>qml/common/GridView.qml</file>
+        <file>qml/images/wmTaskSwitcherIcon.png</file>
+        <file>qml/images/wmTaskSwitcherIconPressed.png</file>
+        <file>qml/images/wmCloseIcon.png</file>
+        <file>qml/images/wmCloseIconPressed.png</file>
     </qresource>
 </RCC>

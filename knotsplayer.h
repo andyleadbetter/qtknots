@@ -53,8 +53,9 @@ public:
 
     void startBacklightKeepAlive();
     void stopBacklightKeepAlive();
-    void onBacklightTimer();
+
 public slots:
+    void onBacklightTimer();
 
     void requestFinished( QNetworkReply* reply);
 

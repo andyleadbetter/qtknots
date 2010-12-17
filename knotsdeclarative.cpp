@@ -7,6 +7,10 @@
 #include "knotsitem.h"
 #include "knotsplayer.h"
 
+#if defined(Q_WS_MAEMO_5)
+    #include <QtDBus/QtDbus>
+#endif
+
 KnotsDeclarative::KnotsDeclarative(QObject *parent)
     : QObject(parent)
     , _instance( Knots::instance())
@@ -34,7 +38,6 @@ void KnotsDeclarative::seek(float position)
 {
     _instance.player().seek(position);
 }
-
 
 QString KnotsDeclarative::getCurrentSource()
 {
@@ -96,6 +99,15 @@ void KnotsDeclarative::onPropertiesUpdated(const KnotsPlayerProperties& newPrope
     emit durationChanged(_duration);
     emit positionChanged(_position);
 
+}
+
+void KnotsDeclarative::taskSwitch()
+{
+#if defined(Q_WS_MAEMO_5)
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    QDBusMessage message = QDBusMessage::createSignal("/","com.nokia.hildon_desktop","exit_app_view");
+    connection.send(message);
+#endif
 }
 
 

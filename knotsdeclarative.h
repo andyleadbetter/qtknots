@@ -58,7 +58,9 @@ public:
     Q_PROPERTY( QString serverName READ getServerName WRITE setServerName )
     Q_PROPERTY( KnotsDirectory *currentDirectory READ getDirectory NOTIFY directoryChanged )
 
- public slots:
+
+public slots:
+    void taskSwitch();
     void onSourceChanged( QString &source );
     void backSelected();
     void stop( );
