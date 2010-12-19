@@ -134,6 +134,13 @@ QString KnotsItem::itemSelected()
         Knots::instance().browseVirtual(_fields["search"]);
         break;
 
+    case CATEGORY:
+        Knots::instance().browseCategory(_id);
+        break;
+
+    case TAG:
+        Knots::instance().browseTags(_id);
+        break;
     case ITEM:
         Knots::instance().player().play(_id);
         break;

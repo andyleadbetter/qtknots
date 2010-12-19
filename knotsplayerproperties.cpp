@@ -71,7 +71,7 @@ bool KnotsPlayerProperties::startDocument()
 
 
 bool KnotsPlayerProperties::startElement(const QString & /* namespaceURI */,
-                                         const QString &localName,
+                                         const QString &/*localName*/,
                                          const QString &/*qName*/,
                                          const QXmlAttributes &/*attributes*/)
 {

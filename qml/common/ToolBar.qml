@@ -50,10 +50,20 @@ Item {
     property alias button3Label: button3.text
     property alias button4Label: button4.text
 
+    property alias button1Image: button1.activeImage
+    property alias button2Image: button2.activeImage
+    property alias button3Image: button3.activeImage
+    property alias button4Image: button4.activeImage
+
     property alias button1Visible: button1.visible
     property alias button2Visible: button2.visible
     property alias button3Visible: button3.visible
     property alias button4Visible: button4.visible
+
+    property alias button1borders: button1.noBorders
+    property alias button2borders: button2.noBorders
+
+
 
 
     signal button1Clicked
@@ -66,25 +76,37 @@ Item {
 
     Button {
         id: button1
-        anchors.left: parent.left; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+
+        hoverImage: activeImage
+        backgroundImage: activeImage
+
+        anchors.left: parent.left; anchors.leftMargin: 5; y: 3; width: text=="" ? 32 : 140; height: 32
         onClicked: toolbar.button1Clicked()
     }
 
     Button {
         id: button2
-        anchors.left: button1.right; anchors.rightMargin: 5; y: 3; width: 140; height: 32
+        hoverImage: activeImage
+        backgroundImage: activeImage
+        anchors.left: button1.right; anchors.rightMargin: 5; y: 3; width: text=="" ? 32 : 140; height: 32
         onClicked: toolbar.button2Clicked()
     }
 
     Button {
         id: button3
-        anchors.left: button2.right; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+        noBorders: true
+        hoverImage: activeImage
+        backgroundImage: activeImage
+        anchors.left: button2.right; anchors.leftMargin: 5; y: 3; width: text=="" ? 32 : 140; height: 32
         onClicked: toolbar.button3Clicked()
     }
 
     Button {
         id: button4
-        anchors.left: button3.right; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+        noBorders: true
+        hoverImage: activeImage
+        backgroundImage: activeImage
+        anchors.left: button3.right; anchors.leftMargin: 5; y: 3; width: text=="" ? 32 : 140; height: 32
         onClicked: toolbar.button4Clicked()
     }
 }

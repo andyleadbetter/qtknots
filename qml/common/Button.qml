@@ -55,6 +55,8 @@ Item {
     property alias hoverImageBorder: buttonHoverImage.border;
     signal clicked
 
+    property bool noBorders: false
+
     width: Math.max(text.width + 20, 110)
     height: Math.max(text.height + 12, 23)
 
@@ -62,10 +64,10 @@ Item {
         id: buttonImage
         anchors.fill:parent        
         source: Qt.resolvedUrl(backgroundImage == "" ? "../images/button.png" : backgroundImage);
-        border.left:10;
-        border.top:10;
-        border.right:10;
-        border.bottom:10;
+        border.left: noBorders ? 0:10;
+        border.top: noBorders ? 0:10;
+        border.right:noBorders ? 0:10;
+        border.bottom: noBorders ? 0:10;
     }
 
     BorderImage {
@@ -74,10 +76,10 @@ Item {
         opacity: 0
 
         anchors.fill: parent
-        border.left: 10
-        border.top: 10
-        border.right: 10
-        border.bottom: 10
+        border.left: noBorders ? 0:10
+        border.top: noBorders ? 0:10
+        border.right: noBorders ? 0:10
+        border.bottom: noBorders ? 0:10
     }
 
     BorderImage {
@@ -86,10 +88,10 @@ Item {
         opacity: 0
 
         anchors.fill: parent
-        border.left: 10
-        border.top: 10
-        border.right: 10
-        border.bottom: 10
+        border.left: noBorders ? 0:10
+        border.top: noBorders ? 0:10
+        border.right: noBorders ? 0:10
+        border.bottom: noBorders ? 0:10
     }
 
     Text {
@@ -114,7 +116,11 @@ Item {
             }
             pushbutton.clicked();
         }
+
     }
+
+    scale: mouseRegion.pressed ? 1.1 : 1.00
+    Behavior on scale { NumberAnimation{ duration: 55} }
 
     states: [
         State {

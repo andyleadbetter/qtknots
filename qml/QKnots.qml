@@ -5,7 +5,9 @@ import Knots 1.0
 import KnotsDirectory 1.0
 
 Item {
-    id: screen; width: 800; height: 480
+    id: screen;
+    width: 800
+    height: 480
     state: "Browsing"
 
     property string defaultView: "Grid"
@@ -15,19 +17,27 @@ Item {
     }
 
     Rectangle {
+        Component.onCompleted:  { console.log( width + "x" + height) }
         id: page
         anchors.fill: parent;
         color: defaultView == "List" ? "#343434" : "white";
 
+        Item {
+            id:titleBar
+            y: 0
+            x: 0
+            visible: false
+        }
 
-        Common.TitleBar { id: titleBar; anchors.top:  page.top; z: 5;  onTaskSwitch: knots.taskSwitch() }
+        /*Common.TitleBar { id: titleBar; anchors.top:  page.top; z: 5;  onTaskSwitch: knots.taskSwitch() }*/
 
         Loader {
             id: directoryView
             sourceComponent: defaultView=="List" ? directory : grid ;
             width: parent.width;
             anchors.top: titleBar.bottom;
-            anchors.bottom: toolBar.top;
+            anchors.bottom: toolBar.top;           
+            Component.onCompleted: { console.log( width + "x" + height) }
         }
 
         Common.ToolBar {
@@ -42,19 +52,19 @@ Item {
                 anchors.fill: parent
                 id: videoGridView;
                 cellHeight:  cellWidth
-                cellWidth: parent.width / 4
+                cellWidth: Qt.isQtObject( parent ) ? parent.width / 4 : 0
                 delegate: Common.GridDelegate {}
                 model: knots.currentDirectory
 
+                Component.onCompleted: { console.log( Component.objectName + " " + width + "x" + height + "Parent:" ) }
             }
-
         }
 
         Component {
             id: directory
             ListView {
-                anchors.fill: parent
                 id: videoListView; delegate: Common.DirectoryDelegate {}
+                anchors.fill: parent
                 model: knots.currentDirectory
             }
         }
@@ -79,10 +89,7 @@ Item {
 
         Common.SearchView {
             id: searchView;
-            x: parent.width;
-            width: parent.width;
-            anchors.top: titleBar.bottom;
-            anchors.bottom: toolBar.top;
+            anchors.centerIn: parent
         }
     }
 
@@ -93,21 +100,28 @@ Item {
             PropertyChanges { target: directoryView; x: 0 }
             PropertyChanges { target: optionsView; x: parent.width  }
             PropertyChanges { target: profilesView; x: 2*parent.width  }
-            PropertyChanges { target: searchView; x:   2*parent.width  }
+            PropertyChanges { target: searchView; opacity: 0.0 }
             PropertyChanges { target: toolBar;
                 button1Label: "Back";
-                button2Label: "Options";
+                button2Label: "";
+                button2Image: "/qml/images/icon-m-toolbar-settings.svg"
+                button2borders: false
+                button3Label: ""
+                button3Image: "/qml/images/knots_button_search.png"
+                button4Image: screen.defaultView == "List" ? "/qml/images/icon-m-toolbar-grid.svg" :  "/qml/images/icon-m-toolbar-list.svg"
                 onButton1Clicked: knots.backSelected();
-                onButton2Clicked: screen.state = "Options"
-                button4Visible: false;
-                button3Visible: false;
+                onButton2Clicked: screen.state = "Options";
+                onButton3Clicked: screen.state = "Searching";
+                onButton4Clicked: screen.defaultView == "List" ? screen.defaultView = "Grid" : screen.defaultView = "List";
+                button4Visible: true;
+                button3Visible: true;
             }
         },
         State {
             name: "Options"
             PropertyChanges { target: directoryView; x: -parent.width }
             PropertyChanges { target: profilesView;  x: parent.width  }
-            PropertyChanges { target: searchView;    x: parent.width  }
+            PropertyChanges { target: searchView;    opacity: 0 }
             PropertyChanges { target: optionsView;   x: 0}
             PropertyChanges { target: toolBar;
                 button1Label: "Back";
@@ -121,7 +135,7 @@ Item {
             name: "Profile"
             PropertyChanges { target: profilesView; x: 0}
             PropertyChanges { target: directoryView; x: -2*parent.width  }
-            PropertyChanges { target: searchView; x:  parent.width  }
+            PropertyChanges { target: searchView;    opacity: 0 }
             PropertyChanges { target: optionsView; x: -parent.width  }
             PropertyChanges { target: toolBar;
                 button1Label: "Back";
@@ -133,13 +147,10 @@ Item {
         },
         State {
             name: "Searching"
-            PropertyChanges { target: searchView; x: 0}
-            PropertyChanges { target: directoryView; x: parent.width  }
-            PropertyChanges { target: optionsView; x: -parent.width  }
-            PropertyChanges { target: profilesView; x: -2*parent.width  }
+            PropertyChanges { target: searchView; opacity: 1.0 }
             PropertyChanges { target: toolBar;
                 button1Label: "Back";
-                onButton1Clicked: screen.state = "Options";
+                onButton1Clicked: screen.state = "Browsing";
                 button2Visible: false;
                 button4Visible: false;
                 button3Visible: false;
@@ -148,5 +159,7 @@ Item {
     ]
     transitions: Transition {
         PropertyAnimation { properties: "x"; duration: 200 }
+
     }
+    Component.onCompleted: { console.log( width + "x" + height) }
 }
