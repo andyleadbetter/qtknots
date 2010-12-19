@@ -28,17 +28,21 @@ Item {
         hoverImage: activeImage
         backgroundImage: activeImage
         anchors.left: parent.left ; anchors.rightMargin: 5; y: 3;
-        width: 64; height: 64
+        noBorders: true
+        width: 60; height: 60
         onClicked: toolbar.prevClicked()
     }
 
     Button {
         id: stop
+
         activeImage: "../images/knots_button_stop.png"
         hoverImage: activeImage
         backgroundImage:  activeImage
         anchors.left: prev.right; anchors.leftMargin: 5; y: 3;
-        width: 64; height: 64
+        noBorders: true
+        width: 60; height: 60
+
         onClicked: toolbar.stopClicked()
     }
 
@@ -48,7 +52,9 @@ Item {
         hoverImage: activeImage
         backgroundImage: activeImage
         anchors.left: stop.right; anchors.leftMargin: 5; y: 3;
-        width: 64; height: 64
+        noBorders: true
+        width: 60; height: 60
+
         onClicked: toolbar.playClicked()
     }
 
@@ -58,7 +64,9 @@ Item {
         hoverImage: activeImage
         backgroundImage: activeImage
         anchors.left: play.right; anchors.rightMargin: 5; y: 3;
-        width: 64; height: 64
+        noBorders: true
+        width: 60; height: 60
+
         onClicked: toolbar.nextClicked()
     }
 
@@ -71,9 +79,12 @@ Item {
         anchors.verticalCenter: toolbar.verticalCenter
         anchors.margins: 10
         height: 32;
-        onDragged: {
-            toolbar.seek();
-            console.log( "VideoControls - Dragged" + value)
+        onDraggingChanged: {
+            if( !dragging )
+                toolbar.seek();
+        }
+
+        onValueChanged: {
         }        
 
     }

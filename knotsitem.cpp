@@ -99,6 +99,8 @@ void KnotsItem::setItemImage() {
                 } else {
                     _itemImage = "/qml/images/knots_item_music.png";
                 }
+            } else if( _type == CATEGORY || _type == VIRTUAL || _type == TAG ) {
+                _itemImage = "/qml/images/knots_dir.png";
             }
         }
     }

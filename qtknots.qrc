@@ -119,17 +119,14 @@
         <file>qml/common/Button.qml</file>
         <file>qml/common/OptionsPage.qml</file>
         <file>qml/common/SearchView.qml</file>
-        <file>qml/common/TitleBar.qml</file>
         <file>qml/common/ToolBar.qml</file>
         <file>qml/common/VideoControls.qml</file>
         <file>qml/common/Directory.qml</file>
         <file>qml/common/DirectoryDelegate.qml</file>
-        <file>qml/common/DirectoryView.qml</file>
         <file>qml/common/PlayingView.qml</file>
         <file>qml/common/ProfilesDelegate.qml</file>
         <file>qml/common/ProfilesView.qml</file>
         <file>qml/common/Progress.qml</file>
-        <file>qml/common/scrollbar.qml</file>
         <file>qml/common/Slider.qml</file>
         <file>qml/common/GridDelegate.qml</file>
         <file>qml/common/GridView.qml</file>

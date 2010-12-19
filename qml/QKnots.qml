@@ -37,7 +37,7 @@ Item {
             width: parent.width;
             anchors.top: titleBar.bottom;
             anchors.bottom: toolBar.top;           
-            Component.onCompleted: { console.log( width + "x" + height) }
+            Behavior on scale { NumberAnimation { easing.type: Easing.InOutQuad} }
         }
 
         Common.ToolBar {
@@ -159,6 +159,7 @@ Item {
     ]
     transitions: Transition {
         PropertyAnimation { properties: "x"; duration: 200 }
+        PropertyAnimation { properties: "opacity"; duration:  150 }
 
     }
     Component.onCompleted: { console.log( width + "x" + height) }

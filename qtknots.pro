@@ -39,6 +39,9 @@ SOURCES += main.cpp \
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
 
+include(models/models.pri)
+include(kernel/kernel.pri)
+
 HEADERS += \
     knots.h \
     profile.h \
@@ -64,10 +67,8 @@ OTHER_FILES += \
     qml/QKnots.qml \
     qml/common/VideoControls.qml \
     qml/common/ToolBar.qml \
-    qml/common/TitleBar.qml \
     qml/common/Slider.qml \
     qml/common/SearchView.qml \
-    qml/common/scrollbar.qml \
     qml/common/Progress.qml \
     qml/common/ProfilesView.qml \
     qml/common/ProfilesDelegate.qml \
@@ -76,9 +77,7 @@ OTHER_FILES += \
     qml/common/OptionsPage.qml \
     qml/common/OptionsModel.qml \
     qml/common/GridDelegate.qml \
-    qml/common/DirectoryView.qml \
     qml/common/DirectoryDelegate.qml \
-    qml/common/Directory.qml \
     qml/common/Button.qml \
     qml/images/tooltip-background.png \
     qml/images/toolbutton.sci \
@@ -194,11 +193,6 @@ OTHER_FILES += \
     qml/images/button-active.png \
     qml/images/button.png \
     qml/images/.directory \
-    qml/mobile/VideoControls.qml \
-    qml/mobile/ToolBar.qml \
-    qml/mobile/ImageDetails.qml \
-    qml/mobile/GridDelegate.qml \
-    qml/mobile/Button.qml \
     qml/images/wmTaskSwitcherIconPressed.png \
     qml/images/wmTaskSwitcherIcon.png \
     qml/images/wmCloseIconPressed.png \

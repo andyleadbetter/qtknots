@@ -60,7 +60,11 @@ void MainWindow::switchViews( bool showPlayer )
     if( showPlayer )
     {
         _navigator->hide();
-        _videoPlayer->showExpanded();
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
+        _videoPlayer->showFullScreen();
+#else
+        _videoPlayer->show();
+#endif
     }
     else
     {

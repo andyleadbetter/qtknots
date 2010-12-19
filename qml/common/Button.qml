@@ -63,6 +63,7 @@ Item {
     BorderImage {
         id: buttonImage
         anchors.fill:parent        
+        smooth:  true
         source: Qt.resolvedUrl(backgroundImage == "" ? "../images/button.png" : backgroundImage);
         border.left: noBorders ? 0:10;
         border.top: noBorders ? 0:10;
@@ -74,7 +75,7 @@ Item {
         id: buttonActiveImage
         source: Qt.resolvedUrl(activeImage == "" ? "../images/button-active.png" : activeImage);
         opacity: 0
-
+        smooth:  true
         anchors.fill: parent
         border.left: noBorders ? 0:10
         border.top: noBorders ? 0:10
@@ -86,7 +87,7 @@ Item {
         id: buttonHoverImage
         source: Qt.resolvedUrl(hoverImage == "" ? "../images/button-hover.png" : hoverImage);
         opacity: 0
-
+        smooth:  true
         anchors.fill: parent
         border.left: noBorders ? 0:10
         border.top: noBorders ? 0:10

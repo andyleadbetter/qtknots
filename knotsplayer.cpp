@@ -182,7 +182,7 @@ void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)
 void KnotsPlayer::startObservingProperties()
 {
     _properties->updateStatus(_playerId, _password);
-    _propertiesUpdateTimer->start(10000);
+    _propertiesUpdateTimer->start(60000);
 
 }
 
@@ -199,6 +199,7 @@ void KnotsPlayer::onPropertiesUpdated()
         {
         QString source(  _properties->_streamUrl.toString() );
         _status = Playing;
+        startObservingProperties();
         emit stateChanged(_status);
         break;
        }

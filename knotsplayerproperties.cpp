@@ -41,25 +41,30 @@ void KnotsPlayerProperties::updateStatus(QString &playerId, QString &password)
 
 void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
 {
-   // qWarning() << "Fetched from " << reply->url() ;
-   // qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-   // qWarning() << reply->peek( 256 );
+    // qWarning() << "Fetched from " << reply->url() ;
+    // qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
+    // qWarning() << reply->peek( 256 );
 
+    if( reply == _currentDownload )
+    {
+        _xmlReader->parse(_xmlSource );
 
-    _xmlReader->parse(_xmlSource );
+        reply->deleteLater();
 
-    reply->deleteLater();
+        _streamUrl.setScheme("http");
+        _streamUrl.setUserName(_playerId);
+        _streamUrl.setPassword(_password);
+        _streamUrl.setPort(_port.toInt());
+        _streamUrl.setHost( Knots::instance().serverAddress().host());
+        _streamUrl.setPath("/" + _stream);
+        delete _xmlSource;
+        _xmlSource=0;
 
-    _streamUrl.setScheme("http");
-    _streamUrl.setUserName(_playerId);
-    _streamUrl.setPassword(_password);
-    _streamUrl.setPort(_port.toInt());
-    _streamUrl.setHost( Knots::instance().serverAddress().host());
-    _streamUrl.setPath("/" + _stream);
-    delete _xmlSource;
-    _xmlSource=0;
+        qDebug() << "Duration: " << this->_duration;
+        qDebug() << "Position: " << this->_position;
 
-    emit propertiesUpdated();
+        emit propertiesUpdated();
+    }
 }
 
 
@@ -122,7 +127,7 @@ bool KnotsPlayerProperties::endElement(const QString & /* namespaceURI */,
     }
 
 
-return true;
+    return true;
 }
 
 bool KnotsPlayerProperties::characters(const QString &str)

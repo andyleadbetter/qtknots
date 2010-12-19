@@ -45,8 +45,7 @@ Rectangle {
         }
         onSourceChanged: {
             //console.log( "Starting Stream @ " + source)
-            playing = source=="" ? false : true;
-            backlightControllerTimer.start();
+            playing = source=="" ? false : true;            
             sliderUpdater.start();
         }
 
@@ -68,9 +67,10 @@ Rectangle {
         position: knots.position
         duration: knots.duration
 
+        onPositionChanged: { console.log( "knots reports new position:" + position ) }
+
         onStopClicked: {
-            knots.stop();
-            backlightControllerTimer.stop()
+            knots.stop();            
             sliderUpdater.stop()
             videoPlayer.playing=false;
         }
@@ -90,20 +90,6 @@ Rectangle {
 
     }
 
-    ScreenSaver {
-        id: backlightControl
-        screenSaverDelayed: true
-    }
-
-    Timer {
-        id: backlightControllerTimer
-        interval: 20000 // 20 seconds
-        repeat:  true
-        onTriggered: {
-            backlightControl.screenSaverDelayed = true;
-            //console.log( "Delayed Screensaver")
-        }
-    }
 
     Timer {
         id: sliderUpdater
@@ -111,7 +97,7 @@ Rectangle {
         repeat:  true
         onTriggered: {
             videoControls.position = videoControls.position + 1000 ;
-            //console.log( "update position slider")
+            console.log( "update position slider")
         }
     }
 

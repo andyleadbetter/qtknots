@@ -84,29 +84,38 @@ Item {
         onClicked: toolbar.button1Clicked()
     }
 
-    Button {
-        id: button2
-        hoverImage: activeImage
-        backgroundImage: activeImage
-        anchors.left: button1.right; anchors.rightMargin: 5; y: 3; width: text=="" ? 32 : 140; height: 32
-        onClicked: toolbar.button2Clicked()
+    Rectangle {
+
+        id: smallButtons
+        anchors.horizontalCenter: parent.horizontalCenter
+
+
+        Button {
+            id: button2
+            hoverImage: activeImage
+            backgroundImage: activeImage
+            anchors.left: smallButtons.right; anchors.leftMargin: 10; y: 3; width: text=="" ? 32 : 140; height: 32
+            onClicked: toolbar.button2Clicked()
+        }
+
+        Button {
+            id: button3
+            noBorders: true
+            hoverImage: activeImage
+            backgroundImage: activeImage
+            anchors.left: button2.right; anchors.leftMargin: 10; y: 3; width: text=="" ? 32 : 140; height: 32
+            onClicked: toolbar.button3Clicked()
+        }
+
+        Button {
+            id: button4
+            noBorders: true
+            hoverImage: activeImage
+            backgroundImage: activeImage
+            anchors.left: button3.right; anchors.leftMargin: 10; y: 3; width: text=="" ? 32 : 140; height: 32
+            onClicked: toolbar.button4Clicked()
+        }
+
     }
 
-    Button {
-        id: button3
-        noBorders: true
-        hoverImage: activeImage
-        backgroundImage: activeImage
-        anchors.left: button2.right; anchors.leftMargin: 5; y: 3; width: text=="" ? 32 : 140; height: 32
-        onClicked: toolbar.button3Clicked()
-    }
-
-    Button {
-        id: button4
-        noBorders: true
-        hoverImage: activeImage
-        backgroundImage: activeImage
-        anchors.left: button3.right; anchors.leftMargin: 5; y: 3; width: text=="" ? 32 : 140; height: 32
-        onClicked: toolbar.button4Clicked()
-    }
 }
