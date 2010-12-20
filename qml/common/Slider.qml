@@ -35,24 +35,18 @@ Item {
     property alias inverted: model.inverted
     property alias minimum: model.minimumValue
     property alias maximum: model.maximumValue
-    property bool dragging: knobArea.pressed
-
-    function setValue( value )
-    {
-        if (!dragging )
-            model.setValue( value );
-    }
 
     height: 22
     width: 108
 
+    signal valueChanged( real value )
 
     BorderImage {
         id: sliderBase
         width: parent.width - 12
         x: 6
         anchors.verticalCenter: parent.verticalCenter
-        source: "/qml/images/slider-background.png";
+        source: Qt.resolvedUrl("../images/slider-background.png");
 
         border.left: 10
         border.top: 0
@@ -66,23 +60,23 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 20
-            onPressed: { model.setPosition(mouseX - knob.width/2); }
+            onPressed: { model.setPosition(knob.x - knob.width/2); }
+
         }
 
         BorderImage {
             id: knob
             x: model.position
-
             anchors.verticalCenter: parent.verticalCenter
             width: 22
-            height: 16
+            height: 18
 
             border.left: 10
-            border.top: 10
+            border.top: 1
             border.right: 10
-            border.bottom: 10
+            border.bottom: 1
 
-            source: "/qml/images/slider-handle.png";
+            source: Qt.resolvedUrl("../images/slider-handle.png");
 
             MouseArea {
                 id: knobArea
@@ -91,19 +85,19 @@ Item {
                 drag.axis: "XAxis"
                 drag.minimumX: -sliderEdgeOffset
                 drag.maximumX: sliderBase.width - knob.width / 2 - sliderEdgeOffset
-                onReleased:  { model.setPosition(mouseX - knob.width/2); }
+                onReleased: {console.log("Knob Dragged to " + ( knob.x - knob.width/2)); model.setPosition(knob.x - knob.width/2); }
             }
 
             states: [
                 State {
                     name: "hover"
                     when: !knobArea.pressed && knobArea.containsMouse
-                    PropertyChanges { target: knob; source: "/qml/images/slider-handle-hover.png"; }
+                    PropertyChanges { target: knob; source: Qt.resolvedUrl("../images/slider-handle-hover.png"); }
                 },
                 State {
                     name: "pressed"
                     when: knobArea.pressed
-                    PropertyChanges { target: knob; source: "/qml/images/slider-handle-active.png"; }
+                    PropertyChanges { target: knob; source: Qt.resolvedUrl("../images/slider-handle-active.png"); }
                 }
             ]
         }
@@ -115,6 +109,6 @@ Item {
         maximumValue: 100
         positionAtMinimum: -sliderEdgeOffset
         positionAtMaximum: sliderBase.width - knob.width / 2 - sliderEdgeOffset
+        onValueChanged: { basicSlider.valueChanged( value ) }
     }
-
 }

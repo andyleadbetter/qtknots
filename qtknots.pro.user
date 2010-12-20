@@ -30,7 +30,6 @@
        <value type="QString">QMLJSDEBUGGER_PATH=/home/andy/QtSDK/QtCreator/share/qtcreator/qml/qmljsdebugger</value>
        <value type="QString">QMLJSDEBUGGER_PATH=/usr/share/qtcreator/qml/qmljsdebugger</value>
       </valuelist>
-      <value key="QtProjectManager.QMakeBuildStep.QMakeForced" type="bool">false</value>
      </valuemap>
      <valuemap key="ProjectExplorer.BuildStepList.Step.1" type="QVariantMap">
       <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Make</value>
@@ -84,7 +83,6 @@
        <value type="QString">QMLJSDEBUGGER_PATH=/home/andy/QtSDK/QtCreator/share/qtcreator/qml/qmljsdebugger</value>
        <value type="QString">QMLJSDEBUGGER_PATH=/usr/share/qtcreator/qml/qmljsdebugger</value>
       </valuelist>
-      <value key="QtProjectManager.QMakeBuildStep.QMakeForced" type="bool">false</value>
      </valuemap>
      <valuemap key="ProjectExplorer.BuildStepList.Step.1" type="QVariantMap">
       <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Make</value>
@@ -136,7 +134,6 @@
       <valuelist key="QtProjectManager.QMakeBuildStep.QMakeArguments" type="QVariantList">
        <value type="QString">QMLJSDEBUGGER_PATH=/home/andy/QtSDK/QtCreator/share/qtcreator/qml/qmljsdebugger</value>
       </valuelist>
-      <value key="QtProjectManager.QMakeBuildStep.QMakeForced" type="bool">false</value>
      </valuemap>
      <valuemap key="ProjectExplorer.BuildStepList.Step.1" type="QVariantMap">
       <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Make</value>
@@ -191,7 +188,6 @@
       <valuelist key="QtProjectManager.QMakeBuildStep.QMakeArguments" type="QVariantList">
        <value type="QString">QMLJSDEBUGGER_PATH=/home/andy/QtSDK/QtCreator/share/qtcreator/qml/qmljsdebugger</value>
       </valuelist>
-      <value key="QtProjectManager.QMakeBuildStep.QMakeForced" type="bool">false</value>
      </valuemap>
      <valuemap key="ProjectExplorer.BuildStepList.Step.1" type="QVariantMap">
       <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Make</value>
@@ -273,7 +269,7 @@
    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Maemo</value>
    <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString">Maemo</value>
    <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">Qt4ProjectManager.Target.MaemoDeviceTarget</value>
-   <value key="ProjectExplorer.Target.ActiveBuildConfiguration" type="int">1</value>
+   <value key="ProjectExplorer.Target.ActiveBuildConfiguration" type="int">0</value>
    <value key="ProjectExplorer.Target.ActiveDeployConfiguration" type="int">0</value>
    <value key="ProjectExplorer.Target.ActiveRunConfiguration" type="int">0</value>
    <valuemap key="ProjectExplorer.Target.BuildConfiguration.0" type="QVariantMap">
@@ -288,7 +284,6 @@
        <value type="QString">QMLJSDEBUGGER_PATH=/home/andy/qtcreator-2.1.81/share/qtcreator/qml/qmljsdebugger</value>
        <value type="QString">QMLJSDEBUGGER_PATH=/usr/share/qtcreator/qml/qmljsdebugger</value>
       </valuelist>
-      <value key="QtProjectManager.QMakeBuildStep.QMakeForced" type="bool">false</value>
      </valuemap>
      <valuemap key="ProjectExplorer.BuildStepList.Step.1" type="QVariantMap">
       <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Make</value>
@@ -343,7 +338,6 @@
        <value type="QString">QMLJSDEBUGGER_PATH=/home/andy/qtcreator-2.1.81/share/qtcreator/qml/qmljsdebugger</value>
        <value type="QString">QMLJSDEBUGGER_PATH=/usr/share/qtcreator/qml/qmljsdebugger</value>
       </valuelist>
-      <value key="QtProjectManager.QMakeBuildStep.QMakeForced" type="bool">false</value>
      </valuemap>
      <valuemap key="ProjectExplorer.BuildStepList.Step.1" type="QVariantMap">
       <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Make</value>
@@ -403,17 +397,21 @@
       <value key="Qt4ProjectManager.MaemoRunConfiguration.DeviceId" type="qulonglong">4</value>
       <valuelist key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedFiles" type="QVariantList">
        <value type="QString">/scratchbox/users/andy/home/andy/qtknots-build-maemo/qtknots_0.0.1_armel.deb</value>
+       <value type="QString">/scratchbox/users/andy/home/andy/qtknots-build-maemo/qtknots_0.0.1_armel.deb</value>
        <value type="QString">/home/andy/QtSDK/QtCreator/qtc-debugging-helper/208145524/libgdbmacros.so</value>
       </valuelist>
       <valuelist key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedHosts" type="QVariantList">
+       <value type="QString">192.168.0.82</value>
        <value type="QString">192.168.2.15</value>
        <value type="QString">192.168.2.15</value>
       </valuelist>
       <valuelist key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedRemotePaths" type="QVariantList">
        <value type="QString"></value>
+       <value type="QString"></value>
        <value type="QString">/home/developer</value>
       </valuelist>
       <valuelist key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedTimes" type="QVariantList">
+       <value type="QDateTime">2010-12-20T22:27:06</value>
        <value type="QDateTime">2010-12-19T21:47:04</value>
        <value type="QDateTime">2010-12-19T21:43:24</value>
       </valuelist>
@@ -478,99 +476,8 @@
   </valuemap>
  </data>
  <data>
-  <variable>ProjectExplorer.Project.Target.2</variable>
-  <valuemap type="QVariantMap">
-   <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Remote Compiler</value>
-   <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString">Remote Compiler</value>
-   <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">Qt4ProjectManager.Target.WccCompilerTarget</value>
-   <value key="ProjectExplorer.Target.ActiveBuildConfiguration" type="int">0</value>
-   <value key="ProjectExplorer.Target.ActiveDeployConfiguration" type="int">0</value>
-   <value key="ProjectExplorer.Target.ActiveRunConfiguration" type="int">0</value>
-   <valuemap key="ProjectExplorer.Target.BuildConfiguration.0" type="QVariantMap">
-    <valuemap key="ProjectExplorer.BuildConfiguration.BuildStepList.0" type="QVariantMap">
-     <valuemap key="ProjectExplorer.BuildStepList.Step.0" type="QVariantMap">
-      <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString"></value>
-      <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
-      <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">Qt4ProjectManager.WccBuildStep</value>
-      <value key="Qt4ProjectManager.WccBuildStep.CertFile" type="QString"></value>
-      <value key="Qt4ProjectManager.WccBuildStep.CertKeyFile" type="QString"></value>
-      <value key="Qt4ProjectManager.WccBuildStep.CertKeyPass" type="QString"></value>
-      <value key="Qt4ProjectManager.WccBuildStep.PkgOpt" type="int">0</value>
-      <value key="Qt4ProjectManager.WccBuildStep.PostOp" type="int">1</value>
-      <value key="Qt4ProjectManager.WccBuildStep.QtVersion" type="QString"></value>
-      <value key="Qt4ProjectManager.WccBuildStep.SisOpt" type="int">1</value>
-      <value key="Qt4ProjectManager.WccBuildStep.Target" type="QString"></value>
-     </valuemap>
-     <value key="ProjectExplorer.BuildStepList.StepsCount" type="int">1</value>
-     <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Build</value>
-     <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
-     <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">ProjectExplorer.BuildSteps.Build</value>
-    </valuemap>
-    <valuemap key="ProjectExplorer.BuildConfiguration.BuildStepList.1" type="QVariantMap">
-     <value key="ProjectExplorer.BuildStepList.StepsCount" type="int">0</value>
-     <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Clean</value>
-     <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
-     <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">ProjectExplorer.BuildSteps.Clean</value>
-    </valuemap>
-    <value key="ProjectExplorer.BuildConfiguration.BuildStepListCount" type="int">2</value>
-    <value key="ProjectExplorer.BuildConfiguration.ClearSystemEnvironment" type="bool">false</value>
-    <valuelist key="ProjectExplorer.BuildConfiguration.UserEnvironmentChanges" type="QVariantList"/>
-    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Remote Compiler</value>
-    <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
-    <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">Qt4ProjectManager.Qt4BuildConfiguration</value>
-    <value key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration" type="int">0</value>
-    <value key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory" type="QString">/scratchbox/users/andy/home/andy/qtknots-build-remote</value>
-    <value key="Qt4ProjectManager.Qt4BuildConfiguration.QtVersionId" type="int">5</value>
-    <value key="Qt4ProjectManager.Qt4BuildConfiguration.ToolChain" type="int">12</value>
-    <value key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild" type="bool">true</value>
-   </valuemap>
-   <value key="ProjectExplorer.Target.BuildConfigurationCount" type="int">1</value>
-   <valuemap key="ProjectExplorer.Target.DeployConfiguration.0" type="QVariantMap">
-    <valuemap key="ProjectExplorer.BuildConfiguration.BuildStepList.0" type="QVariantMap">
-     <value key="ProjectExplorer.BuildStepList.StepsCount" type="int">0</value>
-     <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Deploy</value>
-     <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
-     <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">ProjectExplorer.BuildSteps.Deploy</value>
-    </valuemap>
-    <value key="ProjectExplorer.BuildConfiguration.BuildStepListCount" type="int">1</value>
-    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">No deployment</value>
-    <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
-    <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">ProjectExplorer.DefaultDeployConfiguration</value>
-   </valuemap>
-   <value key="ProjectExplorer.Target.DeployConfigurationCount" type="int">1</value>
-   <valuemap key="ProjectExplorer.Target.RunConfiguration.0" type="QVariantMap">
-    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString"></value>
-    <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString">Remote Compiler - Empty Run Configuration</value>
-    <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">Qt4ProjectManager.WccRunConfiguration</value>
-    <value key="Qt4ProjectManager.WccRunConfiguration.ProFile" type="QString">qtknots.pro</value>
-    <value key="RunConfiguration.QmlDebugServerPort" type="uint">3768</value>
-    <value key="RunConfiguration.UseCppDebugger" type="bool">true</value>
-    <value key="RunConfiguration.UseQmlDebugger" type="bool">false</value>
-   </valuemap>
-   <valuemap key="ProjectExplorer.Target.RunConfiguration.1" type="QVariantMap">
-    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString"></value>
-    <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString">Remote Compiler - Empty Run Configuration2</value>
-    <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">Qt4ProjectManager.WccRunConfiguration</value>
-    <value key="Qt4ProjectManager.WccRunConfiguration.ProFile" type="QString">../../../../../../home/andy/QtSDK/QtCreator/share/qtcreator/qml/qmljsdebugger/editor/editor.pri</value>
-    <value key="RunConfiguration.QmlDebugServerPort" type="uint">3768</value>
-    <value key="RunConfiguration.UseCppDebugger" type="bool">true</value>
-    <value key="RunConfiguration.UseQmlDebugger" type="bool">false</value>
-   </valuemap>
-   <valuemap key="ProjectExplorer.Target.RunConfiguration.2" type="QVariantMap">
-    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString"></value>
-    <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString">Remote Compiler - Empty Run Configuration3</value>
-    <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">Qt4ProjectManager.WccRunConfiguration</value>
-    <value key="Qt4ProjectManager.WccRunConfiguration.ProFile" type="QString">../../../../../../home/andy/QtSDK/QtCreator/share/qtcreator/qml/qmljsdebugger/qmljsdebugger-lib.pri</value>
-    <value key="RunConfiguration.QmlDebugServerPort" type="uint">3768</value>
-    <value key="RunConfiguration.UseCppDebugger" type="bool">true</value>
-    <value key="RunConfiguration.UseQmlDebugger" type="bool">false</value>
-   </valuemap>
-   <value key="ProjectExplorer.Target.RunConfigurationCount" type="int">3</value>
-  </valuemap>
- </data>
- <data>
   <variable>ProjectExplorer.Project.TargetCount</variable>
-  <value type="int">3</value>
+  <value type="int">2</value>
  </data>
  <data>
   <variable>ProjectExplorer.Project.Updater.EnvironmentId</variable>

@@ -119,6 +119,8 @@ void KnotsPlayer::startRequestFinished(QNetworkReply* reply)
 
     reply->deleteLater();
     _playRequest = 0;    
+    _status = Playing;
+    emit stateChanged(_status);
 
     startBacklightKeepAlive();
 
@@ -176,6 +178,8 @@ void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)
     //qWarning() << reply->peek( reply->bytesAvailable());
 
     reply->deleteLater();
+    _status = Playing;
+    emit stateChanged(_status);
 
     startObservingProperties();
 }

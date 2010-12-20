@@ -13,7 +13,7 @@ Component {
             Behavior on scale { NumberAnimation { easing.type: Easing.InOutQuad} }
             id: scaleMe
             source: thumbnail;
-            anchors.centerIn: parent; width: parent.width - 30; height: parent.height - 30; smooth: false; fillMode: Image.PreserveAspectFit;
+            anchors.centerIn: parent; width: parent.width - 30; height: parent.height - 30; smooth: true; fillMode: Image.PreserveAspectFit;
         }
 
         states: [

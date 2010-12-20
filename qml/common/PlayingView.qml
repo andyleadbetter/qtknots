@@ -57,8 +57,6 @@ Rectangle {
         id: videoControls; z: 5
 
         width: parent.width; opacity: 1.0
-
-        value: knots.position
         duration: knots.duration
 
         onStopClicked: {
@@ -74,13 +72,9 @@ Rectangle {
             }
         }
 
-        onSeek: {
-            console.log( "PlayingView - Seeking" + position)
-            knots.seek( position );
-        }
+
 
     }
-
 
     states: [
         State {

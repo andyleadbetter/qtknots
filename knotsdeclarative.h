@@ -6,6 +6,7 @@
 #include "profile.h"
 #include "knotsdirectory.h"
 #include "knotsplayerproperties.h"
+#include "knotsplayer.h"
 
 class Knots;
 
@@ -57,7 +58,7 @@ public:
     Q_PROPERTY( float position READ getPosition NOTIFY positionChanged )
     Q_PROPERTY( QString serverName READ getServerName WRITE setServerName )
     Q_PROPERTY( KnotsDirectory *currentDirectory READ getDirectory NOTIFY directoryChanged )
-
+    Q_PROPERTY( KnotsPlayer::PlayingState currentState READ getState NOTIFY stateChanged )
 
 public slots:
     void taskSwitch();
@@ -66,6 +67,7 @@ public slots:
     void stop( );
     void seek( float position );
     void onPropertiesUpdated(const KnotsPlayerProperties& newProperties );
+    void onPlayerStateChange( KnotsPlayer::PlayingState newState );
     void search( QString searchTag );
 
 signals:
@@ -74,6 +76,7 @@ signals:
     void durationChanged( float newDuration );
     void positionChanged( float newPosition );
     void directoryChanged( KnotsDirectory *newDirectory );
+    void stateChanged( KnotsPlayer::PlayingState newState );
 
 
 private:
@@ -82,6 +85,7 @@ private:
 
     float getDuration();
     float getPosition();
+    KnotsPlayer::PlayingState getState() ;
 
     KnotsDirectory* getDirectory();
 
@@ -93,6 +97,7 @@ private:
     QString _serverName;
     float _duration;
     float _position;
+    KnotsPlayer::PlayingState _playerState;
 
 };
 

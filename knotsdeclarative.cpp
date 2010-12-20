@@ -16,6 +16,7 @@ KnotsDeclarative::KnotsDeclarative(QObject *parent)
     , _instance( Knots::instance())
 {    
     connect( &_instance.player(), SIGNAL(propertiesChanged(KnotsPlayerProperties)), this, SLOT(onPropertiesUpdated(const KnotsPlayerProperties&)));
+    connect( &_instance.player(), SIGNAL(stateChanged(KnotsPlayer::PlayingState)), this, SLOT(onPlayerStateChange(KnotsPlayer::PlayingState)));
     connect( &_instance, SIGNAL(directoryChanged(KnotsDirectory*)), SIGNAL(directoryChanged(KnotsDirectory*)));
 }
 
@@ -99,6 +100,16 @@ void KnotsDeclarative::onPropertiesUpdated(const KnotsPlayerProperties& newPrope
     emit durationChanged(_duration);
     emit positionChanged(_position);
 
+}
+
+void KnotsDeclarative::onPlayerStateChange( KnotsPlayer::PlayingState newState )
+{
+    _playerState = newState;
+    emit stateChanged(newState);
+}
+
+KnotsPlayer::PlayingState KnotsDeclarative::getState() {
+    return _playerState;
 }
 
 void KnotsDeclarative::taskSwitch()

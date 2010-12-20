@@ -2,26 +2,34 @@ import Qt 4.7
 
 import "../common" as Common
 
+import Knots 1.0
+
+
 Item {
     id: toolbar
 
     property alias playLabel: play.text
     property alias nextLabel: next.text
     property alias prevLabel: next.text
-    property alias duration: position.maximum
-    property real value
+    property alias duration: positionSlider.maximum
 
 
     signal playClicked
     signal nextClicked
     signal prevClicked
     signal stopClicked
-    signal seek
+
 
     height:  64
 
-    onValueChanged: {
-            position.setValue( toolbar.position );
+    Knots {
+        id: knots;
+        onPositionChanged: {
+            if( knots.currentState != 3 ) {
+                positionSlider.value = knots.position;
+            }
+
+        }
     }
 
     BorderImage { source: "../images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
@@ -76,8 +84,9 @@ Item {
 
 
     Common.Slider {
-        id: position
+        id: positionSlider
         minimum: 0
+        maximum: knots.duration
         anchors.left: next.right
         anchors.right: parent.right
         anchors.verticalCenter: toolbar.verticalCenter
@@ -85,9 +94,10 @@ Item {
         height: 32;
 
         onValueChanged: {
-            console.log( "value is changed" + value )
-                  toolbar.seek();
-        }        
+            console.log( "Slider repositioned to " + value)
+            if( knots.currentState == 1 )
+                knots.seek( value )
+        }
 
     }
 
