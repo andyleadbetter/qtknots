@@ -7,13 +7,13 @@ Component {
     Rectangle {
         id: gridWrapper;
         width: GridView.view.cellWidth; height: GridView.view.cellHeight ;
-        color: "white"; smooth: true
+        color: "white"; smooth: false
         Image {
             scale: 0.0
             Behavior on scale { NumberAnimation { easing.type: Easing.InOutQuad} }
             id: scaleMe
             source: thumbnail;
-            anchors.centerIn: parent; width: parent.width - 30; height: parent.height - 30; smooth: true; fillMode: Image.PreserveAspectFit;
+            anchors.centerIn: parent; width: parent.width - 30; height: parent.height - 30; smooth: false; fillMode: Image.PreserveAspectFit;
         }
 
         states: [

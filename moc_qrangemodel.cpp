@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'qrangemodel.h'
 **
-** Created: Sun Dec 19 09:50:24 2010
+** Created: Sun Dec 19 21:59:53 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
 **
 ** WARNING! All changes made in this file will be lost!

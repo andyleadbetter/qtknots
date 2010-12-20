@@ -16,7 +16,7 @@ KnotsDirectory::KnotsDirectory( QObject *parent )
     : QAbstractListModel( parent )
     , _xmlReader(0)
     , _xmlSource(0)
-    , _currentDownload(0)    
+    , _currentDownload(0)
     , _parser(0)
 {
     _roles[IdRole] = "id";

@@ -27,9 +27,16 @@ void MainWindow::launch()
     QGLFormat format = QGLFormat::defaultFormat();
     format.setSampleBuffers(false);
 
+    Qt::WidgetAttribute attribute = Qt::WA_Maemo5NonComposited;
+    setAttribute(attribute, true);
+
     _glWidget = new QGLWidget(format);
+
     //### potentially faster, but causes junk to appear if top-level is Item, not Rectangle
     _glWidget->setAutoFillBackground(false);
+    _glWidget->setAttribute(attribute, true);
+    _navigator->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    _navigator->setAttribute(attribute, true);
 
     _navigator->setViewport(_glWidget);
 #else
@@ -61,8 +68,10 @@ void MainWindow::switchViews( bool showPlayer )
     {
         _navigator->hide();
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
+        showFullScreen();
         _videoPlayer->showFullScreen();
 #else
+        show();
         _videoPlayer->show();
 #endif
     }
@@ -70,6 +79,8 @@ void MainWindow::switchViews( bool showPlayer )
     {
         _navigator->showExpanded();
         _videoPlayer->hide();
+        showExpanded();
+
     }
 
 }
@@ -79,7 +90,7 @@ void MainWindow::showExpanded()
 #ifdef Q_OS_SYMBIAN
     showFullScreen();
 #elif defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
-    showMaximized();
+    showFullScreen();
 #else
     show();
 #endif
@@ -92,12 +103,8 @@ void MainWindow::onPlayerStateChange( KnotsPlayer::PlayingState newState )
 
 MainWindow::~MainWindow()
 {
-    _navigator->setViewport(0);
     delete _videoPlayer;
     delete _navigator;
-    #if defined( Q_WS_MAEMO_5 )
-    delete _glWidget;
-    #endif
 }
 
 void MainWindow::onQmlFinished()

@@ -37,6 +37,11 @@ Item {
     property alias maximum: model.maximumValue
     property bool dragging: knobArea.pressed
 
+    function setValue( value )
+    {
+        if (!dragging )
+            model.setValue( value );
+    }
 
     height: 22
     width: 108
@@ -67,6 +72,7 @@ Item {
         BorderImage {
             id: knob
             x: model.position
+
             anchors.verticalCenter: parent.verticalCenter
             width: 22
             height: 16
@@ -85,6 +91,7 @@ Item {
                 drag.axis: "XAxis"
                 drag.minimumX: -sliderEdgeOffset
                 drag.maximumX: sliderBase.width - knob.width / 2 - sliderEdgeOffset
+                onReleased:  { model.setPosition(mouseX - knob.width/2); }
             }
 
             states: [
@@ -108,7 +115,6 @@ Item {
         maximumValue: 100
         positionAtMinimum: -sliderEdgeOffset
         positionAtMaximum: sliderBase.width - knob.width / 2 - sliderEdgeOffset
-        position: knob.x
     }
 
 }

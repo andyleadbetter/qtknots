@@ -4,11 +4,15 @@
 
 KnotsPlayerProperties::KnotsPlayerProperties(QObject *parent )
     : QObject( parent )
+    , _currentDownload(0)
 {
+    _processingThread.start(QThread::LowPriority);
 
+    moveToThread(&_processingThread);
 
     _xmlReader = new QXmlSimpleReader();
     _xmlReader->setContentHandler(this);
+
 
     connect(&_serverConnection, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(fetchFinished(QNetworkReply*)));
@@ -32,10 +36,16 @@ void KnotsPlayerProperties::updateStatus(QString &playerId, QString &password)
     _playerId = playerId;
     _password = password;
 
-    QNetworkRequest request( statusUrl );
-
-    _currentDownload = _serverConnection.get(request);
-    _xmlSource = new QXmlInputSource( _currentDownload );
+    // If not waiting for properties then request new set
+    if( _currentDownload == 0 )
+    {
+        _waitingForRequest.lock();
+        QNetworkRequest request( statusUrl );
+        _currentDownload = _serverConnection.get(request);
+        _xmlSource = new QXmlInputSource( _currentDownload );
+        _waitingForRequest.unlock();
+    }
+    // else wait for the existing request to finish.
 
 }
 
@@ -47,6 +57,7 @@ void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
 
     if( reply == _currentDownload )
     {
+        _waitingForRequest.lock();
         _xmlReader->parse(_xmlSource );
 
         reply->deleteLater();
@@ -59,11 +70,13 @@ void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
         _streamUrl.setPath("/" + _stream);
         delete _xmlSource;
         _xmlSource=0;
+        _currentDownload = 0;
 
         qDebug() << "Duration: " << this->_duration;
         qDebug() << "Position: " << this->_position;
 
         emit propertiesUpdated();
+        _waitingForRequest.unlock();
     }
 }
 

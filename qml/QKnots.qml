@@ -22,14 +22,7 @@ Item {
         anchors.fill: parent;
         color: defaultView == "List" ? "#343434" : "white";
 
-        Item {
-            id:titleBar
-            y: 0
-            x: 0
-            visible: false
-        }
-
-        /*Common.TitleBar { id: titleBar; anchors.top:  page.top; z: 5;  onTaskSwitch: knots.taskSwitch() }*/
+        Common.TitleBar { id: titleBar; anchors.top:  page.top; z: 5;  onTaskSwitch: knots.taskSwitch() }
 
         Loader {
             id: directoryView

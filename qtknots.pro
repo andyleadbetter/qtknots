@@ -333,4 +333,5 @@ OTHER_FILES += \
     qml/images/mediaplayer/AppletPlay.png \
     qml/images/mediaplayer/AppletPause.png \
     qml/images/mediaplayer/AppletForward.png \
-    qml/images/mediaplayer/AppletBack.png
+    qml/images/mediaplayer/AppletBack.png \
+    qml/common/TitleBar.qml

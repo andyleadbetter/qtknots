@@ -4,11 +4,6 @@ import "../common" as Common
 import Knots 1.0
 
 import QtMultimediaKit 1.1
-import QtMobility.systeminfo 1.1
-
-//import  Qt.multimedia 1.0
-
-
 
 Rectangle {
     width:  800;
@@ -46,7 +41,6 @@ Rectangle {
         onSourceChanged: {
             //console.log( "Starting Stream @ " + source)
             playing = source=="" ? false : true;            
-            sliderUpdater.start();
         }
 
         onPositionChanged: {
@@ -64,14 +58,11 @@ Rectangle {
 
         width: parent.width; opacity: 1.0
 
-        position: knots.position
+        value: knots.position
         duration: knots.duration
-
-        onPositionChanged: { console.log( "knots reports new position:" + position ) }
 
         onStopClicked: {
             knots.stop();            
-            sliderUpdater.stop()
             videoPlayer.playing=false;
         }
 
@@ -88,17 +79,6 @@ Rectangle {
             knots.seek( position );
         }
 
-    }
-
-
-    Timer {
-        id: sliderUpdater
-        interval: 1000 // 1 seconds
-        repeat:  true
-        onTriggered: {
-            videoControls.position = videoControls.position + 1000 ;
-            console.log( "update position slider")
-        }
     }
 
 

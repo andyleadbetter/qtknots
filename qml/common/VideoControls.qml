@@ -9,7 +9,8 @@ Item {
     property alias nextLabel: next.text
     property alias prevLabel: next.text
     property alias duration: position.maximum
-    property alias position: position.value
+    property real value
+
 
     signal playClicked
     signal nextClicked
@@ -19,6 +20,9 @@ Item {
 
     height:  64
 
+    onValueChanged: {
+            position.setValue( toolbar.position );
+    }
 
     BorderImage { source: "../images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
 
@@ -79,12 +83,10 @@ Item {
         anchors.verticalCenter: toolbar.verticalCenter
         anchors.margins: 10
         height: 32;
-        onDraggingChanged: {
-            if( !dragging )
-                toolbar.seek();
-        }
 
         onValueChanged: {
+            console.log( "value is changed" + value )
+                  toolbar.seek();
         }        
 
     }
