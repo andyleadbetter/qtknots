@@ -2,9 +2,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#if !defined( Q_OS_SYMBIAN )
+    #include <QtOpenGL>
+#endif
 
 #include "qmlapplicationviewer.h"
 #include "knotsplayer.h"
+
+class     QGLWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -15,6 +20,8 @@ public:
     ~MainWindow();
 
     void switchViews(bool showPlayer);
+    void showExpanded();
+    void resizeEvent(QResizeEvent *newSize);
 signals:
 
 public slots:
@@ -24,6 +31,10 @@ public slots:
 private:
     QmlApplicationViewer* _navigator;
     QmlApplicationViewer* _videoPlayer;
+
+#if !defined( Q_OS_SYMBIAN )
+    QGLWidget *_glWidget;
+#endif
 
 };
 

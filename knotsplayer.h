@@ -21,13 +21,14 @@ class KnotsPlayer : public QObject
     Q_OBJECT
 
 public:
+    Q_ENUMS(PlayingState)
     enum PlayingState
     {
-        WaitingForPortInfo,
-        Playing,
-        Paused,
-        Seeking,
-        Stopped
+        WaitingForPortInfo, // 0
+        Playing,            // 1
+        Paused,             // 2
+        Seeking,            // 3
+        Stopped             // 4
     } _status;
 
 

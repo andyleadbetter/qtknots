@@ -4,14 +4,12 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
-** This file is part of the QtDeclarative module of the Qt Toolkit.
+** This file is part of the Qt Components project on Qt Labs.
 **
-** $QT_BEGIN_LICENSE:LGPL$
 ** No Commercial Usage
 ** This file contains pre-release code and may not be distributed.
-** You may use this file in accordance with the terms and conditions
-** contained in the Technology Preview License Agreement accompanying
-** this package.
+** You may use this file in accordance with the terms and conditions contained
+** in the Technology Preview License Agreement accompanying this package.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
@@ -21,70 +19,96 @@
 ** ensure the GNU Lesser General Public License version 2.1 requirements
 ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** In addition, as a special exception, Nokia gives you certain additional
-** rights.  These rights are described in the Nokia Qt LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
-**
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at qt-info@nokia.com.
-**
-**
-**
-**
-**
-**
-**
-**
-** $QT_END_LICENSE$
 **
 ****************************************************************************/
 
 import Qt 4.7
+import Qt.labs.components 1.0
 
 Item {
-    id: slider; width: 400; height: 16
+    id: basicSlider;
 
-    signal dragged
+    property variant sliderEdgeOffset: 6
+    property alias value: model.value
+    property alias inverted: model.inverted
+    property alias minimum: model.minimumValue
+    property alias maximum: model.maximumValue
 
-    property bool dragging: false
+    height: 22
+    width: 108
 
+    signal valueChanged( real value )
 
-    // value is read/write.
-    property real value    
-    property real maximum: 1
-    property real minimum: 0
-    property int xMax: slider.width - handle.width - 4;
+    BorderImage {
+        id: sliderBase
+        width: parent.width - 12
+        x: 6
+        anchors.verticalCenter: parent.verticalCenter
+        source: Qt.resolvedUrl("../images/slider-background.png");
 
-    onValueChanged: {
-        if( !dragging ) {
-            handle.x = 2 + (value - minimum) * slider.xMax / (maximum - minimum);
-        }
-    }
+        border.left: 10
+        border.top: 0
+        border.right: 10
+        border.bottom: 0
 
-    Rectangle {
-        anchors.fill: parent
-        border.color: "white"; border.width: 0; radius: 8
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "#66343434" }
-            GradientStop { position: 1.0; color: "#66000000" }
-        }
-    }
-
-    Rectangle {
-        id: handle; smooth: true
-        x: slider.width / 2 - handle.width / 2; y: 2; width: 30; height: slider.height-4; radius: 6
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "lightgray" }
-            GradientStop { position: 1.0; color: "gray" }
-        }
 
         MouseArea {
-            signal seek;
-            anchors.fill: parent; drag.target: parent
-            drag.axis: Drag.XAxis; drag.minimumX: 2; drag.maximumX: slider.xMax+2
-            onPressed: { slider.dragging = true }
-            onPositionChanged: { value = (maximum - minimum) * (handle.x-2) / slider.xMax + minimum; }
-            onReleased: {console.log( "slider - Released" + value); slider.dragging = false; slider.dragged(); }
-        }       
+            id: grooveArea
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 20
+            onPressed: { model.setPosition(knob.x - knob.width/2); }
+
+        }
+
+        BorderImage {
+            id: knob
+            x: model.position
+            anchors.verticalCenter: parent.verticalCenter
+            width: 22
+            height: 18
+
+            border.left: 10
+            border.top: 1
+            border.right: 10
+            border.bottom: 1
+
+            source: Qt.resolvedUrl("../images/slider-handle.png");
+
+            MouseArea {
+                id: knobArea
+                anchors.fill: knob
+                drag.target: knob
+                drag.axis: "XAxis"
+                drag.minimumX: -sliderEdgeOffset
+                drag.maximumX: sliderBase.width - knob.width / 2 - sliderEdgeOffset
+                onReleased: {console.log("Knob Dragged to " + ( knob.x - knob.width/2)); model.setPosition(knob.x - knob.width/2); }
+            }
+
+            states: [
+                State {
+                    name: "hover"
+                    when: !knobArea.pressed && knobArea.containsMouse
+                    PropertyChanges { target: knob; source: Qt.resolvedUrl("../images/slider-handle-hover.png"); }
+                },
+                State {
+                    name: "pressed"
+                    when: knobArea.pressed
+                    PropertyChanges { target: knob; source: Qt.resolvedUrl("../images/slider-handle-active.png"); }
+                }
+            ]
+        }
+    }
+
+    RangeModel {
+        id: model
+        minimumValue: 0
+        maximumValue: 100
+        positionAtMinimum: -sliderEdgeOffset
+        positionAtMaximum: sliderBase.width - knob.width / 2 - sliderEdgeOffset
+        onValueChanged: { basicSlider.valueChanged( value ) }
     }
 }

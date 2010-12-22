@@ -2,65 +2,103 @@ import Qt 4.7
 
 import "../common" as Common
 
+import Knots 1.0
+
+
 Item {
     id: toolbar
 
     property alias playLabel: play.text
     property alias nextLabel: next.text
     property alias prevLabel: next.text
-    property alias duration: position.maximum
-    property alias position: position.value
+    property alias duration: positionSlider.maximum
+
 
     signal playClicked
     signal nextClicked
     signal prevClicked
     signal stopClicked
-    signal seek
+
+
+    height:  64
+
+    Knots {
+        id: knots;
+        onPositionChanged: {
+            if( knots.currentState != 3 ) {
+                positionSlider.value = knots.position;
+            }
+
+        }
+    }
 
     BorderImage { source: "../images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
 
     Button {
+        id: prev
+        activeImage: "../images/knots_button_prev.png"
+        hoverImage: activeImage
+        backgroundImage: activeImage
+        anchors.left: parent.left ; anchors.rightMargin: 5; y: 3;
+        noBorders: true
+        width: 60; height: 60
+        onClicked: toolbar.prevClicked()
+    }
+
+    Button {
         id: stop
-        text: "Stop"
-        anchors.left: parent.left; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+
+        activeImage: "../images/knots_button_stop.png"
+        hoverImage: activeImage
+        backgroundImage:  activeImage
+        anchors.left: prev.right; anchors.leftMargin: 5; y: 3;
+        noBorders: true
+        width: 60; height: 60
+
         onClicked: toolbar.stopClicked()
     }
 
     Button {
         id: play
-        text: "Play"
-        anchors.left: stop.right; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+        activeImage: "../images/knots_button_play.png"
+        hoverImage: activeImage
+        backgroundImage: activeImage
+        anchors.left: stop.right; anchors.leftMargin: 5; y: 3;
+        noBorders: true
+        width: 60; height: 60
+
         onClicked: toolbar.playClicked()
-    }
-
-
-    Button {
-        id: prev
-        text: "Prev"
-        anchors.left: play.right; anchors.rightMargin: 5; y: 3; width: 140; height: 32
-        onClicked: toolbar.prevClicked()
     }
 
     Button {
         id: next
-        text: "Next"
-        anchors.left: prev.right; anchors.rightMargin: 5; y: 3; width: 140; height: 32
+        activeImage:"../images/knots_button_next.png"
+        hoverImage: activeImage
+        backgroundImage: activeImage
+        anchors.left: play.right; anchors.rightMargin: 5; y: 3;
+        noBorders: true
+        width: 60; height: 60
+
         onClicked: toolbar.nextClicked()
     }
 
 
-
     Common.Slider {
-        id: position
+        id: positionSlider
         minimum: 0
+        maximum: knots.duration
         anchors.left: next.right
         anchors.right: parent.right
         anchors.verticalCenter: toolbar.verticalCenter
-        anchors.margins: 5
+        anchors.margins: 10
         height: 32;
-        onDragged: {
-            toolbar.seek();
-            console.log( "VideoControls - Dragged" + value)
+
+        onValueChanged: {
+            console.log( "Slider repositioned to " + value)
+            if( knots.currentState == 1 )
+                knots.seek( value )
         }
+
     }
+
 }

@@ -7,7 +7,7 @@ Component {
     Rectangle {
         id: gridWrapper;
         width: GridView.view.cellWidth; height: GridView.view.cellHeight ;
-        color: "white"; smooth: true
+        color: "white"; smooth: false
         Image {
             scale: 0.0
             Behavior on scale { NumberAnimation { easing.type: Easing.InOutQuad} }

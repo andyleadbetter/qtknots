@@ -44,7 +44,7 @@ import Qt 4.7
 Item {
     id: pushbutton
 
-    property string text: "Text"
+    property string text: ""
     property bool checkable: false
     property bool checked: false
     property url backgroundImage: "";
@@ -55,41 +55,44 @@ Item {
     property alias hoverImageBorder: buttonHoverImage.border;
     signal clicked
 
+    property bool noBorders: false
+
     width: Math.max(text.width + 20, 110)
     height: Math.max(text.height + 12, 23)
 
     BorderImage {
         id: buttonImage
         anchors.fill:parent        
+        smooth:  true
         source: Qt.resolvedUrl(backgroundImage == "" ? "../images/button.png" : backgroundImage);
-        border.left:10;
-        border.top:10;
-        border.right:10;
-        border.bottom:10;
+        border.left: noBorders ? 0:10;
+        border.top: noBorders ? 0:10;
+        border.right:noBorders ? 0:10;
+        border.bottom: noBorders ? 0:10;
     }
 
     BorderImage {
         id: buttonActiveImage
         source: Qt.resolvedUrl(activeImage == "" ? "../images/button-active.png" : activeImage);
         opacity: 0
-
+        smooth:  true
         anchors.fill: parent
-        border.left: 10
-        border.top: 10
-        border.right: 10
-        border.bottom: 10
+        border.left: noBorders ? 0:10
+        border.top: noBorders ? 0:10
+        border.right: noBorders ? 0:10
+        border.bottom: noBorders ? 0:10
     }
 
     BorderImage {
         id: buttonHoverImage
         source: Qt.resolvedUrl(hoverImage == "" ? "../images/button-hover.png" : hoverImage);
         opacity: 0
-
+        smooth:  true
         anchors.fill: parent
-        border.left: 10
-        border.top: 10
-        border.right: 10
-        border.bottom: 10
+        border.left: noBorders ? 0:10
+        border.top: noBorders ? 0:10
+        border.right: noBorders ? 0:10
+        border.bottom: noBorders ? 0:10
     }
 
     Text {
@@ -100,6 +103,7 @@ Item {
         anchors.verticalCenterOffset: pushbutton.state === "pressed" ? 1 : 0
         anchors.horizontalCenterOffset: pushbutton.state === "pressed" ? 1 : 0
         text: pushbutton.text
+        visible:  text != ""
         color: "#616261";
     }
 
@@ -113,7 +117,11 @@ Item {
             }
             pushbutton.clicked();
         }
+
     }
+
+    scale: mouseRegion.pressed ? 1.1 : 1.00
+    Behavior on scale { NumberAnimation{ duration: 55} }
 
     states: [
         State {

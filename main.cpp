@@ -4,7 +4,7 @@
 #include "knots.h"
 #include "knotsdirectory.h"
 #include "knotsdeclarative.h"
-
+#include "models/qrangemodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
     qmlRegisterType<ProfileList>("ProfilesList", 1, 0,"ProfilesList");
 
     qmlRegisterType<KnotsDirectory>("KnotsDirectory", 1, 0,"KnotsDirectory");
+
+    qmlRegisterType<QRangeModel>("Qt.labs.components", 1, 0, "RangeModel");
+
 
     Knots::instance().launch();
 

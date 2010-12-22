@@ -55,9 +55,6 @@ Item {
         anchors.right: parent.right
         height: parent.height
 
-
-
-
         Button {
             id: switchButton;
             text:  ""

@@ -4,11 +4,6 @@ import "../common" as Common
 import Knots 1.0
 
 import QtMultimediaKit 1.1
-import QtMobility.systeminfo 1.1
-
-//import  Qt.multimedia 1.0
-
-
 
 Rectangle {
     width:  800;
@@ -45,9 +40,7 @@ Rectangle {
         }
         onSourceChanged: {
             //console.log( "Starting Stream @ " + source)
-            playing = source=="" ? false : true;
-            backlightControllerTimer.start();
-            sliderUpdater.start();
+            playing = source=="" ? false : true;            
         }
 
         onPositionChanged: {
@@ -63,56 +56,25 @@ Rectangle {
     Common.VideoControls {
         id: videoControls; z: 5
 
-        height: 40; width: parent.width; opacity: 1.0
-        position: knots.position
+        width: parent.width; opacity: 1.0
         duration: knots.duration
+
         onStopClicked: {
-            knots.stop();
-            backlightControllerTimer.stop()
-            sliderUpdater.stop()
+            knots.stop();            
             videoPlayer.playing=false;
         }
+
         onPlayClicked: {
             if( videoPlayer.playing ) {
-                videoPlayer.playing = false;
-                playLabel = "Play";
+                videoPlayer.playing = false;       
             } else {
-                videoPlayer.playing = true;                
-                playLabel = "Pause"
+                videoPlayer.playing = true;                                
             }
         }
-        onSeek: {
-            console.log( "PlayingView - Seeking" + position)
-            knots.seek( position );
-        }
+
+
 
     }
-
-    ScreenSaver {
-        id: backlightControl
-        screenSaverDelayed: true
-    }
-
-    Timer {
-        id: backlightControllerTimer
-        interval: 20000 // 20 seconds
-        repeat:  true
-        onTriggered: {
-            backlightControl.screenSaverDelayed = true;
-            //console.log( "Delayed Screensaver")
-        }
-    }
-
-    Timer {
-        id: sliderUpdater
-        interval: 1000 // 1 seconds
-        repeat:  true
-        onTriggered: {
-            videoControls.position = videoControls.position + 1000 ;
-            //console.log( "update position slider")
-        }
-    }
-
 
     states: [
         State {

@@ -99,6 +99,8 @@ void KnotsItem::setItemImage() {
                 } else {
                     _itemImage = "/qml/images/knots_item_music.png";
                 }
+            } else if( _type == CATEGORY || _type == VIRTUAL || _type == TAG ) {
+                _itemImage = "/qml/images/knots_dir.png";
             }
         }
     }
@@ -134,6 +136,13 @@ QString KnotsItem::itemSelected()
         Knots::instance().browseVirtual(_fields["search"]);
         break;
 
+    case CATEGORY:
+        Knots::instance().browseCategory(_id);
+        break;
+
+    case TAG:
+        Knots::instance().browseTags(_id);
+        break;
     case ITEM:
         Knots::instance().player().play(_id);
         break;

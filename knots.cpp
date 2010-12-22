@@ -23,6 +23,7 @@ Knots& Knots::instance()
     return *Knots::_instance;
 }
 
+
 Knots::Knots(QObject *parent)
     : QObject(parent)
     , _serverAddress("")
@@ -178,7 +179,27 @@ void Knots::browseVirtual( QString &virtualPath )
 }
 
 
+void Knots::browseTags( QString &tag )
+{
 
+    QString qualifiedDir;
+    qualifiedDir = _currentPath + "&tag=" + tag;
+
+    _pathHistory.push(_currentPath);
+    _currentPath = qualifiedDir ;
+    loadDirectory(qualifiedDir);
+}
+
+
+void Knots::browseCategory( QString &virtualPath )
+{
+    QString qualifiedDir("/external/browse?category=");
+    qualifiedDir += virtualPath ;
+
+    _pathHistory.push(_currentPath);
+    _currentPath = qualifiedDir ;
+    loadDirectory(qualifiedDir);
+}
 
 QString Knots::currentPath() const
 {
@@ -218,8 +239,8 @@ void Knots::onPlayerStateChange( KnotsPlayer::PlayingState /*newState */)
 
 Knots::~Knots()
 {
-    delete _mainWindow;
     delete _player;
+    delete _currentDirectory;
 }
 
 KnotsDirectory* Knots::currentDirectory() {

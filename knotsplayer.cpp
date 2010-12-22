@@ -71,6 +71,8 @@ void KnotsPlayer::seek( float newPosition )
 {
     double percentage = 1.0  - ( duration() - newPosition ) / duration();
 
+    stopObservingProperties();
+
     QUrl url = Knots::instance().serverAddress();
     url.setPath( "/external/seek");
     url.addQueryItem("player_id", _playerId );
@@ -117,6 +119,8 @@ void KnotsPlayer::startRequestFinished(QNetworkReply* reply)
 
     reply->deleteLater();
     _playRequest = 0;    
+    _status = Playing;
+    emit stateChanged(_status);
 
     startBacklightKeepAlive();
 
@@ -147,7 +151,7 @@ void KnotsPlayer::stopRequestFinished(QNetworkReply* reply)
 
 void KnotsPlayer::startBacklightKeepAlive()
 {
-    _backlightTimer->start(5000);
+    _backlightTimer->start(20000);
 }
 
 void KnotsPlayer::stopBacklightKeepAlive()
@@ -174,8 +178,10 @@ void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)
     //qWarning() << reply->peek( reply->bytesAvailable());
 
     reply->deleteLater();
+    _status = Playing;
+    emit stateChanged(_status);
 
-    _properties->updateStatus(_playerId,_password);
+    startObservingProperties();
 }
 
 
@@ -199,6 +205,7 @@ void KnotsPlayer::onPropertiesUpdated()
         {
         QString source(  _properties->_streamUrl.toString() );
         _status = Playing;
+        startObservingProperties();
         emit stateChanged(_status);
         break;
        }

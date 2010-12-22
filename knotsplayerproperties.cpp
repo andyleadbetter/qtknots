@@ -4,11 +4,15 @@
 
 KnotsPlayerProperties::KnotsPlayerProperties(QObject *parent )
     : QObject( parent )
+    , _currentDownload(0)
 {
+    _processingThread.start(QThread::LowPriority);
 
+    moveToThread(&_processingThread);
 
     _xmlReader = new QXmlSimpleReader();
     _xmlReader->setContentHandler(this);
+
 
     connect(&_serverConnection, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(fetchFinished(QNetworkReply*)));
@@ -32,34 +36,48 @@ void KnotsPlayerProperties::updateStatus(QString &playerId, QString &password)
     _playerId = playerId;
     _password = password;
 
-    QNetworkRequest request( statusUrl );
-
-    _currentDownload = _serverConnection.get(request);
-    _xmlSource = new QXmlInputSource( _currentDownload );
+    // If not waiting for properties then request new set
+    if( _currentDownload == 0 )
+    {
+        _waitingForRequest.lock();
+        QNetworkRequest request( statusUrl );
+        _currentDownload = _serverConnection.get(request);
+        _xmlSource = new QXmlInputSource( _currentDownload );
+        _waitingForRequest.unlock();
+    }
+    // else wait for the existing request to finish.
 
 }
 
 void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
 {
-   // qWarning() << "Fetched from " << reply->url() ;
-   // qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-   // qWarning() << reply->peek( 256 );
+    // qWarning() << "Fetched from " << reply->url() ;
+    // qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
+    // qWarning() << reply->peek( 256 );
 
+    if( reply == _currentDownload )
+    {
+        _waitingForRequest.lock();
+        _xmlReader->parse(_xmlSource );
 
-    _xmlReader->parse(_xmlSource );
+        reply->deleteLater();
 
-    reply->deleteLater();
+        _streamUrl.setScheme("http");
+        _streamUrl.setUserName(_playerId);
+        _streamUrl.setPassword(_password);
+        _streamUrl.setPort(_port.toInt());
+        _streamUrl.setHost( Knots::instance().serverAddress().host());
+        _streamUrl.setPath("/" + _stream);
+        delete _xmlSource;
+        _xmlSource=0;
+        _currentDownload = 0;
 
-    _streamUrl.setScheme("http");
-    _streamUrl.setUserName(_playerId);
-    _streamUrl.setPassword(_password);
-    _streamUrl.setPort(_port.toInt());
-    _streamUrl.setHost( Knots::instance().serverAddress().host());
-    _streamUrl.setPath("/" + _stream);
-    delete _xmlSource;
-    _xmlSource=0;
+        qDebug() << "Duration: " << this->_duration;
+        qDebug() << "Position: " << this->_position;
 
-    emit propertiesUpdated();
+        emit propertiesUpdated();
+        _waitingForRequest.unlock();
+    }
 }
 
 
@@ -71,7 +89,7 @@ bool KnotsPlayerProperties::startDocument()
 
 
 bool KnotsPlayerProperties::startElement(const QString & /* namespaceURI */,
-                                         const QString &localName,
+                                         const QString &/*localName*/,
                                          const QString &/*qName*/,
                                          const QXmlAttributes &/*attributes*/)
 {
@@ -122,7 +140,7 @@ bool KnotsPlayerProperties::endElement(const QString & /* namespaceURI */,
     }
 
 
-return true;
+    return true;
 }
 
 bool KnotsPlayerProperties::characters(const QString &str)

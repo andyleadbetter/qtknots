@@ -119,17 +119,14 @@
         <file>qml/common/Button.qml</file>
         <file>qml/common/OptionsPage.qml</file>
         <file>qml/common/SearchView.qml</file>
-        <file>qml/common/TitleBar.qml</file>
         <file>qml/common/ToolBar.qml</file>
         <file>qml/common/VideoControls.qml</file>
         <file>qml/common/Directory.qml</file>
         <file>qml/common/DirectoryDelegate.qml</file>
-        <file>qml/common/DirectoryView.qml</file>
         <file>qml/common/PlayingView.qml</file>
         <file>qml/common/ProfilesDelegate.qml</file>
         <file>qml/common/ProfilesView.qml</file>
         <file>qml/common/Progress.qml</file>
-        <file>qml/common/scrollbar.qml</file>
         <file>qml/common/Slider.qml</file>
         <file>qml/common/GridDelegate.qml</file>
         <file>qml/common/GridView.qml</file>
@@ -137,5 +134,32 @@
         <file>qml/images/wmTaskSwitcherIconPressed.png</file>
         <file>qml/images/wmCloseIcon.png</file>
         <file>qml/images/wmCloseIconPressed.png</file>
+        <file>qml/images/mediaplayer/AppletBack.png</file>
+        <file>qml/images/mediaplayer/AppletForward.png</file>
+        <file>qml/images/mediaplayer/AppletPause.png</file>
+        <file>qml/images/mediaplayer/AppletPlay.png</file>
+        <file>qml/images/mediaplayer/AppletStop.png</file>
+        <file>qml/images/mediaplayer/Back.png</file>
+        <file>qml/images/mediaplayer/background.png</file>
+        <file>qml/images/mediaplayer/BackPressed.png</file>
+        <file>qml/images/mediaplayer/Button.png</file>
+        <file>qml/images/mediaplayer/Crossfade.png</file>
+        <file>qml/images/mediaplayer/CrossfadePressed.png</file>
+        <file>qml/images/mediaplayer/Forward.png</file>
+        <file>qml/images/mediaplayer/ForwardPressed.png</file>
+        <file>qml/images/mediaplayer/Pause.png</file>
+        <file>qml/images/mediaplayer/Play.png</file>
+        <file>qml/images/mediaplayer/Repeat.png</file>
+        <file>qml/images/mediaplayer/RepeatPressed.png</file>
+        <file>qml/images/mediaplayer/Shuffle.png</file>
+        <file>qml/images/mediaplayer/ShufflePressed.png</file>
+        <file>qml/images/mediaplayer/Stop.png</file>
+        <file>qml/images/mediaplayer/StopPressed.png</file>
+        <file>qml/images/mediaplayer/VideoOverlayButton.png</file>
+        <file>qml/images/mediaplayer/VideoOverlayButtonPressed.png</file>
+        <file>qml/images/icon-m-toolbar-grid.svg</file>
+        <file>qml/images/icon-m-toolbar-list.svg</file>
+        <file>qml/images/icon-m-toolbar-settings.svg</file>
+        <file>qml/common/TitleBar.qml</file>
     </qresource>
 </RCC>

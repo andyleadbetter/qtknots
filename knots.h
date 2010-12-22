@@ -71,6 +71,10 @@ public:
 
     void search( QString &searchTag );
 
+    void browseCategory(QString &virtualPath);
+
+    void browseTags(QString &tag);
+
 private:
     QString _profile;
     QUrl _serverAddress;

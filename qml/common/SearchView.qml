@@ -2,62 +2,106 @@ import Qt 4.7
 import "../common" as Common
 import Knots 1.0
 
-Rectangle {
+Item {
 
-    id: container
-    color: "#343434";
+    anchors.fill: parent
 
-    Knots { id: knots }
-
-    function accept(tags) {
-        console.log( "Searching for " + tags );
-        screen.state = "Browsing";
-        knots.search( tags );
+    MouseArea {
+        anchors.fill:  parent
+        onPressed: screen.state = "Browsing"
     }
-
-
 
     Rectangle {
-        id: lineEdit
-        y: 4; height: 40
-        color: "white"
-        anchors {
-            left: parent.left; right: parent.right; leftMargin: 30; rightMargin: 30
-            verticalCenter: parent.verticalCenter
+
+        Behavior on opacity {  PropertyAnimation { property: "opacity"; duration: 200; } }
+
+        id: container
+        width: 500
+        height: 127
+        color: "#2f2828"
+        radius: 14
+        border.width: 2
+        border.color: "#959090"
+
+        anchors.centerIn: parent
+
+        Knots { id: knots }
+
+        function accept(tags) {
+            console.log( "Searching for " + tags );
+            screen.state = "Browsing";
+            knots.search( tags );
         }
 
-        TextInput {
-            id: editor
-            anchors {
-                left: parent.left; right: parent.right; leftMargin: 10; rightMargin: 10
-                verticalCenter: parent.verticalCenter
-            }
-            cursorVisible: true; font.bold: true
-            color: "#151515"; selectionColor: "Green"
-
-        }
-
-        Keys.forwardTo: [ (returnKey), (editor)]
 
         Item {
-            id: returnKey
-            Keys.onReturnPressed: container.accept(editor.text);
-            Keys.onEscapePressed: titleBar.state = ""
+            id: item1
+            x: 30
+            y: 34
+            width: 378
+            height: 65
+
+            Rectangle {
+                id: lineEdit
+                y: 28
+                width: 364
+                height: 40
+                radius: 18
+                border.color: "#000000"
+                TextInput {
+                    id: editor
+                    x: 10
+                    y: 7
+                    width: 349
+                    height: 27
+                    color: "#000000"
+                    text: ""
+                    inputMask: ""
+                    font.pointSize: 15
+                    horizontalAlignment: TextInput.AlignHCenter
+                    smooth: true
+                    anchors.rightMargin: 17
+                    selectionColor: "#008000"
+                    anchors.verticalCenterOffset: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.bold: false
+                    anchors.right: parent.right
+                    anchors.leftMargin: 17
+                    cursorVisible: true
+                    anchors.left: parent.left
+                    focus: true
+                    Keys.onReturnPressed: container.accept( text )
+                }
+                anchors.rightMargin: 9
+                border.width: 0
+                anchors.verticalCenterOffset: 0
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.leftMargin: 5
+                anchors.left: parent.left
+            }
+
+            Item {
+                id: returnKey
+            }
+
+            Button {
+                id: tagButton
+                x: 397
+                y: 1
+                width: 63
+                height: 64
+                text: ""
+                hoverImage: "../images/knots_button_search.png"
+                backgroundImage: "../images/knots_button_search.png"
+                activeImage: "../images/knots_button_search.png"
+                anchors.left: lineEdit.right
+                anchors.leftMargin: 10
+                anchors.verticalCenter: lineEdit.verticalCenter
+                onClicked: { container.accept(editor.text); }
+            }
         }
 
-
-    }
-    Button {
-        id: tagButton;
-        text:  "Search"
-        anchors {
-            top: lineEdit.bottom
-            bottomMargin: 10
-            left: lineEdit.left
-        }
-        width: 45; height: 32;
-        onClicked: container.accept(editor.text);
     }
 
 }
-
