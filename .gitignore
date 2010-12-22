@@ -1,0 +1,11 @@
+*.o
+*.obj
+Makefile*
+*deb 
+moc*.cpp
+*.pdb
+qtknots.pro.user
+./obj/*
+./release/*
+
+
