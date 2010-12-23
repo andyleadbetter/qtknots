@@ -2,9 +2,6 @@ import Qt 4.7
 
 import "../common" as Common
 
-import Knots 1.0
-
-
 Item {
     id: toolbar
 
@@ -13,6 +10,10 @@ Item {
     property alias prevLabel: next.text
     property alias duration: positionSlider.maximum
 
+    function setValue( value )
+    {
+        positionSlider.setValue(value)
+    }
 
     signal playClicked
     signal nextClicked
@@ -21,16 +22,6 @@ Item {
 
 
     height:  64
-
-    Knots {
-        id: knots;
-        onPositionChanged: {
-            if( knots.currentState != 3 ) {
-                positionSlider.setValue( knots.position);
-            }
-
-        }
-    }
 
     BorderImage { source: "../images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
 

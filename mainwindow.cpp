@@ -124,3 +124,4 @@ void MainWindow::resizeEvent(QResizeEvent *newSizeEvent)
     _navigator->resize(newSize);
     QMainWindow::resizeEvent(newSizeEvent);
 }
+

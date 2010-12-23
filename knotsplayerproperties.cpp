@@ -5,6 +5,9 @@
 KnotsPlayerProperties::KnotsPlayerProperties(QObject *parent )
     : QObject( parent )
     , _currentDownload(0)
+    , _position(0.0)
+    , _duration(0)
+
 {
     _processingThread.start(QThread::LowPriority);
 

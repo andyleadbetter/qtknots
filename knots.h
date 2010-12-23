@@ -37,6 +37,8 @@ public slots:
 
 public:
 
+    MainWindow* mainWindow();
+
     static Knots& instance();
 
     KnotsPlayer& player();
@@ -75,6 +77,7 @@ public:
 
     void browseTags(QString &tag);
 
+    void setPlayer(KnotsPlayer *newPlayer);
 private:
     QString _profile;
     QUrl _serverAddress;
@@ -97,9 +100,9 @@ private:
 
     ProfileListImpl* _profiles;
     KnotsDirectory* _currentDirectory;
-    KnotsPlayer* _player;
-    QSettings _settings;
 
+    QSettings _settings;
+    KnotsPlayer* _player;
     MainWindow* _mainWindow;
 
 

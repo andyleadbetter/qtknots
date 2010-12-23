@@ -13,7 +13,7 @@
 #include <QtDBus/QtDBus>
 
 const int KOneSecond = 1000;
-
+const int KNetworkCadence = 10;
 class KnotsPlayerProperties;
 
 class KnotsPlayer : public QObject
@@ -53,7 +53,7 @@ public slots:
 
     void seek(int newPosition );
 
-    void onPropertiesUpdated();
+    void networkPropertiesUpdated();
 
 public:
 
@@ -65,6 +65,10 @@ public:
 
 
 protected:
+
+
+    void onPropertiesUpdated();
+
 
     QString getCurrentSource();
 
@@ -118,7 +122,9 @@ private: // Data
 
     KnotsPlayerProperties* _properties;
 
+    int _tickPeriod;
     int _tickCount;
+    int _localPosition;
 
 #if defined(Q_WS_MAEMO_5)
     osso_context_t* _ossoContext;

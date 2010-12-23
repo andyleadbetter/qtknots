@@ -30,14 +30,13 @@ Knots::Knots(QObject *parent)
     , _currentPath("")
     , _currentDirectory(0)
     , _settings("AndyLeadbetter", "QtKnots")
+    , _player(0)
 {  
 
     loadSettings();
 
     loadProfiles();
 
-
-    _player = new KnotsPlayer( this );
     _currentDirectory = new KnotsDirectory(this);
 
     connect( _currentDirectory , SIGNAL(directoryChanged()), this, SLOT(onDirectoryReady()));
@@ -52,8 +51,6 @@ void Knots::launch()
 
     _mainWindow->launch();
 
-    connect( _player, SIGNAL(stateChanged(KnotsPlayer::PlayingState)), this, SLOT(onPlayerStateChange(KnotsPlayer::PlayingState)));
-    connect( _player, SIGNAL(stateChanged(KnotsPlayer::PlayingState)), _mainWindow, SLOT(onPlayerStateChange(KnotsPlayer::PlayingState)));
     connect(&serverConnection, SIGNAL(finished(QNetworkReply*)), this, SLOT(onProfilesFetched(QNetworkReply*)));
 }
 
@@ -240,7 +237,6 @@ void Knots::onPlayerStateChange( KnotsPlayer::PlayingState /*newState */)
 
 Knots::~Knots()
 {
-    delete _player;
     delete _currentDirectory;
 }
 
@@ -253,4 +249,15 @@ void Knots::search( QString &searchTag )
     QString qualifiedDir = "/external/browse?search=" + searchTag + " &order=added DESC&limit=10000";
     _currentPath = qualifiedDir ;
     loadDirectory(qualifiedDir);
+}
+
+MainWindow* Knots::mainWindow()
+{
+    return _mainWindow;
+}
+
+void Knots::setPlayer( KnotsPlayer* newPlayer )
+{
+
+    _player = newPlayer;
 }

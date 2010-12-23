@@ -9,7 +9,15 @@ Rectangle {
     width:  800;
     height: 480;
     id: playingPage;
-    KnotsPlayer {  id: knots }
+
+    KnotsPlayer {
+        id: knots;
+        onPositionChanged: {
+            if( knots.currentState != 3 ) {
+                videoControls.setValue( knots.position);
+            }
+        }
+    }
     state:  "Default"
     color: "Black"
 

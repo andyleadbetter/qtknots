@@ -15,11 +15,14 @@
 KnotsPlayer::KnotsPlayer( QObject *parent )
     : QObject( parent )
     , _status( Stopped )
+    , _tickPeriod( KOneSecond )
     , _tickCount( 0 )
 {
     _properties = new KnotsPlayerProperties;
     _propertiesUpdateTimer = new QTimer();
     _backlightTimer = new QTimer();
+
+    Knots::instance().setPlayer( this );
 
     _propertiesUpdateTimer->setSingleShot(false);
 
@@ -27,8 +30,11 @@ KnotsPlayer::KnotsPlayer( QObject *parent )
 
     connect(_backlightTimer, SIGNAL(timeout()), this, SLOT(onBacklightTimer()));
 
-    connect( _properties, SIGNAL(propertiesUpdated()), this, SLOT(onPropertiesUpdated()));
+    connect( _properties, SIGNAL(propertiesUpdated()), this, SLOT(networkPropertiesUpdated()));
+
     connect( &_serverConnection, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestFinished(QNetworkReply*)));
+
+    connect( this, SIGNAL(stateChanged(KnotsPlayer::PlayingState)), Knots::instance().mainWindow(), SLOT(onPlayerStateChange(KnotsPlayer::PlayingState)));
 
 #if defined(Q_WS_MAEMO_5)
     _ossoContext = osso_initialize("QtKnots","1.0",true, 0);
@@ -50,7 +56,8 @@ void KnotsPlayer::play( QString& id )
     url.setPath( "/external/play" );
     url.addQueryItem("profile",Knots::instance().profile());
     url.addQueryItem("id",id);
-    _tickCount = 0;
+
+    _localPosition =_tickCount = 0;
 
     _playRequest = _serverConnection.get(QNetworkRequest(url));
     _status = WaitingForPortInfo;
@@ -113,17 +120,11 @@ void KnotsPlayer::stopRequestFinished(QNetworkReply* reply)
 void KnotsPlayer::seek( int newPosition )
 {
 
-    float percentage = 1.0  - ( _properties->_position - newPosition ) / _properties->_duration;
+    float percentage = (float) newPosition / (float) _properties->_duration;
+
+    _localPosition = newPosition;
 
     stopObservingProperties();
-
-
-    unsigned int seekChange = 100 * ( percentage - _properties->_position );
-
-    if( seekChange == 0 )
-    {
-        return;
-    }
 
     QUrl url = Knots::instance().serverAddress();
     url.setPath( "/external/seek");
@@ -138,7 +139,7 @@ void KnotsPlayer::seek( int newPosition )
 void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)
 {
 
-    //qWarning() << "Fetched from " << reply->url() ;
+    qWarning() << "Fetched from " << reply->url() ;
     //qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
     //qWarning() << reply->peek( reply->bytesAvailable());
 
@@ -193,10 +194,11 @@ void KnotsPlayer::onBacklightTimer()
 
 void KnotsPlayer::startObservingProperties()
 {
-    _properties->updateStatus(_playerId, _password);
+
+    qDebug() << "Start observing with period " << _tickPeriod;
 
     // timer to tick every second, but only sync with server every 60
-    _propertiesUpdateTimer->start(1000);
+    _propertiesUpdateTimer->start(_tickPeriod);
 
 }
 
@@ -209,27 +211,12 @@ void KnotsPlayer::onPropertiesUpdated()
 {
     switch( _status )
     {
-    case WaitingForPortInfo:        
-        {
-        // Do initial properties change while Waiting State so that initial slider change
-        // does not trigger seek
-        emit propertiesChanged(*_properties);
-        emit sourceChanged(_properties->_streamUrl);
-
-        // Set the clock to tick.
-        startObservingProperties();
-
-        // Now begin to play
-        _status = Playing;
-        emit stateChanged(_status);
-        break;
-       }
     case Playing:
     {
         QString newLabel = getFormattedPosition();
         emit formattedPositionChanged(newLabel);
         emit durationChanged(_properties->_duration);
-        emit positionChanged(_properties->_position);
+        emit positionChanged( _localPosition );
         emit propertiesChanged(*_properties);
         break;
     }
@@ -238,7 +225,48 @@ void KnotsPlayer::onPropertiesUpdated()
         emit propertiesChanged(*_properties);       
         break;
     };
+
 }
+
+void KnotsPlayer::networkPropertiesUpdated()
+{
+    // when network properties retrieved,
+    // first set if status is WaitingForPortInfo then
+    // setup the source and url info,
+    // the video.
+    if( _status == WaitingForPortInfo )
+    {
+        // Do initial properties change while Waiting State so that initial slider change
+        // does not trigger seek
+        emit sourceChanged(_properties->_streamUrl);
+
+        _localPosition = _properties->_duration * _properties->_position;
+
+        // Now begin to play
+        _status = Playing;
+        emit stateChanged(_status);
+    }
+
+    // When the network properties are returned,
+    // calculate the drift between server position
+    // and local position and adjust timeout interval to
+    // resync over the next 60 beats.
+    float  drift = _localPosition - ( _properties->_duration * _properties->_position );
+
+    // we count in MS for the local tick, so adjust the number of MS between ticks
+    // to compensate for the drift, double the adjustment since we are compensating for
+    // two periods
+
+    _tickPeriod = 1000 - ( drift / KNetworkCadence );
+
+    // restart observations with drift compensation.
+    stopObservingProperties();
+    startObservingProperties();
+
+    onPropertiesUpdated();
+
+}
+
 
 KnotsPlayerProperties& KnotsPlayer::properties()
 {
@@ -248,18 +276,13 @@ KnotsPlayerProperties& KnotsPlayer::properties()
 void KnotsPlayer::updateTimeout()
 {
     // Once per minute goto network update
-    if( ++_tickCount % 10 == 0)
+    if( ++_tickCount % KNetworkCadence == 0)
+    {
         _properties->updateStatus(_playerId,_password);
+    }
     else // Local update
     {
-        float duration = _properties->_duration;
-        float position = duration * _properties->_position;
-
-        position += 1.0;
-
-        position = 1.0 - ( duration - position ) / duration  ;
-
-        _properties->_position = position;
+        _localPosition++;
 
         onPropertiesUpdated();
     }
@@ -271,8 +294,8 @@ QString KnotsPlayer::getFormattedPosition()
     int durationSecs = _properties->_duration - ( durationMins * 60 );
 
 
-    int positionMins = (int) _properties->_duration * _properties->_position / 60.0;
-    int positionSecs = (int) (_properties->_duration * _properties->_position) % 60;
+    int positionMins = (int) _localPosition / 60;
+    int positionSecs = (int) _localPosition % 60;
 
     QString timeLabel= QString( "%3:%4/%1:%2" )\
             .arg(QString::number(durationMins),2, '0')\
@@ -296,6 +319,6 @@ QString KnotsPlayer::getCurrentSource()
 
 int KnotsPlayer::getPosition()
 {
-    return _properties->_duration * _properties->_position;
+    return _localPosition;
 }
 
