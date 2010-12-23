@@ -54,11 +54,12 @@ public:
     explicit KnotsDeclarative(QObject *parent = 0);
 
     Q_PROPERTY( QString currentSource READ getCurrentSource WRITE setCurrentSource NOTIFY sourceChanged )
-    Q_PROPERTY( float duration READ getDuration NOTIFY durationChanged )
-    Q_PROPERTY( float position READ getPosition NOTIFY positionChanged )
+    Q_PROPERTY( int duration READ getDuration NOTIFY durationChanged )
+    Q_PROPERTY( int position READ getPosition NOTIFY positionChanged )
     Q_PROPERTY( QString serverName READ getServerName WRITE setServerName )
     Q_PROPERTY( KnotsDirectory *currentDirectory READ getDirectory NOTIFY directoryChanged )
     Q_PROPERTY( KnotsPlayer::PlayingState currentState READ getState NOTIFY stateChanged )
+    Q_PROPERTY( QString formattedPosition READ getFormattedPosition NOTIFY formattedPositionChanged )
 
 public slots:
     void taskSwitch();
@@ -73,18 +74,21 @@ public slots:
 signals:
     void currentPathChanged();
     void sourceChanged(QString &newSource );
-    void durationChanged( float newDuration );
-    void positionChanged( float newPosition );
+    void durationChanged( int newDuration );
+    void positionChanged( int newPosition );
     void directoryChanged( KnotsDirectory *newDirectory );
     void stateChanged( KnotsPlayer::PlayingState newState );
+    void formattedPositionChanged( QString &newPos );
 
 
 private:
     QString getCurrentSource();
     void setCurrentSource( QString &newSource );
 
-    float getDuration();
-    float getPosition();
+    int getDuration();
+    int getPosition();
+    QString getFormattedPosition();
+
     KnotsPlayer::PlayingState getState() ;
 
     KnotsDirectory* getDirectory();

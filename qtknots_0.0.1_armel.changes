@@ -15,8 +15,8 @@ Changes:
  .
    * Initial Release.
 Checksums-Sha1: 
- 4731e6ed3531ee0ef75b25fff0534251088a0cb1 404500 qtknots_0.0.1_armel.deb
+ d91f193cb9a7fa2e524c846d5a49b8746e7eda12 1989234 qtknots_0.0.1_armel.deb
 Checksums-Sha256: 
- ce32ef7a810d7d81b0bffe167128853c0480210070de2bf727bfb9fee623599f 404500 qtknots_0.0.1_armel.deb
+ 7f5951bd38b74168748b269a683d1b122325b139ce274d06f742f5c4bab754a1 1989234 qtknots_0.0.1_armel.deb
 Files: 
- fe640cda32542a138ca94022f5298335 404500 user/hidden optional qtknots_0.0.1_armel.deb
+ 120f83d81a2432df9b32a0b5d3718abc 1989234 user/hidden optional qtknots_0.0.1_armel.deb

@@ -15,10 +15,13 @@
 KnotsPlayer::KnotsPlayer( QObject *parent )
     : QObject( parent )
     , _status( Stopped )
+    , _tickCount( 0 )
 {
     _properties = new KnotsPlayerProperties;
     _propertiesUpdateTimer = new QTimer();
     _backlightTimer = new QTimer();
+
+    _propertiesUpdateTimer->setSingleShot(false);
 
     connect(_propertiesUpdateTimer, SIGNAL(timeout()), this, SLOT( updateTimeout()));
 
@@ -47,64 +50,14 @@ void KnotsPlayer::play( QString& id )
     url.setPath( "/external/play" );
     url.addQueryItem("profile",Knots::instance().profile());
     url.addQueryItem("id",id);
-
+    _tickCount = 0;
 
     _playRequest = _serverConnection.get(QNetworkRequest(url));
     _status = WaitingForPortInfo;
-
-
 }
-
-
-void KnotsPlayer::stop()
-{
-    QUrl url = Knots::instance().serverAddress();
-    url.setPath( "/root/stop");
-    url.addQueryItem("id",_playerId);
-
-    _stopRequest = _serverConnection.get(QNetworkRequest(url));
-
-}
-
-
-void KnotsPlayer::seek( float newPosition )
-{
-    double percentage = 1.0  - ( duration() - newPosition ) / duration();
-
-    stopObservingProperties();
-
-    QUrl url = Knots::instance().serverAddress();
-    url.setPath( "/external/seek");
-    url.addQueryItem("player_id", _playerId );
-    url.addQueryItem("position", QString::number( percentage )  );
-
-
-    _seekRequest = _serverConnection.get(QNetworkRequest(url));
-    _status = Seeking;
-}
-
-
-float KnotsPlayer::duration()
-{
-    return _properties->_duration.toFloat()*1000;
-}
-
-void KnotsPlayer::requestFinished( QNetworkReply* reply)
-{
-    if( reply == _playRequest )
-        startRequestFinished(reply);
-    else if( reply == _stopRequest )
-        stopRequestFinished(reply);
-
-
-    updateTimeout();
-
-}
-
 
 void KnotsPlayer::startRequestFinished(QNetworkReply* reply)
 {
-
     qWarning() << "Fetched from " << reply->url() ;
     qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
     qWarning() << reply->peek( reply->bytesAvailable());
@@ -118,15 +71,20 @@ void KnotsPlayer::startRequestFinished(QNetworkReply* reply)
     _password = tokens[1];
 
     reply->deleteLater();
-    _playRequest = 0;    
-    _status = Playing;
-    emit stateChanged(_status);
+    _playRequest = 0;
 
-    startBacklightKeepAlive();
-
-
+    _properties->updateStatus(_playerId, _password);
 }
 
+void KnotsPlayer::stop()
+{
+    QUrl url = Knots::instance().serverAddress();
+    url.setPath( "/root/stop");
+    url.addQueryItem("id",_playerId);
+
+    _stopRequest = _serverConnection.get(QNetworkRequest(url));
+
+}
 void KnotsPlayer::stopRequestFinished(QNetworkReply* reply)
 {
 
@@ -147,6 +105,65 @@ void KnotsPlayer::stopRequestFinished(QNetworkReply* reply)
     stopBacklightKeepAlive();
 
 }
+
+
+
+void KnotsPlayer::seek( float newPosition )
+{
+
+    double percentage = 1.0  - ( duration() - newPosition ) / duration();
+
+    stopObservingProperties();
+
+
+    unsigned int seekChange = 100 * ( percentage - _properties->_position.toFloat() );
+
+    if( seekChange == 0 )
+    {
+        return;
+    }
+
+    QUrl url = Knots::instance().serverAddress();
+    url.setPath( "/external/seek");
+    url.addQueryItem("player_id", _playerId );
+    url.addQueryItem("position", QString::number( percentage )  );
+
+
+    _seekRequest = _serverConnection.get(QNetworkRequest(url));
+    _status = Seeking;
+}
+
+void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)
+{
+
+    //qWarning() << "Fetched from " << reply->url() ;
+    //qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
+    //qWarning() << reply->peek( reply->bytesAvailable());
+
+    reply->deleteLater();
+    _status = Playing;
+    emit stateChanged(_status);
+
+    startObservingProperties();
+}
+
+
+int KnotsPlayer::duration()
+{
+    return _properties->_duration.toInt();
+}
+
+void KnotsPlayer::requestFinished( QNetworkReply* reply)
+{
+    if( reply == _playRequest )
+        startRequestFinished(reply);
+    else if( reply == _stopRequest )
+        stopRequestFinished(reply);
+    else if( reply == _seekRequest )
+        seekRequestFinished(reply);
+}
+
+
 
 
 void KnotsPlayer::startBacklightKeepAlive()
@@ -170,25 +187,14 @@ void KnotsPlayer::onBacklightTimer()
 #endif
 }
 
-void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)
-{
-
-    //qWarning() << "Fetched from " << reply->url() ;
-    //qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-    //qWarning() << reply->peek( reply->bytesAvailable());
-
-    reply->deleteLater();
-    _status = Playing;
-    emit stateChanged(_status);
-
-    startObservingProperties();
-}
 
 
 void KnotsPlayer::startObservingProperties()
 {
     _properties->updateStatus(_playerId, _password);
-    _propertiesUpdateTimer->start(10000);
+
+    // timer to tick every second, but only sync with server every 60
+    _propertiesUpdateTimer->start(1000);
 
 }
 
@@ -203,18 +209,23 @@ void KnotsPlayer::onPropertiesUpdated()
     {
     case WaitingForPortInfo:        
         {
-        QString source(  _properties->_streamUrl.toString() );
-        _status = Playing;
+        // Do initial properties change while Waiting State so that initial slider change
+        // does not trigger seek
+        emit propertiesChanged(*_properties);
+        // Let declarative update
         startObservingProperties();
+
+        // Now begin to play
+        _status = Playing;
         emit stateChanged(_status);
+
         break;
        }
     default:
+        emit propertiesChanged(*_properties);
        // qWarning() << "Default State in properties update";
         break;
     };
-
-    emit propertiesChanged(*_properties);
 }
 
 KnotsPlayerProperties& KnotsPlayer::properties()
@@ -224,5 +235,20 @@ KnotsPlayerProperties& KnotsPlayer::properties()
 
 void KnotsPlayer::updateTimeout()
 {
-    _properties->updateStatus(_playerId,_password);
+    // Once per minute goto network update
+    if( ++_tickCount % 10 == 0)
+        _properties->updateStatus(_playerId,_password);
+    else // Local update
+    {
+        float duration = _properties->_duration.toFloat() ;
+        float position = duration * _properties->_position.toFloat();
+
+        position += 1.0;
+
+        position = 1.0 - ( duration - position ) / duration  ;
+
+        _properties->_position = QString::number(position);
+
+        onPropertiesUpdated();
+    }
 }

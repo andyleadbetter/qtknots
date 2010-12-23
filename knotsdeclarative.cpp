@@ -45,16 +45,36 @@ QString KnotsDeclarative::getCurrentSource()
     return _source;
 }
 
-float KnotsDeclarative::getDuration()
+int KnotsDeclarative::getDuration()
 {
     return _duration;
 }
 
-
-float KnotsDeclarative::getPosition()
+int KnotsDeclarative::getPosition()
 {
     return _position;
 }
+
+QString KnotsDeclarative::getFormattedPosition()
+{
+    int durationMins = (int)_duration / 60;
+    int durationSecs =  _duration - ( durationMins * 60 );
+
+
+    int positionMins = ( int ) _position / 60;
+    int positionSecs = (int) _position - ( positionMins * 60);
+
+    QString timeLabel= QString( "%3:%4/%1:%2" )\
+            .arg(QString::number(durationMins),2, '0')\
+            .arg(QString::number(durationSecs),2, '0')\
+            .arg(QString::number(positionMins),2, '0')\
+            .arg(QString::number(positionSecs),2, '0');
+
+    return timeLabel;
+}
+
+
+
 
 QString KnotsDeclarative::getServerName()
 {
@@ -87,8 +107,10 @@ void KnotsDeclarative::onSourceChanged(QString &/*source*/)
 void KnotsDeclarative::onPropertiesUpdated(const KnotsPlayerProperties& newProperties )
 {
 
-    _duration = newProperties._duration.toFloat() * 1000;
+    _duration = newProperties._duration.toFloat();
     _position = _duration * newProperties._position.toFloat() ;
+
+
 
     QString tmpSource = newProperties._streamUrl.toString();
     if( _source != tmpSource )
@@ -97,9 +119,12 @@ void KnotsDeclarative::onPropertiesUpdated(const KnotsPlayerProperties& newPrope
         emit sourceChanged(_source);
     }
 
+    QString newLabel = getFormattedPosition();
+    emit formattedPositionChanged(newLabel);
     emit durationChanged(_duration);
     emit positionChanged(_position);
 
+    qDebug() << newLabel;
 }
 
 void KnotsDeclarative::onPlayerStateChange( KnotsPlayer::PlayingState newState )

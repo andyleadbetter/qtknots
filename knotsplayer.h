@@ -28,7 +28,7 @@ public:
         Playing,            // 1
         Paused,             // 2
         Seeking,            // 3
-        Stopped             // 4
+        Stopped             // 4        
     } _status;
 
 
@@ -45,7 +45,7 @@ public:
 
     void seek(float newPosition );
 
-    float duration();
+    int duration();
 
     ~KnotsPlayer();
 
@@ -86,6 +86,7 @@ private:
     QTimer* _backlightTimer;
     KnotsPlayerProperties* _properties;
 
+    int _tickCount;
 
 #if defined(Q_WS_MAEMO_5)
     osso_context_t* _ossoContext;

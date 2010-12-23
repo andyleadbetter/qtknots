@@ -83,6 +83,7 @@ private:
     QXmlSimpleReader*    _xmlReader;
     QXmlInputSource*     _xmlSource;
     QString _currentText;
+
     QMutex _waitingForRequest;
 
     QThread _processingThread;

@@ -26,7 +26,7 @@ Item {
         id: knots;
         onPositionChanged: {
             if( knots.currentState != 3 ) {
-                positionSlider.value = knots.position;
+                positionSlider.setValue( knots.position);
             }
 
         }
@@ -88,7 +88,7 @@ Item {
         minimum: 0
         maximum: knots.duration
         anchors.left: next.right
-        anchors.right: parent.right
+        anchors.right: timeIndication.left
         anchors.verticalCenter: toolbar.verticalCenter
         anchors.margins: 10
         height: 32;
@@ -101,4 +101,14 @@ Item {
 
     }
 
+    Text {
+        id: timeIndication
+        text:  knots.formattedPosition
+        font.pixelSize: 32
+        color: "white"
+        anchors.right:  parent.right
+        anchors.verticalCenter: toolbar.verticalCenter
+        anchors.verticalCenterOffset: 4
+        height: 60
+    }
 }

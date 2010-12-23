@@ -35,11 +35,18 @@ Item {
     property alias inverted: model.inverted
     property alias minimum: model.minimumValue
     property alias maximum: model.maximumValue
+    property bool dragging
 
     height: 22
     width: 108
 
     signal valueChanged( real value )
+
+    function setValue( value )
+    {
+        if( !dragging )
+            model.value = value
+    }
 
     BorderImage {
         id: sliderBase
@@ -69,7 +76,7 @@ Item {
             x: model.position
             anchors.verticalCenter: parent.verticalCenter
             width: 22
-            height: 18
+            height: 32
 
             border.left: 10
             border.top: 1
@@ -85,7 +92,12 @@ Item {
                 drag.axis: "XAxis"
                 drag.minimumX: -sliderEdgeOffset
                 drag.maximumX: sliderBase.width - knob.width / 2 - sliderEdgeOffset
-                onReleased: {console.log("Knob Dragged to " + ( knob.x - knob.width/2)); model.setPosition(knob.x - knob.width/2); }
+                onReleased: {console.log("Knob Dragged to " + ( knob.x - knob.width/2));
+                    model.setPosition(knob.x - knob.width/2);
+                    basicSlider.valueChanged( model.value );
+                    basicSlider.dragging = false;
+                }
+                onPressed: { basicSlider.dragging = true; }
             }
 
             states: [
@@ -108,7 +120,6 @@ Item {
         minimumValue: 0
         maximumValue: 100
         positionAtMinimum: -sliderEdgeOffset
-        positionAtMaximum: sliderBase.width - knob.width / 2 - sliderEdgeOffset
-        onValueChanged: { basicSlider.valueChanged( value ) }
+        positionAtMaximum: sliderBase.width - knob.width / 2 - sliderEdgeOffset        
     }
 }

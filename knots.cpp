@@ -65,6 +65,7 @@ KnotsPlayer& Knots::player()
 void Knots::loadSettings()
 {
     _serverAddress = _settings.value( "ServerAddress", QString("Http://192.168.0.28:1978")).toString();
+            //QString("http://192.168.2.14:1978");
     _profile = _settings.value( "DefaultProfileId", QString( "6") ).toString();
 }
 
