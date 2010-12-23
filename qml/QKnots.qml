@@ -81,9 +81,17 @@ Item {
 
 
         Common.SearchView {
+            opacity: 0.0
             id: searchView;
             anchors.centerIn: parent
         }
+
+        Common.RefreshView {
+            opacity: 0.0
+            id: refreshView;
+            anchors.centerIn: parent
+        }
+
     }
 
     states: [
@@ -141,6 +149,17 @@ Item {
         State {
             name: "Searching"
             PropertyChanges { target: searchView; opacity: 1.0 }
+            PropertyChanges { target: toolBar;
+                button1Label: "Back";
+                onButton1Clicked: screen.state = "Browsing";
+                button2Visible: false;
+                button4Visible: false;
+                button3Visible: false;
+            }
+        },
+        State {
+            name: "Refreshing"
+            PropertyChanges { target: refreshView; opacity: 1.0 }
             PropertyChanges { target: toolBar;
                 button1Label: "Back";
                 onButton1Clicked: screen.state = "Browsing";

@@ -337,4 +337,13 @@ OTHER_FILES += \
     qml/images/mediaplayer/AppletPause.png \
     qml/images/mediaplayer/AppletForward.png \
     qml/images/mediaplayer/AppletBack.png \
-    qml/common/TitleBar.qml
+    qml/common/TitleBar.qml \
+    qml/common/RefreshView.qml \
+    qml/images/indicator_update_white8.png \
+    qml/images/indicator_update_white7.png \
+    qml/images/indicator_update_white6.png \
+    qml/images/indicator_update_white5.png \
+    qml/images/indicator_update_white4.png \
+    qml/images/indicator_update_white3.png \
+    qml/images/indicator_update_white2.png \
+    qml/images/indicator_update_white1.png

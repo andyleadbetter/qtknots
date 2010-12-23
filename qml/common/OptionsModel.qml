@@ -12,6 +12,6 @@ ListModel {
     }
     ListElement {
         name: "Refresh Collection"
-        nextState: "refreshCollection"
+        nextState: "Refreshing"
     }
 }

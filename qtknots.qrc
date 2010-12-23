@@ -161,5 +161,14 @@
         <file>qml/images/icon-m-toolbar-list.svg</file>
         <file>qml/images/icon-m-toolbar-settings.svg</file>
         <file>qml/common/TitleBar.qml</file>
+        <file>qml/images/indicator_update_white1.png</file>
+        <file>qml/images/indicator_update_white2.png</file>
+        <file>qml/images/indicator_update_white3.png</file>
+        <file>qml/images/indicator_update_white4.png</file>
+        <file>qml/images/indicator_update_white5.png</file>
+        <file>qml/images/indicator_update_white6.png</file>
+        <file>qml/images/indicator_update_white7.png</file>
+        <file>qml/common/RefreshView.qml</file>
+        <file>qml/images/indicator_update_white8.png</file>
     </qresource>
 </RCC>
