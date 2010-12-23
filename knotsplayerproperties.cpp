@@ -62,12 +62,17 @@ void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
 
         reply->deleteLater();
 
-        _streamUrl.setScheme("http");
-        _streamUrl.setUserName(_playerId);
-        _streamUrl.setPassword(_password);
-        _streamUrl.setPort(_port.toInt());
-        _streamUrl.setHost( Knots::instance().serverAddress().host());
-        _streamUrl.setPath("/" + _stream);
+        QUrl streamUrl;
+
+        streamUrl.setScheme("http");
+        streamUrl.setUserName(_playerId);
+        streamUrl.setPassword(_password);
+        streamUrl.setPort(_port.toInt());
+        streamUrl.setHost( Knots::instance().serverAddress().host());
+        streamUrl.setPath("/" + _stream);
+
+        _streamUrl = streamUrl.toString();
+
         delete _xmlSource;
         _xmlSource=0;
         _currentDownload = 0;
@@ -110,7 +115,7 @@ bool KnotsPlayerProperties::endElement(const QString & /* namespaceURI */,
     } else if ( localName == "title" ) {
         _title = _currentText;
     } else if ( localName == "position" ) {
-        _position = _currentText;
+        _position = _currentText.toFloat();
     } else if ( localName == "media_id" ) {
         _media_id = _currentText;
     } else if ( localName == "playlistindex" ) {
@@ -136,7 +141,7 @@ bool KnotsPlayerProperties::endElement(const QString & /* namespaceURI */,
     } else if ( localName == "looped" ) {
         _looped = _currentText;
     } else if ( localName == "duration") {
-        _duration = _currentText;
+        _duration = _currentText.toInt();
     }
 
 

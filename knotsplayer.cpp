@@ -56,6 +56,8 @@ void KnotsPlayer::play( QString& id )
     _status = WaitingForPortInfo;
 }
 
+
+
 void KnotsPlayer::startRequestFinished(QNetworkReply* reply)
 {
     qWarning() << "Fetched from " << reply->url() ;
@@ -108,15 +110,15 @@ void KnotsPlayer::stopRequestFinished(QNetworkReply* reply)
 
 
 
-void KnotsPlayer::seek( float newPosition )
+void KnotsPlayer::seek( int newPosition )
 {
 
-    double percentage = 1.0  - ( duration() - newPosition ) / duration();
+    float percentage = 1.0  - ( _properties->_position - newPosition ) / _properties->_duration;
 
     stopObservingProperties();
 
 
-    unsigned int seekChange = 100 * ( percentage - _properties->_position.toFloat() );
+    unsigned int seekChange = 100 * ( percentage - _properties->_position );
 
     if( seekChange == 0 )
     {
@@ -148,9 +150,9 @@ void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)
 }
 
 
-int KnotsPlayer::duration()
+int KnotsPlayer::getDuration()
 {
-    return _properties->_duration.toInt();
+    return _properties->_duration;
 }
 
 void KnotsPlayer::requestFinished( QNetworkReply* reply)
@@ -212,18 +214,28 @@ void KnotsPlayer::onPropertiesUpdated()
         // Do initial properties change while Waiting State so that initial slider change
         // does not trigger seek
         emit propertiesChanged(*_properties);
-        // Let declarative update
+        emit sourceChanged(_properties->_streamUrl);
+
+        // Set the clock to tick.
         startObservingProperties();
 
         // Now begin to play
         _status = Playing;
         emit stateChanged(_status);
-
         break;
        }
-    default:
+    case Playing:
+    {
+        QString newLabel = getFormattedPosition();
+        emit formattedPositionChanged(newLabel);
+        emit durationChanged(_properties->_duration);
+        emit positionChanged(_properties->_position);
         emit propertiesChanged(*_properties);
-       // qWarning() << "Default State in properties update";
+        break;
+    }
+
+    default:
+        emit propertiesChanged(*_properties);       
         break;
     };
 }
@@ -240,15 +252,50 @@ void KnotsPlayer::updateTimeout()
         _properties->updateStatus(_playerId,_password);
     else // Local update
     {
-        float duration = _properties->_duration.toFloat() ;
-        float position = duration * _properties->_position.toFloat();
+        float duration = _properties->_duration;
+        float position = duration * _properties->_position;
 
         position += 1.0;
 
         position = 1.0 - ( duration - position ) / duration  ;
 
-        _properties->_position = QString::number(position);
+        _properties->_position = position;
 
         onPropertiesUpdated();
     }
 }
+
+QString KnotsPlayer::getFormattedPosition()
+{
+    int durationMins = _properties->_duration / 60;
+    int durationSecs = _properties->_duration - ( durationMins * 60 );
+
+
+    int positionMins = (int) _properties->_duration * _properties->_position / 60.0;
+    int positionSecs = (int) (_properties->_duration * _properties->_position) % 60;
+
+    QString timeLabel= QString( "%3:%4/%1:%2" )\
+            .arg(QString::number(durationMins),2, '0')\
+            .arg(QString::number(durationSecs),2, '0')\
+            .arg(QString::number(positionMins),2, '0')\
+            .arg(QString::number(positionSecs),2, '0');
+
+    return timeLabel;
+}
+
+KnotsPlayer::PlayingState KnotsPlayer::getState()
+{
+    return _status;
+}
+
+
+QString KnotsPlayer::getCurrentSource()
+{
+    return _properties->_streamUrl;
+}
+
+int KnotsPlayer::getPosition()
+{
+    return _properties->_duration * _properties->_position;
+}
+

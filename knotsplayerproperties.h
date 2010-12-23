@@ -56,8 +56,8 @@ public:
     QString _seekable;
     QString _mediatype;
     QString _title;
-    QString _position;
-    QString _duration;
+    float    _position;
+    int     _duration;
     QString _media_id;
     QString _playlistindex;
     QString _playlist_length;
@@ -70,7 +70,7 @@ public:
     QString _buffer;
     QString _address;
     QString _looped;
-    QUrl _streamUrl;
+    QString _streamUrl;
     QString _playerId;
     QString _password;
 

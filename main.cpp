@@ -20,6 +20,9 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<KnotsDirectory>("KnotsDirectory", 1, 0,"KnotsDirectory");
 
+    qmlRegisterType<KnotsPlayer>("KnotsPlayer", 1, 0,"KnotsPlayer");
+
+
     qmlRegisterType<QRangeModel>("Qt.labs.components", 1, 0, "RangeModel");
 
 

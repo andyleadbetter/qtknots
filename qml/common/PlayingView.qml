@@ -1,7 +1,7 @@
 import Qt 4.7
 import "../common" as Common
 
-import Knots 1.0
+import KnotsPlayer 1.0
 
 import QtMultimediaKit 1.1
 
@@ -9,7 +9,7 @@ Rectangle {
     width:  800;
     height: 480;
     id: playingPage;
-    Knots {  id: knots }
+    KnotsPlayer {  id: knots }
     state:  "Default"
     color: "Black"
 

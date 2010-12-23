@@ -18,10 +18,10 @@ symbian:TARGET.UID3 = 0xEB530529
 # (This might significantly increase build time)
 #DEFINES += QMLJSDEBUGGER
 
-
-CONFIG      += link_pkgconfig
-PKGCONFIG   += glib-2.0 dbus-1 libosso
-
+maemo5: {
+        CONFIG      += link_pkgconfig
+        PKGCONFIG   += glib-2.0 dbus-1 libosso
+}
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     knots.cpp \
@@ -37,9 +37,12 @@ SOURCES += main.cpp \
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
+!windows: {
 qtcAddDeployment()
+}
 
 include(models/models.pri)
+
 include(kernel/kernel.pri)
 
 HEADERS += \

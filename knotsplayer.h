@@ -31,48 +31,78 @@ public:
         Stopped             // 4        
     } _status;
 
+    Q_PROPERTY( KnotsPlayer::PlayingState currentState READ getState NOTIFY stateChanged )
+    Q_PROPERTY( QString formattedPosition READ getFormattedPosition NOTIFY formattedPositionChanged )
+    Q_PROPERTY( QString currentSource READ getCurrentSource NOTIFY sourceChanged )
+    Q_PROPERTY( int duration READ getDuration NOTIFY durationChanged )
+    Q_PROPERTY( int position READ getPosition NOTIFY positionChanged )
+
 
 signals:
-    void propertiesChanged(const KnotsPlayerProperties &newProperties );
+    void propertiesChanged(const KnotsPlayerProperties &newProperties );    
+    void sourceChanged(QString &newSource );
+    void durationChanged( int newDuration );
+    void positionChanged( int newPosition );
     void stateChanged( KnotsPlayer::PlayingState newState );
+    void formattedPositionChanged( QString &newPos );
 
-public:
-    explicit KnotsPlayer( QObject *parent = 0);
-
+public slots:
     void play( QString& id );
 
-    void stop();
+    void stop( );
 
-    void seek(float newPosition );
+    void seek(int newPosition );
 
-    int duration();
+    void onPropertiesUpdated();
+
+public:
+
+    explicit KnotsPlayer( QObject *parent = 0);
 
     ~KnotsPlayer();
 
     KnotsPlayerProperties& properties();
 
 
-    void startBacklightKeepAlive();
-    void stopBacklightKeepAlive();
+protected:
 
-public slots:
+    QString getCurrentSource();
+
+    void setCurrentSource( QString &newSource );
+
+    int getDuration();
+
+    int getPosition();
+
+    QString getFormattedPosition();
+
+    PlayingState getState() ;
+
+protected slots:
+
     void onBacklightTimer();
 
     void requestFinished( QNetworkReply* reply);
 
-    void onPropertiesUpdated();    
-
     void updateTimeout();
 
-private:
+private: // Methods
 
     void startRequestFinished(QNetworkReply* reply);
+
     void stopRequestFinished(QNetworkReply* reply);
+
     void seekRequestFinished(QNetworkReply* reply);
+
     void startObservingProperties();
+
     void stopObservingProperties();
 
+    void startBacklightKeepAlive();
 
+    void stopBacklightKeepAlive();
+
+private: // Data
 
     QNetworkAccessManager _serverConnection;
     QNetworkReply* _stopRequest;
@@ -81,9 +111,11 @@ private:
 
     QString _playerId;
     QString _password;
+    QString _source;
 
     QTimer* _propertiesUpdateTimer;
     QTimer* _backlightTimer;
+
     KnotsPlayerProperties* _properties;
 
     int _tickCount;
@@ -91,7 +123,6 @@ private:
 #if defined(Q_WS_MAEMO_5)
     osso_context_t* _ossoContext;
 #endif
-
 
 };
 
