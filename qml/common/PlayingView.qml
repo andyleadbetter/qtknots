@@ -12,12 +12,17 @@ Rectangle {
 
     KnotsPlayer {
         id: knots;
-        onPositionChanged: {
-            if( knots.currentState != 3 ) {
-                videoControls.setValue( knots.position);
-            }
-        }
     }
+
+
+    Binding {
+        target:  videoControls;
+        property: position;
+        value: knots.position;
+        when: ( knots.currentState != 3 && !videoControls.draggng )
+    }
+
+
     state:  "Default"
     color: "Black"
 

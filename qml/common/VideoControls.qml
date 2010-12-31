@@ -9,11 +9,7 @@ Item {
     property alias nextLabel: next.text
     property alias prevLabel: next.text
     property alias duration: positionSlider.maximum
-
-    function setValue( value )
-    {
-        positionSlider.setValue(value)
-    }
+    property alias position: positionSlider.value
 
     signal playClicked
     signal nextClicked
