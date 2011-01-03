@@ -15,15 +15,10 @@ Rectangle {
         onCurrentStateChanged: console.log( "State " + currentState )
     }
 
-    Connections {
-        target:  knots
-        onPositionChanged: if ( knots.currentState == 1 && !videoControls.dragging )
-                               videoControls.position = knots.position;
-    }
 
     Connections {
         target: videoControls
-        onDraggingChanged: console.log( videoControls.dragging ? "Dragging" : "Tracking" )
+        onDraggingChanged: console.log( ( videoControls.dragging ? "Dragging" : "Tracking" ) + videoControls.position )
         onPositionChanged: console.log( videoControls.position )
     }
 
@@ -71,11 +66,11 @@ Rectangle {
     }
 
     Common.VideoControls {
-        id: videoControls; z: 5
-
-        width: parent.width; opacity: 1.0
-        duration: knots.duration
-
+        id: videoControls;
+        width: parent.width; opacity: 1.0        
+        duration: knots.duration      
+        positionDisplay: knots.formattedPosition
+        position:  knots.position
         onStopClicked: {
             knots.stop();            
             videoPlayer.playing=false;
@@ -89,6 +84,10 @@ Rectangle {
             }
         }
 
+        onDraggedToNewPos: {
+            console.log("Seeking new Position " + newPosition )
+            knots.seek( newPosition );
+        }
 
 
     }

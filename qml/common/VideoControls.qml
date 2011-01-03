@@ -9,13 +9,22 @@ Item {
     property alias nextLabel: next.text
     property alias prevLabel: next.text
     property alias duration: positionSlider.maximum
-    property alias position: positionSlider.value
-    property alias dragging: positionSlider.dragging
+    property real  position
+    property alias positionDisplay: timeIndication.text
+    property bool dragging
 
     signal playClicked
     signal nextClicked
     signal prevClicked
     signal stopClicked
+    signal draggedToNewPos( real newPosition )
+
+    Binding {
+        target: positionSlider
+        property: "value"
+        value:  toolbar.position
+        when: !dragging
+    }
 
 
     height:  64
@@ -73,25 +82,19 @@ Item {
 
     Common.Slider {
         id: positionSlider
-        minimum: 0
-        maximum: knots.duration
         anchors.left: next.right
         anchors.right: timeIndication.left
         anchors.verticalCenter: toolbar.verticalCenter
         anchors.margins: 10
         height: 32;
-
-        onValueChanged: {
-            console.log( "Slider repositioned to " + value)
-            if( knots.currentState == 1 )
-                knots.seek( value )
+        Component.onCompleted: {
+            draggedToNewValue.connect( draggedToNewPos )
         }
 
     }
 
     Text {
         id: timeIndication
-        text:  knots.formattedPosition
         font.pixelSize: 32
         color: "white"
         anchors.right:  parent.right

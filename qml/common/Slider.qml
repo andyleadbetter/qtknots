@@ -35,20 +35,20 @@ Item {
     property alias inverted: model.inverted
     property alias minimum: model.minimumValue
     property alias maximum: model.maximumValue
-    property bool dragging
+
+    signal draggedToNewValue( real newValue )
 
     height: 22
     width: 108
 
-    signal valueChanged( real value )
-
-    Binding {
-        target: model
-        property:  "value"
-        value:  basicSlider.value
-        when: !dragging
+    Connections {
+        target: basicSlider
+        onValueChanged:{
+            if( knobArea.drag.active == false ){
+                model.setValue(value);
+            }
+        }
     }
-
 
     BorderImage {
         id: sliderBase
@@ -70,6 +70,10 @@ Item {
             anchors.right: parent.right
             height: 20
             onPressed: { model.setPosition(knob.x - knob.width/2); }
+            onReleased: {
+                console.log( "Groove released at " + model.value )
+                basicSlider.draggedToNewValue(model.value)
+            }
 
         }
 
@@ -94,12 +98,10 @@ Item {
                 drag.axis: "XAxis"
                 drag.minimumX: -sliderEdgeOffset
                 drag.maximumX: sliderBase.width - knob.width / 2 - sliderEdgeOffset
-                onReleased: {console.log("Knob Dragged to " + ( knob.x - knob.width/2));
-                    model.setPosition(knob.x - knob.width/2);
-                    basicSlider.valueChanged( model.value );
-                    basicSlider.dragging = false;
+                onReleased: {
+                    console.log( "Knob Area released at " + model.value )
+                    basicSlider.draggedToNewValue(model.value)
                 }
-                onPressed: { basicSlider.dragging = true; }
             }
 
             states: [
@@ -115,12 +117,13 @@ Item {
                 }
             ]
         }
-    }
+    }   
 
     RangeModel {
         id: model
         minimumValue: 0
         maximumValue: 100
+        position: knob.x
         positionAtMinimum: -sliderEdgeOffset
         positionAtMaximum: sliderBase.width - knob.width / 2 - sliderEdgeOffset        
     }
