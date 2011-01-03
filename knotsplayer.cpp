@@ -17,6 +17,7 @@ KnotsPlayer::KnotsPlayer( QObject *parent )
     , _status( Stopped )
     , _tickPeriod( KOneSecond )
     , _tickCount( 0 )
+    , _properties( 0 )
 {
     _properties = new KnotsPlayerProperties;
     _propertiesUpdateTimer = new QTimer();
@@ -32,7 +33,7 @@ KnotsPlayer::KnotsPlayer( QObject *parent )
 
     connect( _properties, SIGNAL(propertiesUpdated()), this, SLOT(networkPropertiesUpdated()));
 
-    connect( &_serverConnection, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestFinished(QNetworkReply*)));
+    connect( &Knots::instance().serverConnection(), SIGNAL(finished(QNetworkReply*)), this, SLOT(requestFinished(QNetworkReply*)));
 
     connect( this, SIGNAL(stateChanged(KnotsPlayer::PlayingState)), Knots::instance().mainWindow(), SLOT(onPlayerStateChange(KnotsPlayer::PlayingState)));
 
@@ -59,7 +60,7 @@ void KnotsPlayer::play( QString& id )
 
     _localPosition =_tickCount = 0;
 
-    _playRequest = _serverConnection.get(QNetworkRequest(url));
+    _playRequest = Knots::instance().serverConnection().get(QNetworkRequest(url));
     _status = WaitingForPortInfo;
 }
 
@@ -91,7 +92,7 @@ void KnotsPlayer::stop()
     url.setPath( "/root/stop");
     url.addQueryItem("id",_playerId);
 
-    _stopRequest = _serverConnection.get(QNetworkRequest(url));
+    _stopRequest = Knots::instance().serverConnection().get(QNetworkRequest(url));
 
 }
 void KnotsPlayer::stopRequestFinished(QNetworkReply* reply)
@@ -132,8 +133,9 @@ void KnotsPlayer::seek( int newPosition )
     url.addQueryItem("position", QString::number( percentage )  );
 
 
-    _seekRequest = _serverConnection.get(QNetworkRequest(url));
+    _seekRequest = Knots::instance().serverConnection().get(QNetworkRequest(url));
     _status = Seeking;
+    emit stateChanged(_status);
 }
 
 void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)

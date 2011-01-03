@@ -27,16 +27,18 @@ void MainWindow::launch()
     QGLFormat format = QGLFormat::defaultFormat();
     format.setSampleBuffers(false);
 
-    Qt::WidgetAttribute attribute = Qt::WA_Maemo5NonComposited;
-    setAttribute(attribute, true);
+
+
+    setAttribute(Qt::WA_Maemo5NonComposited, true);
+    setAttribute(Qt::WA_Maemo5AutoOrientation, true);
 
     _glWidget = new QGLWidget(format);
 
     //### potentially faster, but causes junk to appear if top-level is Item, not Rectangle
     _glWidget->setAutoFillBackground(false);
-    _glWidget->setAttribute(attribute, true);
+    _glWidget->setAttribute(Qt::WA_Maemo5NonComposited, true);
     _navigator->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-    _navigator->setAttribute(attribute, true);
+    _navigator->setAttribute(Qt::WA_Maemo5NonComposited, true);
 
     _navigator->setViewport(_glWidget);
 #else
@@ -51,15 +53,17 @@ void MainWindow::launch()
     _videoPlayer->setOrientation(QmlApplicationViewer::ScreenOrientationLockLandscape);
     _videoPlayer->setSource(QUrl("qrc:///qml/common/PlayingView.qml"));
     _videoPlayer->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    _videoPlayer->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
+#if defined( Q_WS_MAEMO_5 )
+    _videoPlayer->setAttribute(Qt::WA_Maemo5NonComposited, true);
+#endif
 
     QObject::connect(_navigator->engine(), SIGNAL(quit()), QCoreApplication::instance(),SLOT(quit()));
     connect( QCoreApplication::instance(), SIGNAL(aboutToQuit()), this, SLOT(onQmlFinished()));
 
-
     switchViews(false);
     showExpanded();
-
 }
 
 void MainWindow::switchViews( bool showPlayer )
@@ -98,13 +102,11 @@ void MainWindow::showExpanded()
 
 void MainWindow::onPlayerStateChange( KnotsPlayer::PlayingState newState )
 {
-    switchViews(KnotsPlayer::Playing == newState );
+    switchViews(KnotsPlayer::Stopped != newState );
 }
 
 MainWindow::~MainWindow()
 {
-    delete _videoPlayer;
-    delete _navigator;
 }
 
 void MainWindow::onQmlFinished()
@@ -112,13 +114,13 @@ void MainWindow::onQmlFinished()
     _navigator->close();
     _videoPlayer->close();    
     close();
-    delete this;
+  //  deleteLater();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *newSizeEvent)
 {
     QSize newSize = newSizeEvent->size();
-    qDebug() << "Width:"  << newSize.width() << "\n" << "Height:" << newSize.height();
+  //  qDebug() << "Width:"  << newSize.width() << "\n" << "Height:" << newSize.height();
 
     _videoPlayer->resize(newSize);     
     _navigator->resize(newSize);

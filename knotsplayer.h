@@ -108,7 +108,6 @@ private: // Methods
 
 private: // Data
 
-    QNetworkAccessManager _serverConnection;
     QNetworkReply* _stopRequest;
     QNetworkReply* _playRequest;
     QNetworkReply* _seekRequest;

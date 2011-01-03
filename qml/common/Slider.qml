@@ -31,7 +31,7 @@ Item {
     id: basicSlider;
 
     property variant sliderEdgeOffset: 6
-    property alias value: model.value
+    property real value
     property alias inverted: model.inverted
     property alias minimum: model.minimumValue
     property alias maximum: model.maximumValue
@@ -42,11 +42,13 @@ Item {
 
     signal valueChanged( real value )
 
-    function setValue( value )
-    {
-        if( !dragging )
-            model.value = value
+    Binding {
+        target: model
+        property:  "value"
+        value:  basicSlider.value
+        when: !dragging
     }
+
 
     BorderImage {
         id: sliderBase

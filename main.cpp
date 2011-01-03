@@ -10,8 +10,6 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    app.setGraphicsSystem("raster");
-
     Knots::instance();
 
     qmlRegisterType<KnotsDeclarative>("Knots", 1, 0, "Knots");
@@ -22,9 +20,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<KnotsPlayer>("KnotsPlayer", 1, 0,"KnotsPlayer");
 
-
     qmlRegisterType<QRangeModel>("Qt.labs.components", 1, 0, "RangeModel");
-
 
     Knots::instance().launch();
 

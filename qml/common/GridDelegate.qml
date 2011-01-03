@@ -1,10 +1,22 @@
-
 import Qt 4.7
+import QtQuick 1.0
 
 Component {
     id: gridDelegate;
 
     Rectangle {
+        function showDetails()
+        {
+            mediaDetails.name =  model.name;
+            mediaDetails.duration = duration;
+            mediaDetails.views = views;
+            mediaDetails.position = lastposition;
+            mediaDetails.imageUrl = thumbnail;
+            mediaDetails.mediaId =  model.mediaId;
+            mediaDetails.addedOn = addedOn;
+            mediaDetails.size = model.width + "x" + model.height
+        }
+
         id: gridWrapper;
         width: GridView.view.cellWidth; height: GridView.view.cellHeight ;
         color: "white"; smooth: false
@@ -41,7 +53,7 @@ Component {
             anchors.fill: gridWrapper
             onClicked: {
                 videoGridView.currentIndex = index;
-                console.log( "QML: Selected " + model.id );
+                showDetails();
                 screen.state = knots.currentDirectory.itemSelected( model.id );
             }
         }

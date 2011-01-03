@@ -11,7 +11,7 @@
 #include "profile.h"
 #include "mainwindow.h"
 
-class SaxProfileHandler;
+class ProfilesHandler;
 class KnotsDirectory;
 
 
@@ -25,15 +25,15 @@ public:
 signals:
     void directoryChanged(KnotsDirectory* newItems);
 
-    void profilesChanged(ProfileListImpl* profiles );
-
 public slots:
-
-    void onProfilesFetched( QNetworkReply* reply );
 
     void onDirectoryReady();
 
     void onPlayerStateChange( KnotsPlayer::PlayingState newState );
+
+    void authenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
+
+
 
 public:
 
@@ -49,7 +49,7 @@ public:
 
     QUrl  serverAddress() const;
 
-    KnotsDirectory* currentDirectory();
+    KnotsDirectory& currentDirectory();
 
     void setServerAddress( QUrl &newServerAddress );
 
@@ -78,27 +78,38 @@ public:
     void browseTags(QString &tag);
 
     void setPlayer(KnotsPlayer *newPlayer);
+
+    ProfilesHandler& profiles();
+
+    QNetworkAccessManager& serverConnection();
+
+    QString password();
+
+    QString userName();
+
+    void setUserName(QString newPass);
+
+    void setPassword(QString newPass);
+
 private:
     QString _profile;
     QUrl _serverAddress;
     QString _currentPath;
     QString _playerId;
+    QString _userName;
+    QString _password;
 
-    QXmlSimpleReader* _xmlReader;
-    QXmlInputSource  *_xmlSource;
-
-
-    QNetworkAccessManager serverConnection;
+    QNetworkAccessManager _serverConnection;
     QNetworkReply* currentDownload;
-    QNetworkReply* _profileFetch;
+
 
     QStack<QString> _pathHistory;
 
-    SaxProfileHandler* handler;
+    ProfilesHandler* _handler;
 
     static Knots* _instance;
 
-    ProfileListImpl* _profiles;
+    ProfilesHandler* _profiles;
     KnotsDirectory* _currentDirectory;
 
     QSettings _settings;

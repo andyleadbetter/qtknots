@@ -17,7 +17,16 @@ class KnotsDirectory : public QAbstractListModel, public SaxKnotsItemHandlerPars
     enum ProfileRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
-        ItemImageRole
+        ImageRole,
+        WidthRole,
+        HeightRole,
+        ViewsRole,
+        AddedRole,
+        DurationRole,
+        LastViewedPositionRole,
+        MediaIdRole
+
+
     };
 
 signals:
@@ -63,7 +72,6 @@ private:
     QXmlInputSource*     _xmlSource;
     QNetworkReply* _currentDownload;
     SaxKnotsItemHandler* _parser;
-    QNetworkAccessManager _serverConnection;
     QHash<int, QByteArray> _roles;
     int _totalPages;
     int _currentPage;

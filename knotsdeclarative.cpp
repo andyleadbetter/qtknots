@@ -6,6 +6,7 @@
 #include "profile.h"
 #include "knotsitem.h"
 #include "knotsplayer.h"
+#include "profileshandler.h"
 
 #if defined(Q_WS_MAEMO_5)
     #include <QtDBus>
@@ -20,7 +21,7 @@ KnotsDeclarative::KnotsDeclarative(QObject *parent)
 
 KnotsDirectory* KnotsDeclarative::getDirectory()
 {
-    return _instance.currentDirectory();
+    return &_instance.currentDirectory();
 }
 
 void KnotsDeclarative::backSelected()
@@ -63,7 +64,11 @@ ProfileList::ProfileList( QObject *parent )
     _roles[IdRole] = "id";
     _roles[NameRole] = "name";
     setRoleNames(_roles);
-    connect( &_instance, SIGNAL( profilesChanged(ProfileListImpl*)), this, SLOT(onProfilesChanged(ProfileListImpl*)));
+    connect( &_instance.profiles(), SIGNAL( profilesChanged(ProfileListImpl*)), this, SLOT(onProfilesChanged(ProfileListImpl*)));
+}
+
+ProfileList::~ProfileList()
+{
 }
 
 void ProfileList::setCurrentProfile(QString &newProfile)
@@ -127,3 +132,28 @@ QVariant ProfileList::data ( const QModelIndex & index, int role ) const
 
 }
 
+QString KnotsDeclarative::userName() {
+    return Knots::instance().userName();
+}
+
+QString KnotsDeclarative::password() {
+    return Knots::instance().password();
+}
+
+void KnotsDeclarative::setUserName(QString userName ) {
+    Knots::instance().setUserName(userName);
+}
+
+void KnotsDeclarative::setPassword(QString password ) {
+    Knots::instance().setPassword(password);
+}
+
+void KnotsDeclarative::login()
+{
+    Knots::instance().browseRoot();
+}
+
+void KnotsDeclarative::play( QString modelId )
+{
+    _instance.player().play(modelId);
+}

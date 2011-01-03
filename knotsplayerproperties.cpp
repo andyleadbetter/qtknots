@@ -4,9 +4,9 @@
 
 KnotsPlayerProperties::KnotsPlayerProperties(QObject *parent )
     : QObject( parent )
-    , _currentDownload(0)
-    , _position(0.0)
+    , _position(0.0)    
     , _duration(0)
+    , _currentDownload(0)
 
 {
     _processingThread.start(QThread::LowPriority);
@@ -17,7 +17,7 @@ KnotsPlayerProperties::KnotsPlayerProperties(QObject *parent )
     _xmlReader->setContentHandler(this);
 
 
-    connect(&_serverConnection, SIGNAL(finished(QNetworkReply*)),
+    connect(&Knots::instance().serverConnection(), SIGNAL(finished(QNetworkReply*)),
             this, SLOT(fetchFinished(QNetworkReply*)));
 }
 
@@ -44,7 +44,7 @@ void KnotsPlayerProperties::updateStatus(QString &playerId, QString &password)
     {
         _waitingForRequest.lock();
         QNetworkRequest request( statusUrl );
-        _currentDownload = _serverConnection.get(request);
+        _currentDownload = Knots::instance().serverConnection().get(request);
         _xmlSource = new QXmlInputSource( _currentDownload );
         _waitingForRequest.unlock();
     }

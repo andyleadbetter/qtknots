@@ -2,6 +2,7 @@
 #include <QNetworkReply>
 #include <qdebug.h>
 #include "knotsdirectory.h"
+#include "knots.h"
 
 
 KnotsDirectory::~KnotsDirectory()
@@ -21,14 +22,23 @@ KnotsDirectory::KnotsDirectory( QObject *parent )
 {
     _roles[IdRole] = "id";
     _roles[NameRole] = "name";
-    _roles[ItemImageRole] = "thumbnail";
+    _roles[ImageRole] = "thumbnail";
+    _roles[WidthRole] = "width";
+    _roles[HeightRole] = "height";
+    _roles[ViewsRole] = "views";
+    _roles[AddedRole] = "addedOn";
+    _roles[DurationRole] = "duration";
+    _roles[LastViewedPositionRole] = "lastposition";
+    _roles[MediaIdRole] = "mediaId";
+
+
 
     setRoleNames(_roles);
 
     _parser = new SaxKnotsItemHandler();
     _parser->setItemHandler(this);
 
-    connect(&_serverConnection, SIGNAL(finished(QNetworkReply*)),SLOT(onDirectoryFetchFinished(QNetworkReply*)));
+    connect(&Knots::instance().serverConnection(), SIGNAL(finished(QNetworkReply*)),SLOT(onDirectoryFetchFinished(QNetworkReply*)));
 
 }
 
@@ -39,9 +49,7 @@ void KnotsDirectory::onDirectoryFetchFinished( QNetworkReply* reply )
     {
         qWarning() << "Fetched from " << reply->url() ;
         qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-        qWarning() << reply->peek( 256 );
-
-        int start = _items.count();
+        qWarning() << reply->peek( 4096 );
 
         _xmlReader->parse(_xmlSource );
 
@@ -81,7 +89,7 @@ void KnotsDirectory::loadPath(QUrl &pathToLoad)
 
         QNetworkRequest request( pathToLoad );
 
-        _currentDownload = _serverConnection.get(request);
+        _currentDownload = Knots::instance().serverConnection().get(request);
 
         _xmlSource = new QXmlInputSource( _currentDownload );
         _xmlReader = new QXmlSimpleReader();
@@ -154,15 +162,29 @@ QVariant KnotsDirectory::data ( const QModelIndex & index, int role ) const
 
         //qDebug() << "Qml asking item " << index.row() << "Name: " << dobj->getText() << "Id: " << dobj->getId() << "thumbnail" << dobj->getItemImage();
 
+
         switch (role) {
         case Qt::DisplayRole: // The default display role now displays the first name as well
         case IdRole:
             return QVariant::fromValue(dobj->_modelIndex);
         case NameRole:
             return QVariant::fromValue(dobj->getText());
-        case ItemImageRole:
+        case ImageRole:
             return QVariant::fromValue(dobj->getItemImage().toString());
-
+        case WidthRole:
+            return QVariant::fromValue(dobj->getFields()["width"]);
+        case HeightRole:
+            return QVariant::fromValue(dobj->getFields()["height"]);
+        case ViewsRole:
+            return QVariant::fromValue(dobj->getFields()["views"]);
+        case AddedRole:
+            return QVariant::fromValue(dobj->getFields()["added"]);
+        case DurationRole:
+            return QVariant::fromValue(dobj->getFields()["duration"]);
+        case LastViewedPositionRole:
+            return QVariant::fromValue(dobj->getFields()["position"]);
+        case MediaIdRole:
+            return QVariant::fromValue(dobj->getId());
         default:
             return QVariant();
         }

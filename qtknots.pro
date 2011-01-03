@@ -26,14 +26,14 @@ maemo5: {
 SOURCES += main.cpp \
     knots.cpp \
     profile.cpp \
-    saxprofilehandler.cpp \
     knotsdeclarative.cpp \
     mainwindow.cpp \
     knotsplayerproperties.cpp \
     knotsplayer.cpp \
     knotsitem.cpp \
     knotsdirectory.cpp \
-    saxknotsitemhandler.cpp
+    saxknotsitemhandler.cpp \
+    profileshandler.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -48,14 +48,14 @@ include(kernel/kernel.pri)
 HEADERS += \
     knots.h \
     profile.h \
-    saxprofilehandler.h \
     knotsdeclarative.h \
     mainwindow.h \
     knotsplayerproperties.h \
     knotsplayer.h \
     knotsitem.h \
     knotsdirectory.h \
-    saxknotsitemhandler.h
+    saxknotsitemhandler.h \
+    profileshandler.h
 
 QT           += xml network opengl
 
@@ -71,7 +71,6 @@ OTHER_FILES += \
     qml/common/VideoControls.qml \
     qml/common/ToolBar.qml \
     qml/common/Slider.qml \
-    qml/common/SearchView.qml \
     qml/common/Progress.qml \
     qml/common/ProfilesView.qml \
     qml/common/ProfilesDelegate.qml \
@@ -346,4 +345,10 @@ OTHER_FILES += \
     qml/images/indicator_update_white4.png \
     qml/images/indicator_update_white3.png \
     qml/images/indicator_update_white2.png \
-    qml/images/indicator_update_white1.png
+    qml/images/indicator_update_white1.png \
+    qml/common/LineEdit.qml \
+    qml/images/lock-icon.svg \
+    qml/images/clear.png \
+    qml/common/SearchPanel.qml \
+    qml/common/UserNamePanel.qml \
+    qml/common/DetailsPanel.qml

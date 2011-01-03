@@ -10,6 +10,7 @@ Item {
     property alias prevLabel: next.text
     property alias duration: positionSlider.maximum
     property alias position: positionSlider.value
+    property alias dragging: positionSlider.dragging
 
     signal playClicked
     signal nextClicked

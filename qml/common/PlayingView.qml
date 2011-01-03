@@ -12,16 +12,20 @@ Rectangle {
 
     KnotsPlayer {
         id: knots;
+        onCurrentStateChanged: console.log( "State " + currentState )
     }
 
-
-    Binding {
-        target:  videoControls;
-        property: position;
-        value: knots.position;
-        when: ( knots.currentState != 3 && !videoControls.draggng )
+    Connections {
+        target:  knots
+        onPositionChanged: if ( knots.currentState == 1 && !videoControls.dragging )
+                               videoControls.position = knots.position;
     }
 
+    Connections {
+        target: videoControls
+        onDraggingChanged: console.log( videoControls.dragging ? "Dragging" : "Tracking" )
+        onPositionChanged: console.log( videoControls.position )
+    }
 
     state:  "Default"
     color: "Black"

@@ -22,6 +22,8 @@ public:
 
     Q_PROPERTY( QString currentProfile READ getCurrentProfile WRITE setCurrentProfile )
 
+    ~ProfileList();
+
 public slots:
     void onProfilesChanged( ProfileListImpl* newProfileList );
 
@@ -55,18 +57,31 @@ public:
 
     Q_PROPERTY( QString serverName READ getServerName WRITE setServerName )
     Q_PROPERTY( KnotsDirectory *currentDirectory READ getDirectory NOTIFY directoryChanged )
+    Q_PROPERTY( QString userName READ userName WRITE setUserName )
+    Q_PROPERTY( QString password READ password WRITE setPassword )
 
 
 public slots:
     void taskSwitch();
     void backSelected();
     void search( QString searchTag );
+    void login();
+    void play( QString modelId );
+
 
 signals:
     void currentPathChanged();
     void directoryChanged( KnotsDirectory *newDirectory );
 
 private:
+
+    QString userName() ;
+    QString password() ;
+
+    void setUserName(QString userName ) ;
+    void setPassword(QString password ) ;
+
+
 
     KnotsDirectory* getDirectory();
 

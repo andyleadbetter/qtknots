@@ -1,16 +1,59 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/QKnots.qml</file>
+        <file>qml/common/Button.qml</file>
+        <file>qml/common/Directory.qml</file>
+        <file>qml/common/DirectoryDelegate.qml</file>
+        <file>qml/common/GridDelegate.qml</file>
+        <file>qml/common/GridView.qml</file>
+        <file>qml/common/LineEdit.qml</file>
+        <file>qml/common/OptionsModel.qml</file>
+        <file>qml/common/OptionsPage.qml</file>
+        <file>qml/common/OptionsView.qml</file>
+        <file>qml/common/PlayingView.qml</file>
+        <file>qml/common/ProfilesDelegate.qml</file>
+        <file>qml/common/ProfilesView.qml</file>
+        <file>qml/common/Progress.qml</file>
+        <file>qml/common/RefreshView.qml</file>
+        <file>qml/common/SearchPanel.qml</file>
+        <file>qml/common/Slider.qml</file>
+        <file>qml/common/TitleBar.qml</file>
+        <file>qml/common/ToolBar.qml</file>
+        <file>qml/common/UserNamePanel.qml</file>
+        <file>qml/common/VideoControls.qml</file>
+        <file>qml/images/button.png</file>
+        <file>qml/images/button-active.png</file>
+        <file>qml/images/button-hover.png</file>
+        <file>qml/images/close.png</file>
+        <file>qml/images/close-hover.png</file>
+        <file>qml/images/combobox.png</file>
+        <file>qml/images/combobox-marker.png</file>
+        <file>qml/images/combobox-toolbar.png</file>
+        <file>qml/images/combobox-toolbar-marker.png</file>
+        <file>qml/images/default.css</file>
+        <file>qml/images/edit-clear.png</file>
+        <file>qml/images/edit-find.png</file>
+        <file>qml/images/entry.png</file>
+        <file>qml/images/entry-active.png</file>
+        <file>qml/images/expander-arrow-down.png</file>
+        <file>qml/images/expander-arrow-down-hover.png</file>
+        <file>qml/images/expander-arrow-up.png</file>
+        <file>qml/images/expander-arrow-up-hover.png</file>
+        <file>qml/images/expander-closed.png</file>
+        <file>qml/images/expander-hover.png</file>
+        <file>qml/images/expander-open.png</file>
         <file>qml/images/gloss.png</file>
-        <file>qml/images/lineedit.png</file>
-        <file>qml/images/lineedit.sci</file>
-        <file>qml/images/quit.png</file>
-        <file>qml/images/stripes.png</file>
-        <file>qml/images/titlebar.png</file>
-        <file>qml/images/titlebar.sci</file>
-        <file>qml/images/toolbutton.png</file>
-        <file>qml/images/toolbutton.sci</file>
-        <file>qml/images/knots2.png</file>
+        <file>qml/images/icon-m-toolbar-grid.svg</file>
+        <file>qml/images/icon-m-toolbar-list.svg</file>
+        <file>qml/images/icon-m-toolbar-settings.svg</file>
+        <file>qml/images/indicator_update_white1.png</file>
+        <file>qml/images/indicator_update_white2.png</file>
+        <file>qml/images/indicator_update_white3.png</file>
+        <file>qml/images/indicator_update_white4.png</file>
+        <file>qml/images/indicator_update_white5.png</file>
+        <file>qml/images/indicator_update_white6.png</file>
+        <file>qml/images/indicator_update_white7.png</file>
+        <file>qml/images/indicator_update_white8.png</file>
         <file>qml/images/knots_button_add_to_playlist.png</file>
         <file>qml/images/knots_button_back.png</file>
         <file>qml/images/knots_button_clear_position.png</file>
@@ -18,12 +61,12 @@
         <file>qml/images/knots_button_info.png</file>
         <file>qml/images/knots_button_lyrics.png</file>
         <file>qml/images/knots_button_new.png</file>
-        <file>qml/images/knots_button_next_item.png</file>
         <file>qml/images/knots_button_next.png</file>
+        <file>qml/images/knots_button_next_item.png</file>
         <file>qml/images/knots_button_no_repeat.png</file>
+        <file>qml/images/knots_button_play.png</file>
         <file>qml/images/knots_button_play_album.png</file>
         <file>qml/images/knots_button_play_artist.png</file>
-        <file>qml/images/knots_button_play.png</file>
         <file>qml/images/knots_button_player.png</file>
         <file>qml/images/knots_button_playlist.png</file>
         <file>qml/images/knots_button_prev.png</file>
@@ -39,101 +82,74 @@
         <file>qml/images/knots_item_music.png</file>
         <file>qml/images/knots_item_server.png</file>
         <file>qml/images/knots_item_video.png</file>
-        <file>qml/images/button-active.png</file>
-        <file>qml/images/button-hover.png</file>
-        <file>qml/images/button.png</file>
-        <file>qml/images/close-hover.png</file>
-        <file>qml/images/close.png</file>
-        <file>qml/images/combobox-marker.png</file>
-        <file>qml/images/combobox.png</file>
-        <file>qml/images/combobox-toolbar-marker.png</file>
-        <file>qml/images/combobox-toolbar.png</file>
-        <file>qml/images/default.css</file>
-        <file>qml/images/edit-clear.png</file>
-        <file>qml/images/edit-find.png</file>
-        <file>qml/images/entry-active.png</file>
-        <file>qml/images/entry.png</file>
-        <file>qml/images/expander-arrow-down-hover.png</file>
-        <file>qml/images/expander-arrow-down.png</file>
-        <file>qml/images/expander-arrow-up-hover.png</file>
-        <file>qml/images/expander-arrow-up.png</file>
-        <file>qml/images/expander-closed.png</file>
-        <file>qml/images/expander-hover.png</file>
-        <file>qml/images/expander-open.png</file>
+        <file>qml/images/knots2.png</file>
+        <file>qml/images/lineedit.png</file>
+        <file>qml/images/lineedit.sci</file>
+        <file>qml/images/lock-icon.svg</file>
         <file>qml/images/Makefile.am</file>
-        <file>qml/images/menu-item.png</file>
         <file>qml/images/menu.png</file>
+        <file>qml/images/menu-item.png</file>
         <file>qml/images/menu-toolbar.png</file>
+        <file>qml/images/pathbar-button.png</file>
         <file>qml/images/pathbar-button-active.png</file>
         <file>qml/images/pathbar-button-focus.png</file>
         <file>qml/images/pathbar-button-hover.png</file>
+        <file>qml/images/pathbar-button-last.png</file>
         <file>qml/images/pathbar-button-last-active.png</file>
         <file>qml/images/pathbar-button-last-focus.png</file>
         <file>qml/images/pathbar-button-last-hover.png</file>
-        <file>qml/images/pathbar-button-last.png</file>
-        <file>qml/images/pathbar-button.png</file>
-        <file>qml/images/plus-button-checked-hover.png</file>
-        <file>qml/images/plus-button-checked.png</file>
-        <file>qml/images/plus-button-hover.png</file>
         <file>qml/images/plus-button.png</file>
+        <file>qml/images/plus-button-checked.png</file>
+        <file>qml/images/plus-button-checked-hover.png</file>
+        <file>qml/images/plus-button-hover.png</file>
         <file>qml/images/progress-bar-background.png</file>
         <file>qml/images/progress-bar-bar.png</file>
+        <file>qml/images/quit.png</file>
         <file>qml/images/resize-grip.png</file>
-        <file>qml/images/scroll-button-down-hover.png</file>
         <file>qml/images/scroll-button-down.png</file>
-        <file>qml/images/scroll-button-left-hover.png</file>
+        <file>qml/images/scroll-button-down-hover.png</file>
         <file>qml/images/scroll-button-left.png</file>
-        <file>qml/images/scroll-button-right-hover.png</file>
+        <file>qml/images/scroll-button-left-hover.png</file>
         <file>qml/images/scroll-button-right.png</file>
-        <file>qml/images/scroll-button-up-hover.png</file>
+        <file>qml/images/scroll-button-right-hover.png</file>
         <file>qml/images/scroll-button-up.png</file>
-        <file>qml/images/scroll-hbackground-disabled.png</file>
+        <file>qml/images/scroll-button-up-hover.png</file>
         <file>qml/images/scroll-hbackground.png</file>
+        <file>qml/images/scroll-hbackground-disabled.png</file>
+        <file>qml/images/scroll-hhandle.png</file>
         <file>qml/images/scroll-hhandle-active.png</file>
         <file>qml/images/scroll-hhandle-disabled.png</file>
         <file>qml/images/scroll-hhandle-hover.png</file>
-        <file>qml/images/scroll-hhandle.png</file>
-        <file>qml/images/scroll-vbackground-disabled.png</file>
         <file>qml/images/scroll-vbackground.png</file>
+        <file>qml/images/scroll-vbackground-disabled.png</file>
+        <file>qml/images/scroll-vhandle.png</file>
         <file>qml/images/scroll-vhandle-active.png</file>
         <file>qml/images/scroll-vhandle-disabled.png</file>
         <file>qml/images/scroll-vhandle-hover.png</file>
-        <file>qml/images/scroll-vhandle.png</file>
+        <file>qml/images/slider-background.png</file>
         <file>qml/images/slider-background-active.png</file>
         <file>qml/images/slider-background-disabled.png</file>
         <file>qml/images/slider-background-focus.png</file>
         <file>qml/images/slider-background-hover.png</file>
-        <file>qml/images/slider-background.png</file>
+        <file>qml/images/slider-handle.png</file>
         <file>qml/images/slider-handle-active.png</file>
         <file>qml/images/slider-handle-disabled.png</file>
         <file>qml/images/slider-handle-focus.png</file>
         <file>qml/images/slider-handle-hover.png</file>
-        <file>qml/images/slider-handle.png</file>
-        <file>qml/images/toggle-background-active.png</file>
+        <file>qml/images/stripes.png</file>
+        <file>qml/images/titlebar.png</file>
+        <file>qml/images/titlebar.sci</file>
         <file>qml/images/toggle-background.png</file>
+        <file>qml/images/toggle-background-active.png</file>
         <file>qml/images/toggle-handle.png</file>
         <file>qml/images/toolbar-button-hover.png</file>
+        <file>qml/images/toolbutton.png</file>
+        <file>qml/images/toolbutton.sci</file>
         <file>qml/images/tooltip-background.png</file>
-        <file>qml/common/OptionsView.qml</file>
-        <file>qml/common/OptionsModel.qml</file>
-        <file>qml/common/Button.qml</file>
-        <file>qml/common/OptionsPage.qml</file>
-        <file>qml/common/SearchView.qml</file>
-        <file>qml/common/ToolBar.qml</file>
-        <file>qml/common/VideoControls.qml</file>
-        <file>qml/common/Directory.qml</file>
-        <file>qml/common/DirectoryDelegate.qml</file>
-        <file>qml/common/PlayingView.qml</file>
-        <file>qml/common/ProfilesDelegate.qml</file>
-        <file>qml/common/ProfilesView.qml</file>
-        <file>qml/common/Progress.qml</file>
-        <file>qml/common/Slider.qml</file>
-        <file>qml/common/GridDelegate.qml</file>
-        <file>qml/common/GridView.qml</file>
-        <file>qml/images/wmTaskSwitcherIcon.png</file>
-        <file>qml/images/wmTaskSwitcherIconPressed.png</file>
         <file>qml/images/wmCloseIcon.png</file>
         <file>qml/images/wmCloseIconPressed.png</file>
+        <file>qml/images/wmTaskSwitcherIcon.png</file>
+        <file>qml/images/wmTaskSwitcherIconPressed.png</file>
         <file>qml/images/mediaplayer/AppletBack.png</file>
         <file>qml/images/mediaplayer/AppletForward.png</file>
         <file>qml/images/mediaplayer/AppletPause.png</file>
@@ -149,6 +165,7 @@
         <file>qml/images/mediaplayer/ForwardPressed.png</file>
         <file>qml/images/mediaplayer/Pause.png</file>
         <file>qml/images/mediaplayer/Play.png</file>
+        <file>qml/images/mediaplayer/PlayPressed.png</file>
         <file>qml/images/mediaplayer/Repeat.png</file>
         <file>qml/images/mediaplayer/RepeatPressed.png</file>
         <file>qml/images/mediaplayer/Shuffle.png</file>
@@ -157,18 +174,9 @@
         <file>qml/images/mediaplayer/StopPressed.png</file>
         <file>qml/images/mediaplayer/VideoOverlayButton.png</file>
         <file>qml/images/mediaplayer/VideoOverlayButtonPressed.png</file>
-        <file>qml/images/icon-m-toolbar-grid.svg</file>
-        <file>qml/images/icon-m-toolbar-list.svg</file>
-        <file>qml/images/icon-m-toolbar-settings.svg</file>
-        <file>qml/common/TitleBar.qml</file>
-        <file>qml/images/indicator_update_white1.png</file>
-        <file>qml/images/indicator_update_white2.png</file>
-        <file>qml/images/indicator_update_white3.png</file>
-        <file>qml/images/indicator_update_white4.png</file>
-        <file>qml/images/indicator_update_white5.png</file>
-        <file>qml/images/indicator_update_white6.png</file>
-        <file>qml/images/indicator_update_white7.png</file>
-        <file>qml/common/RefreshView.qml</file>
-        <file>qml/images/indicator_update_white8.png</file>
+        <file>qml/images/lineedit-bg.png</file>
+        <file>qml/images/lineedit-bg-focus.png</file>
+        <file>qml/images/clear.png</file>
+        <file>qml/common/DetailsPanel.qml</file>
     </qresource>
 </RCC>

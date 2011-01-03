@@ -2,11 +2,11 @@
 #include <QtOpenGL/QGLWidget>
 #include <qdeclarative.h>
 #include <QMainWindow>
-
+#include <QAuthenticator>
 
 #include "knots.h"
 #include "profile.h"
-#include "saxprofilehandler.h"
+#include "profileshandler.h"
 #include "knotsdirectory.h"
 #include "knotsitem.h"
 #include "knotsplayer.h"
@@ -33,6 +33,13 @@ Knots::Knots(QObject *parent)
     , _player(0)
 {  
 
+
+}
+
+void Knots::launch()
+{    
+    connect( &_serverConnection, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(authenticationRequired(QNetworkReply*,QAuthenticator*)));
+
     loadSettings();
 
     loadProfiles();
@@ -41,17 +48,12 @@ Knots::Knots(QObject *parent)
 
     connect( _currentDirectory , SIGNAL(directoryChanged()), this, SLOT(onDirectoryReady()));
 
-}
-
-void Knots::launch()
-{
     browseRoot();
 
     _mainWindow = new MainWindow;
 
     _mainWindow->launch();
 
-    connect(&serverConnection, SIGNAL(finished(QNetworkReply*)), this, SLOT(onProfilesFetched(QNetworkReply*)));
 }
 
 KnotsPlayer& Knots::player()
@@ -64,6 +66,8 @@ void Knots::loadSettings()
     _serverAddress = _settings.value( "ServerAddress", QString("Http://192.168.0.28:1978")).toString();
             //QString("http://192.168.2.14:1978");
     _profile = _settings.value( "DefaultProfileId", QString( "6") ).toString();
+    _password = _settings.value( "Password", QString( "juno") ).toString();
+    _userName = _settings.value( "Username", QString( "andy") ).toString();
 }
 
 QString Knots::profile() const
@@ -73,14 +77,12 @@ QString Knots::profile() const
 
 void Knots::setProfile( QString &newProfile )
 {
-
-    Profile *profile = _profiles->values().at(newProfile.toInt());
+    Profile *profile = _profiles->profiles()->values().at(newProfile.toInt());
 
     if( profile )
         _profile = profile->getId();
 
     _settings.setValue("DefaultProfileId", _profile );
-
 }
 
 QUrl Knots::serverAddress() const
@@ -92,62 +94,17 @@ void Knots::setServerAddress( QUrl &newServerAddress )
 {
     _serverAddress = newServerAddress;
     _settings.setValue( "ServerAddress", _serverAddress);
-    delete _profiles;
-    delete handler;
+    delete _profiles;    
     loadProfiles();
     browseRoot();
 }
 
 
 
-void Knots::loadProfiles() {
-
-    try {
-
-        _profiles = new ProfileListImpl();
-
-        handler = new SaxProfileHandler(*_profiles);
-
-        QUrl requestAddress = _serverAddress;
-
-        requestAddress.setPath(+ "/external/transcoding_profiles");
-
-        QNetworkRequest request( requestAddress );
-
-        _profileFetch = serverConnection.get(request);
-
-    }
-
-    catch(...)
-    {
-        qWarning() << "Failed to fetch profiles";
-    }
-}
-
-void Knots::onProfilesFetched( QNetworkReply* reply )
+void Knots::loadProfiles()
 {
-    if( reply == _profileFetch )
-    {
-        _xmlSource = new QXmlInputSource( _profileFetch );
-        _xmlReader = new QXmlSimpleReader;
-        _xmlReader->setContentHandler(handler);
-
-        qWarning() << "Fetched from " << reply->url() ;
-        qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-        qWarning() << reply->peek( 256 );
-
-
-        _xmlReader->parse(_xmlSource );
-
-        delete _xmlSource;
-        delete _xmlReader;
-        _xmlReader = 0;
-
-
-        _profileFetch->deleteLater();
-
-        emit profilesChanged(_profiles);
-    }
+    _profiles = new ProfilesHandler(this);
+    _profiles->loadProfiles();
 }
 
 void Knots::browseRoot()
@@ -240,8 +197,13 @@ Knots::~Knots()
     delete _currentDirectory;
 }
 
-KnotsDirectory* Knots::currentDirectory() {
-    return _currentDirectory;
+KnotsDirectory& Knots::currentDirectory() {
+    return *_currentDirectory;
+}
+
+ProfilesHandler& Knots::profiles()
+{
+    return *_profiles;
 }
 
 void Knots::search( QString &searchTag )
@@ -260,4 +222,39 @@ void Knots::setPlayer( KnotsPlayer* newPlayer )
 {
 
     _player = newPlayer;
+}
+
+void Knots::authenticationRequired ( QNetworkReply * /*reply*/, QAuthenticator * authenticator )
+{
+
+    authenticator->setPassword(_password);
+    authenticator->setUser(_userName);
+
+}
+
+QNetworkAccessManager& Knots::serverConnection()
+{
+    return _serverConnection;
+}
+
+
+QString Knots::password()
+{
+    return _password;
+}
+
+void Knots::setUserName( QString newUser )
+{
+    _userName = newUser;
+}
+
+
+void Knots::setPassword(QString newPass )
+{
+    _password = newPass;
+}
+
+QString Knots::userName()
+{
+    return _userName;
 }

@@ -78,7 +78,6 @@ public:
 
 private:
 
-    QNetworkAccessManager _serverConnection;
     QNetworkReply* _currentDownload;
     QXmlSimpleReader*    _xmlReader;
     QXmlInputSource*     _xmlSource;

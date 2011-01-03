@@ -48,8 +48,8 @@ Item {
                 cellWidth: Qt.isQtObject( parent ) ? parent.width / 4 : 0
                 delegate: Common.GridDelegate {}
                 model: knots.currentDirectory
-
-                Component.onCompleted: { console.log( Component.objectName + " " + width + "x" + height + "Parent:" ) }
+                cacheBuffer: 100
+                snapMode: GridView.SnapToRow
             }
         }
 
@@ -80,9 +80,15 @@ Item {
         }
 
 
-        Common.SearchView {
+        Common.SearchPanel {
             opacity: 0.0
             id: searchView;
+            anchors.centerIn: parent
+        }
+
+        Common.UserNamePanel {
+            opacity: 0.0
+            id: userNameView;
             anchors.centerIn: parent
         }
 
@@ -92,6 +98,11 @@ Item {
             anchors.centerIn: parent
         }
 
+        Common.DetailsPanel {
+            id: mediaDetails
+            opacity:  0.0
+            anchors.centerIn: parent
+        }
     }
 
     states: [
@@ -110,12 +121,15 @@ Item {
                 button3Label: ""
                 button3Image: "/qml/images/knots_button_search.png"
                 button4Image: screen.defaultView == "List" ? "/qml/images/icon-m-toolbar-grid.svg" :  "/qml/images/icon-m-toolbar-list.svg"
+                button5Image: "/qml/images/lock-icon.svg"
                 onButton1Clicked: knots.backSelected();
                 onButton2Clicked: screen.state = "Options";
                 onButton3Clicked: screen.state = "Searching";
                 onButton4Clicked: screen.defaultView == "List" ? screen.defaultView = "Grid" : screen.defaultView = "List";
+                onButton5Clicked: screen.state = "UserName";
                 button4Visible: true;
                 button3Visible: true;
+                button5Visible: true;
             }
         },
         State {
@@ -144,17 +158,32 @@ Item {
                 button2Visible: false;
                 button4Visible: false;
                 button3Visible: false;
+                button5Visible: false;
             }
         },
         State {
             name: "Searching"
-            PropertyChanges { target: searchView; opacity: 1.0 }
+            PropertyChanges { target: searchView; opacity: 1.0; z: 1 }
             PropertyChanges { target: toolBar;
                 button1Label: "Back";
                 onButton1Clicked: screen.state = "Browsing";
                 button2Visible: false;
                 button4Visible: false;
                 button3Visible: false;
+                button5Visible: false;
+            }
+        },
+        State {
+            name: "UserName"
+            PropertyChanges { target: userNameView; opacity: 1.0 }
+            PropertyChanges { target: toolBar;
+                button1Label: "Back";
+                onButton1Clicked: screen.state = "Browsing";
+                button2Visible: false;
+                button3Visible: false;
+                button4Visible: false;
+                button5Visible: false;
+
             }
         },
         State {
@@ -166,6 +195,23 @@ Item {
                 button2Visible: false;
                 button4Visible: false;
                 button3Visible: false;
+                button5Visible: false;
+            }
+        },
+        State {
+            name: "Details"
+            PropertyChanges { target: mediaDetails; opacity: 1.0 }
+            PropertyChanges { target: toolBar;
+                button1Label: "Play";
+                onButton1Clicked: {
+                    knots.play( mediaDetails.mediaId );
+                    screen.state = "Browsing"
+                }
+
+                button2Visible: false;
+                button4Visible: false;
+                button3Visible: false;
+                button5Visible: false;
             }
         }
     ]
@@ -174,5 +220,4 @@ Item {
         PropertyAnimation { properties: "opacity"; duration:  150 }
 
     }
-    Component.onCompleted: { console.log( width + "x" + height) }
 }

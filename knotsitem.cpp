@@ -16,11 +16,33 @@ KnotsItem::KnotsItem(QObject *parent)
  * @author andy
  * @desc Object to hold details of a knots item
  *
- *  <item>
- *    <dirname><![CDATA[Magnum Force]]></dirname>
- *    <dir><![CDATA[1,1]]></dir>
- *    <id>0</id>
- *  </item>
+ * <item>
+    <id>12</id>
+    <name><![CDATA[101 - Death Has A Shadow]]></name>
+    <path><![CDATA[C:/Users/andy/Videos/Family Guy/Season 1/101 - Death Has A Shadow.avi]]></path>
+    <size>161716224</size>
+    <duration><![CDATA[00:22:32]]></duration>
+    <added><![CDATA[2010-08-21]]></added>
+    <modified><![CDATA[2008-06-01]]></modified>
+    <views>3</views>
+    <position><![CDATA[00:00:00]]></position>
+    <rating>0</rating>
+    <info/>
+    <last_viewed/>
+    <directory_changed>2009-11-05T18:14:32+00:00</directory_changed>
+    <video_format><![CDATA[mpeg4]]></video_format>
+    <audio_format><![CDATA[tbr]]></audio_format>
+    <audio_bitrate><![CDATA[2 channels]]></audio_bitrate>
+    <aspect><![CDATA[4:3]]></aspect>
+    <width>640</width>
+    <height>480</height>
+    <category>1</category>
+    <active>1</active>
+    <mediatype>0</mediatype>
+    <params/><dreambox_url/>
+    <tracks/>
+    <mid>22</mid>
+  </item>
  *
  */
 
@@ -84,6 +106,8 @@ void KnotsItem::setItemImage() {
     {
         if( !( _mid == "" ) ) {
             _itemImage = Knots::instance().serverAddress();
+            _itemImage.setPassword(Knots::instance().password());
+            _itemImage.setUserName(Knots::instance().userName());
             _itemImage.addQueryItem("type","screenshot");
             _itemImage.addQueryItem("mid",_mid);
             _itemImage.addQueryItem("mediatype","0");
@@ -144,7 +168,7 @@ QString KnotsItem::itemSelected()
         Knots::instance().browseTags(_id);
         break;
     case ITEM:
-        Knots::instance().player().play(_id);
+        newState = "Details";
         break;
     }
     return newState;
