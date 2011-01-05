@@ -22,6 +22,7 @@ class KnotsPlayer : public QObject
 
 public:
     Q_ENUMS(PlayingState)
+
     enum PlayingState
     {
         WaitingForPortInfo, // 0
@@ -31,8 +32,7 @@ public:
         Stopped             // 4        
     } _status;
 
-    Q_PROPERTY( KnotsPlayer::PlayingState currentState READ getState NOTIFY stateChanged )
-    Q_PROPERTY( QString formattedPosition READ getFormattedPosition NOTIFY formattedPositionChanged )
+    Q_PROPERTY( KnotsPlayer::PlayingState currentState READ getState NOTIFY stateChanged )    
     Q_PROPERTY( QString currentSource READ getCurrentSource NOTIFY sourceChanged )
     Q_PROPERTY( int duration READ getDuration NOTIFY durationChanged )
     Q_PROPERTY( int position READ getPosition NOTIFY positionChanged )
@@ -44,7 +44,7 @@ signals:
     void durationChanged( int newDuration );
     void positionChanged( int newPosition );
     void stateChanged( KnotsPlayer::PlayingState newState );
-    void formattedPositionChanged( QString &newPos );
+
 
 public slots:
     void play( QString& id );
@@ -77,8 +77,6 @@ protected:
     int getDuration();
 
     int getPosition();
-
-    QString getFormattedPosition();
 
     PlayingState getState() ;
 
@@ -119,11 +117,12 @@ private: // Data
     QTimer* _propertiesUpdateTimer;
     QTimer* _backlightTimer;
 
-    KnotsPlayerProperties* _properties;
+
 
     int _tickPeriod;
     int _tickCount;
     int _localPosition;
+    KnotsPlayerProperties* _properties;
 
 #if defined(Q_WS_MAEMO_5)
     osso_context_t* _ossoContext;

@@ -25,7 +25,9 @@
 ****************************************************************************/
 
 import Qt 4.7
-import Qt.labs.components 1.0
+import RangeModel 1.0
+
+
 
 Item {
     id: basicSlider;
@@ -38,8 +40,7 @@ Item {
 
     signal draggedToNewValue( real newValue )
 
-    height: 22
-    width: 108
+
 
     Connections {
         target: basicSlider
@@ -57,78 +58,104 @@ Item {
         when: knobArea.drag.active
     }
 
+    Binding {
+        target: knob
+        property:  "x"
+        value:     model.position
+        when: !knobArea.drag.active
+    }
 
-    BorderImage {
-        id: sliderBase
-        width: parent.width - 12
-        x: 6
+
+    Text {
+        id: label
+        font.pixelSize: 32
+        color: "white"
+        anchors.right:  parent.right
         anchors.verticalCenter: parent.verticalCenter
-        source: Qt.resolvedUrl("../images/slider-background.png");
+        anchors.verticalCenterOffset: 4
+        height: 60
+        text: model.label
+    }
 
-        border.left: 10
-        border.top: 0
-        border.right: 10
-        border.bottom: 0
+    Item {
+        id: grooveContainer
+        height: 22
 
-
-        MouseArea {
-            id: grooveArea
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 20
-            onPressed: { model.setPosition(knob.x - knob.width/2); }
-            onReleased: {
-                console.log( "Groove released at " + model.value )
-                basicSlider.draggedToNewValue(model.value)
-            }
-
-        }
+        anchors.left:  parent.left
+        anchors.right: label.left
 
         BorderImage {
-            id: knob
-            x: model.position
+            id: sliderBase
+            width: parent.width - 12
+            x: 6
             anchors.verticalCenter: parent.verticalCenter
-            width: 22
-            height: 32
+            source: Qt.resolvedUrl("../images/slider-background.png");
 
             border.left: 10
-            border.top: 1
+            border.top: 0
             border.right: 10
-            border.bottom: 1
+            border.bottom: 0
 
-            source: Qt.resolvedUrl("../images/slider-handle.png");
 
             MouseArea {
-                id: knobArea
-                anchors.fill: knob
-                drag.target: knob
-                drag.axis: "XAxis"
-                drag.minimumX: -sliderEdgeOffset
-                drag.maximumX: sliderBase.width - knob.width / 2 - sliderEdgeOffset
+                id: grooveArea
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 20
+                onPressed: { model.setPosition(knob.x - knob.width/2); }
                 onReleased: {
-                    console.log( "Knob Area released at " + model.value )
+                    //console.log( "Groove released at " + model.value )
                     basicSlider.draggedToNewValue(model.value)
                 }
+
             }
 
-            states: [
-                State {
-                    name: "hover"
-                    when: !knobArea.pressed && knobArea.containsMouse
-                    PropertyChanges { target: knob; source: Qt.resolvedUrl("../images/slider-handle-hover.png"); }
-                },
-                State {
-                    name: "pressed"
-                    when: knobArea.pressed
-                    PropertyChanges { target: knob; source: Qt.resolvedUrl("../images/slider-handle-active.png"); }
-                }
-            ]
-        }
-    }   
+            BorderImage {
+                id: knob
 
+                anchors.verticalCenter: parent.verticalCenter
+                width: 22
+                height: 32
+
+                border.left: 10
+                border.top: 1
+                border.right: 10
+                border.bottom: 1
+
+                source: Qt.resolvedUrl("../images/slider-handle.png");
+
+                MouseArea {
+                    id: knobArea
+                    anchors.fill: knob
+                    drag.target: knob
+                    drag.axis: "XAxis"
+                    drag.minimumX: -sliderEdgeOffset
+                    drag.maximumX: sliderBase.width - knob.width / 2 - sliderEdgeOffset
+                    onReleased: {
+                        //console.log( "Knob Area released at " + model.value )
+                        basicSlider.draggedToNewValue(model.value)
+                    }
+                }
+
+                states: [
+                    State {
+                        name: "hover"
+                        when: !knobArea.pressed && knobArea.containsMouse
+                        PropertyChanges { target: knob; source: Qt.resolvedUrl("../images/slider-handle-hover.png"); }
+                    },
+                    State {
+                        name: "pressed"
+                        when: knobArea.pressed
+                        PropertyChanges { target: knob; source: Qt.resolvedUrl("../images/slider-handle-active.png"); }
+                    }
+                ]
+            }
+        }
+    }
     RangeModel {
         id: model
+        type: RangeModel.TimeScale
         minimumValue: 0
         maximumValue: 100
         positionAtMinimum: -sliderEdgeOffset

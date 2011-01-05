@@ -69,9 +69,9 @@ void KnotsPlayer::play( QString& id )
 
 void KnotsPlayer::startRequestFinished(QNetworkReply* reply)
 {
-    qWarning() << "Fetched from " << reply->url() ;
-    qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-    qWarning() << reply->peek( reply->bytesAvailable());
+    //qWarning() << "Fetched from " << reply->url() ;
+    //qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
+    //qWarning() << reply->peek( reply->bytesAvailable());
 
     QString returnedData = reply->readAll();
 
@@ -99,9 +99,9 @@ void KnotsPlayer::stop()
 void KnotsPlayer::stopRequestFinished(QNetworkReply* reply)
 {
 
-    qWarning() << "Fetched from " << reply->url() ;
-    qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-    qWarning() << reply->peek( reply->bytesAvailable());
+    // qWarning() << "Fetched from " << reply->url() ;
+    // qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
+    // qWarning() << reply->peek( reply->bytesAvailable());
 
     QString returnedData = reply->readAll();
 
@@ -142,7 +142,7 @@ void KnotsPlayer::seek( int newPosition )
 void KnotsPlayer::seekRequestFinished(QNetworkReply* reply)
 {
 
-    qWarning() << "Fetched from " << reply->url() ;
+    //qWarning() << "Fetched from " << reply->url() ;
     //qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
     //qWarning() << reply->peek( reply->bytesAvailable());
 
@@ -186,10 +186,10 @@ void KnotsPlayer::onBacklightTimer()
 {
 #if defined(Q_WS_MAEMO_5)
     osso_return_t err = osso_display_state_on(_ossoContext);
-    qWarning() << "Turned on display for playback with result " << err;
+    //qWarning() << "Turned on display for playback with result " << err;
 
     err = osso_display_blanking_pause( _ossoContext );
-    qWarning() << "Request backlight result " << err ;
+    //qWarning() << "Request backlight result " << err ;
 #endif
 }
 
@@ -198,7 +198,7 @@ void KnotsPlayer::onBacklightTimer()
 void KnotsPlayer::startObservingProperties()
 {
 
-    qDebug() << "Start observing with period " << _tickPeriod;
+    //qDebug() << "Start observing with period " << _tickPeriod;
 
     // timer to tick every second, but only sync with server every 60
     _propertiesUpdateTimer->start(_tickPeriod);
@@ -216,8 +216,6 @@ void KnotsPlayer::onPropertiesUpdated()
     {
     case Playing:
     {
-        QString newLabel = getFormattedPosition();
-        emit formattedPositionChanged(newLabel);
         emit durationChanged(_properties->_duration);
         emit positionChanged( _localPosition );
         emit propertiesChanged(*_properties);
@@ -291,23 +289,7 @@ void KnotsPlayer::updateTimeout()
     }
 }
 
-QString KnotsPlayer::getFormattedPosition()
-{
-    int durationMins = _properties->_duration / 60;
-    int durationSecs = _properties->_duration - ( durationMins * 60 );
 
-
-    int positionMins = (int) _localPosition / 60;
-    int positionSecs = (int) _localPosition % 60;
-
-    QString timeLabel= QString( "%3:%4/%1:%2" )\
-            .arg(QString::number(durationMins),2, '0')\
-            .arg(QString::number(durationSecs),2, '0')\
-            .arg(QString::number(positionMins),2, '0')\
-            .arg(QString::number(positionSecs),2, '0');
-
-    return timeLabel;
-}
 
 KnotsPlayer::PlayingState KnotsPlayer::getState()
 {

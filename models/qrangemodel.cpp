@@ -57,6 +57,42 @@ void QRangeModelPrivate::init()
     inverted = false;
 }
 
+QString QRangeModelPrivate::publicLabel() const
+{
+    QString label;
+
+    if( type == QRangeModel::LinearScale )
+    {
+        label = QString::number( value );
+    }
+    else if( type == QRangeModel::PercentageScale )
+    {
+        const qreal valueRange = maximum - minimum;
+        const qreal positionPercent = ( valueRange - value ) / valueRange;
+        label = QString::number( positionPercent * 100.0 );
+
+    }
+    else if( type == QRangeModel::TimeScale )
+    {
+        int durationMins = maximum / 60;
+        int durationSecs = maximum - ( durationMins * 60 );
+
+
+        int positionMins = (int) value / 60;
+        int positionSecs = (int) value % 60;
+
+        label = QString( "%3:%4/%1:%2" )\
+                .arg(QString::number(durationMins),2, '0')\
+                .arg(QString::number(durationSecs),2, '0')\
+                .arg(QString::number(positionMins),2, '0')\
+                .arg(QString::number(positionSecs),2, '0');
+
+    }
+
+    return label;
+}
+
+
 qreal QRangeModelPrivate::publicPosition(qreal position) const
 {
     // Calculate the equivalent stepSize for the position property.
@@ -122,8 +158,12 @@ void QRangeModelPrivate::emitValueAndPositionIfChanged(const qreal oldValue, con
     // unchanged. This will be the case when operating with values outside range:
     const qreal newValue = q->value();
     const qreal newPosition = q->position();
+
     if (!qFuzzyCompare(newValue, oldValue))
+    {
         emit q->valueChanged(newValue);
+        emit q->labelChanged(q->label());
+    }
     if (!qFuzzyCompare(newPosition, oldPosition))
         emit q->positionChanged(newPosition);
 }
@@ -374,3 +414,23 @@ void QRangeModel::toMaximum()
     Q_D(const QRangeModel);
     setValue(d->maximum);
 }
+
+QRangeModel::SliderType QRangeModel::type()
+{
+    Q_D(const QRangeModel);
+    return d->type;
+}
+
+void QRangeModel::setType( QRangeModel::SliderType newType )
+{
+    Q_D(QRangeModel);
+    d->type = newType;
+}
+
+
+QString QRangeModel::label() const
+{
+    Q_D( const QRangeModel);
+    return d->publicLabel();
+}
+

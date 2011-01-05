@@ -56,6 +56,7 @@ public:
 
     QRangeModel *q_ptr;
 
+
     inline qreal effectivePosAtMin() const {
         return inverted ? posatmax : posatmin;
     }
@@ -86,7 +87,13 @@ public:
 
     qreal publicPosition(qreal position) const;
     qreal publicValue(qreal value) const;
+
+    QString publicLabel() const;
+
     void emitValueAndPositionIfChanged(const qreal oldValue, const qreal oldPosition);
+
+    QRangeModel::SliderType type;
+
 };
 
 #endif // QRANGEMODEL_P_H

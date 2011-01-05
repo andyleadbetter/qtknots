@@ -10,8 +10,7 @@ Item {
     property alias prevLabel: next.text
     property alias duration: positionSlider.maximum
     property real  position
-    property alias positionDisplay: timeIndication.text
-    property bool dragging
+    property bool  dragging
 
     signal playClicked
     signal nextClicked
@@ -83,7 +82,7 @@ Item {
     Common.Slider {
         id: positionSlider
         anchors.left: next.right
-        anchors.right: timeIndication.left
+        anchors.right: parent.right
         anchors.verticalCenter: toolbar.verticalCenter
         anchors.margins: 10
         height: 32;
@@ -93,13 +92,4 @@ Item {
 
     }
 
-    Text {
-        id: timeIndication
-        font.pixelSize: 32
-        color: "white"
-        anchors.right:  parent.right
-        anchors.verticalCenter: toolbar.verticalCenter
-        anchors.verticalCenterOffset: 4
-        height: 60
-    }
 }

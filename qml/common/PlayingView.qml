@@ -12,14 +12,14 @@ Rectangle {
 
     KnotsPlayer {
         id: knots;
-        onCurrentStateChanged: console.log( "State " + currentState )
+        //onCurrentStateChanged: console.log( "State " + currentState )
     }
 
 
     Connections {
         target: videoControls
-        onDraggingChanged: console.log( ( videoControls.dragging ? "Dragging" : "Tracking" ) + videoControls.position )
-        onPositionChanged: console.log( videoControls.position )
+        //onDraggingChanged: console.log( ( videoControls.dragging ? "Dragging" : "Tracking" ) + videoControls.position )
+        //onPositionChanged: console.log( videoControls.position )
     }
 
     state:  "Default"
@@ -41,7 +41,7 @@ Rectangle {
         Keys.onSpacePressed: videoPlayer.paused = !videoPlayer.paused
 
         onErrorChanged: {
-            console.log( "Video Error:" + errorString)
+            //console.log( "Video Error:" + errorString)
         }
 
         onStatusChanged: {
@@ -65,12 +65,13 @@ Rectangle {
         }
     }
 
+
+
     Common.VideoControls {
         id: videoControls;
         width: parent.width; opacity: 1.0        
-        duration: knots.duration      
-        positionDisplay: knots.formattedPosition
-        position:  knots.position
+
+
         onStopClicked: {
             knots.stop();            
             videoPlayer.playing=false;
@@ -85,7 +86,7 @@ Rectangle {
         }
 
         onDraggedToNewPos: {
-            console.log("Seeking new Position " + newPosition )
+            //console.log("Seeking new Position " + newPosition )
             knots.seek( newPosition );
         }
 
@@ -101,7 +102,12 @@ Rectangle {
         State {
             name: "Default"
             PropertyChanges { target: videoArea; onClicked: { playingPage.state = "Fullscreen" } }
-            PropertyChanges { target: videoControls; y: playingPage.height - videoControls.height; }
+            PropertyChanges {
+                target: videoControls;
+                y: playingPage.height - videoControls.height;
+                duration: knots.duration
+                position:  knots.position
+            }
         }
 
     ]

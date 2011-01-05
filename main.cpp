@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<KnotsPlayer>("KnotsPlayer", 1, 0,"KnotsPlayer");
 
-    qmlRegisterType<QRangeModel>("Qt.labs.components", 1, 0, "RangeModel");
+    qmlRegisterType<QRangeModel>("RangeModel", 1, 0, "RangeModel");
 
     Knots::instance().launch();
 

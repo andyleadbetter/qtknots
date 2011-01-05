@@ -47,9 +47,9 @@ void KnotsDirectory::onDirectoryFetchFinished( QNetworkReply* reply )
 {
     if( reply == _currentDownload )
     {
-        qWarning() << "Fetched from " << reply->url() ;
-        qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
-        qWarning() << reply->peek( 4096 );
+       // qWarning() << "Fetched from " << reply->url() ;
+       // qWarning() << "Read " << reply->bytesAvailable() << " Bytes";
+       // qWarning() << reply->peek( 4096 );
 
         _xmlReader->parse(_xmlSource );
 

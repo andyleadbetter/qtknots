@@ -37,6 +37,7 @@ class QRangeModelPrivate;
 class QRangeModel : public QObject
 {
     Q_OBJECT
+    Q_ENUMS( SliderType )
     Q_PROPERTY(qreal value READ value WRITE setValue NOTIFY valueChanged USER true)
     Q_PROPERTY(qreal minimumValue READ minimum WRITE setMinimum NOTIFY minimumChanged)
     Q_PROPERTY(qreal maximumValue READ maximum WRITE setMaximum NOTIFY maximumChanged)
@@ -45,8 +46,17 @@ class QRangeModel : public QObject
     Q_PROPERTY(qreal positionAtMinimum READ positionAtMinimum WRITE setPositionAtMinimum NOTIFY positionAtMinimumChanged)
     Q_PROPERTY(qreal positionAtMaximum READ positionAtMaximum WRITE setPositionAtMaximum NOTIFY positionAtMaximumChanged)
     Q_PROPERTY(bool inverted READ inverted WRITE setInverted NOTIFY invertedChanged)
+    Q_PROPERTY( QString label READ label NOTIFY labelChanged )
+    Q_PROPERTY( SliderType type WRITE setType READ type  )
+
 
 public:
+
+    enum SliderType { TimeScale, PercentageScale, LinearScale };
+
+    QRangeModel::SliderType type();
+    void setType( QRangeModel::SliderType newType );
+
     QRangeModel(QObject *parent = 0);
     virtual ~QRangeModel();
 
@@ -70,6 +80,8 @@ public:
 
     void setInverted(bool inverted);
     bool inverted() const;
+
+    QString label() const;
 
     qreal value() const;
     qreal position() const;
@@ -95,6 +107,7 @@ Q_SIGNALS:
     void maximumChanged(qreal max);
     void positionAtMinimumChanged(qreal min);
     void positionAtMaximumChanged(qreal max);
+    void labelChanged( QString label );
 
 protected:
     QRangeModel(QRangeModelPrivate &dd, QObject *parent);
@@ -103,6 +116,7 @@ protected:
 private:
     Q_DISABLE_COPY(QRangeModel)
     Q_DECLARE_PRIVATE(QRangeModel)
+
 
 };
 
