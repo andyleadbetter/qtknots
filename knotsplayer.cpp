@@ -62,6 +62,7 @@ void KnotsPlayer::play( QString& id )
 
     _playRequest = Knots::instance().serverConnection().get(QNetworkRequest(url));
     _status = WaitingForPortInfo;
+    startBacklightKeepAlive();
 }
 
 

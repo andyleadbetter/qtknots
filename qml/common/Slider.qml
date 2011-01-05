@@ -50,6 +50,14 @@ Item {
         }
     }
 
+    Binding {
+        target: model
+        property:  "position"
+        value:     knob.x
+        when: knobArea.drag.active
+    }
+
+
     BorderImage {
         id: sliderBase
         width: parent.width - 12
@@ -123,8 +131,7 @@ Item {
         id: model
         minimumValue: 0
         maximumValue: 100
-        position: knob.x
         positionAtMinimum: -sliderEdgeOffset
-        positionAtMaximum: sliderBase.width - knob.width / 2 - sliderEdgeOffset        
+        positionAtMaximum: sliderBase.width - knob.width / 2 - sliderEdgeOffset
     }
 }
