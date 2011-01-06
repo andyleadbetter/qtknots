@@ -9,6 +9,9 @@ QML_IMPORT_PATH =
 # Avoid auto screen rotation
 #DEFINES += ORIENTATIONLOCK
 
+DEFINES += USE_DISK_CACHE
+
+
 # Needs to be defined for Symbian
 #DEFINES += NETWORKACCESS
 
@@ -33,7 +36,8 @@ SOURCES += main.cpp \
     knotsitem.cpp \
     knotsdirectory.cpp \
     saxknotsitemhandler.cpp \
-    profileshandler.cpp
+    profileshandler.cpp \
+    networkaccessmanager.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -55,7 +59,8 @@ HEADERS += \
     knotsitem.h \
     knotsdirectory.h \
     saxknotsitemhandler.h \
-    profileshandler.h
+    profileshandler.h \
+    networkaccessmanager.h
 
 QT           += xml network opengl
 

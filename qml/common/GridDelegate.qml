@@ -38,6 +38,9 @@ Component {
         Text {
             id: label;
             text: name;
+            elide: Text.ElideLeft
+            smooth:  true
+            wrapMode: Text.WordWrap
 
             font {
                 family: "Arial";

@@ -4,11 +4,14 @@
 #include <QVBoxLayout>
 #include <QtGui>
 
+#include "networkaccessmanager.h"
+
 #if !defined( Q_OS_SYMBIAN )
     #include <QtOpenGL>
 #endif
 
 #include "mainwindow.h"
+#include "knots.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -27,8 +30,6 @@ void MainWindow::launch()
     QGLFormat format = QGLFormat::defaultFormat();
     format.setSampleBuffers(false);
 
-
-
     setAttribute(Qt::WA_Maemo5NonComposited, true);
     setAttribute(Qt::WA_Maemo5AutoOrientation, true);
 
@@ -39,8 +40,12 @@ void MainWindow::launch()
     _glWidget->setAttribute(Qt::WA_Maemo5NonComposited, true);
     _navigator->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     _navigator->setAttribute(Qt::WA_Maemo5NonComposited, true);
-
     _navigator->setViewport(_glWidget);
+
+
+
+
+
 #else
     _navigator = new QmlApplicationViewer( this );
 #endif
@@ -48,12 +53,18 @@ void MainWindow::launch()
     _navigator->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     _navigator->setSource(QUrl("qrc:///qml/QKnots.qml"));
     _navigator->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+#if USE_DISK_CACHE
+    _navigator->engine()->setNetworkAccessManagerFactory(new MyQmlNetworkCache );
+#endif
 
     _videoPlayer = new QmlApplicationViewer( this );
     _videoPlayer->setOrientation(QmlApplicationViewer::ScreenOrientationLockLandscape);
     _videoPlayer->setSource(QUrl("qrc:///qml/common/PlayingView.qml"));
     _videoPlayer->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     _videoPlayer->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+#if USE_DISK_CACHE
+    _videoPlayer->engine()->setNetworkAccessManagerFactory(new MyQmlNetworkCache);
+#endif
 
 #if defined( Q_WS_MAEMO_5 )
     _videoPlayer->setAttribute(Qt::WA_Maemo5NonComposited, true);
@@ -107,6 +118,9 @@ void MainWindow::onPlayerStateChange( KnotsPlayer::PlayingState newState )
 
 MainWindow::~MainWindow()
 {
+
+    delete _navigator;
+    delete _videoPlayer;
 }
 
 void MainWindow::onQmlFinished()
@@ -114,7 +128,6 @@ void MainWindow::onQmlFinished()
     _navigator->close();
     _videoPlayer->close();    
     close();
-  //  deleteLater();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *newSizeEvent)

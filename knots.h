@@ -8,8 +8,11 @@
 #include <QNetworkReply>
 #include <QSettings>
 
+#include <QDeclarativeNetworkAccessManagerFactory>
+
 #include "profile.h"
 #include "mainwindow.h"
+#include "networkaccessmanager.h"
 
 class ProfilesHandler;
 class KnotsDirectory;
@@ -32,8 +35,6 @@ public slots:
     void onPlayerStateChange( KnotsPlayer::PlayingState newState );
 
     void authenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
-
-
 
 public:
 
@@ -99,7 +100,7 @@ private:
     QString _userName;
     QString _password;
 
-    QNetworkAccessManager _serverConnection;
+    NetworkAccessManager _serverConnection;
     QNetworkReply* currentDownload;
 
 

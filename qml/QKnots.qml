@@ -48,7 +48,7 @@ Item {
                 cellWidth: Qt.isQtObject( parent ) ? parent.width / 4 : 0
                 delegate: Common.GridDelegate {}
                 model: knots.currentDirectory
-                cacheBuffer: 100
+                cacheBuffer: cellHeight * 2
                 snapMode: GridView.SnapToRow
             }
         }

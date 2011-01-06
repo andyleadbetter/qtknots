@@ -1,12 +1,14 @@
 #include "knots.h"
 #include "knotsplayerproperties.h"
 #include <QDebug>
+#include <QMutexLocker>
 
 KnotsPlayerProperties::KnotsPlayerProperties(QObject *parent )
     : QObject( parent )
     , _position(0.0)    
     , _duration(0)
     , _currentDownload(0)
+    , _waitingForRequest(QMutex::Recursive)
 
 {
     _processingThread.start(QThread::LowPriority);
@@ -42,11 +44,10 @@ void KnotsPlayerProperties::updateStatus(QString &playerId, QString &password)
     // If not waiting for properties then request new set
     if( _currentDownload == 0 )
     {
-        _waitingForRequest.lock();
+        QMutexLocker locker(&_waitingForRequest);
         QNetworkRequest request( statusUrl );
         _currentDownload = Knots::instance().serverConnection().get(request);
-        _xmlSource = new QXmlInputSource( _currentDownload );
-        _waitingForRequest.unlock();
+        _xmlSource = new QXmlInputSource( _currentDownload );      
     }
     // else wait for the existing request to finish.
 
@@ -60,7 +61,7 @@ void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
 
     if( reply == _currentDownload )
     {
-        _waitingForRequest.lock();
+        QMutexLocker locker(&_waitingForRequest);
         _xmlReader->parse(_xmlSource );
 
         reply->deleteLater();
@@ -83,8 +84,7 @@ void KnotsPlayerProperties::fetchFinished( QNetworkReply* reply )
         qDebug() << "Duration: " << this->_duration;
         qDebug() << "Position: " << this->_position;
 
-        emit propertiesUpdated();
-        _waitingForRequest.unlock();
+        emit propertiesUpdated();        
     }
 }
 

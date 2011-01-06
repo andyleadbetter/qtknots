@@ -13,6 +13,7 @@
 #include "knotsdeclarative.h"
 
 
+
 Knots* Knots::_instance = 0;
 
 Knots& Knots::instance()
@@ -258,3 +259,5 @@ QString Knots::userName()
 {
     return _userName;
 }
+
+
